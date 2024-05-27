@@ -8,12 +8,12 @@ const defaultCookie: Cookie = {
   name: '',
   value: '',
   domain: "",
-  sameSite: "unspecified",
   path: "/",
+  expirationDate: dayjs().add(1, 'year').valueOf() / 1000,
   httpOnly: false,
   secure: false,
-  expirationDate: dayjs().add(1, 'year').valueOf() / 1000,
   session: false,
+  sameSite: "unspecified",
   storeId: "",
   hostOnly: false,
   create: true,
@@ -21,26 +21,23 @@ const defaultCookie: Cookie = {
 
 
 export interface DataListProps {
+  init: () => void
+  value: Cookie[]
+  onChange: (value: Cookie[]) => void
   urlInfo: ReturnType<typeof useGetUrlInfo>
 }
 const DataList: React.FC<DataListProps> = props => {
-  const { urlInfo } = props
-  const { domain, subdomain, protocol, hostname } = urlInfo
+  const { urlInfo, value = [], init, onChange: onCookiesChange } = props
+  const { domain, subdomain } = urlInfo
 
-  const [cookies, setCookies, cookiesRef] = useRefState<Cookie[]>([])
-  const [filterDomains, setFilterDomains] = React.useState(() => {
+  const [domainList, setDomainList] = React.useState(() => {
     return getDomainList(domain, subdomain)
   })
   const [highlightId, setHighlightId] = React.useState("")
 
-  const url = `${protocol}//${hostname}`
   const createDefaultDomain = subdomain ? `${subdomain}.${domain}` : domain
   defaultCookie.domain = createDefaultDomain
   const createDataRef = React.useRef<Cookie>(defaultCookie)
-
-  React.useEffect(() => {
-    init()
-  }, [domain, subdomain])
 
   React.useEffect(() => {
     if (!highlightId) return
@@ -50,33 +47,24 @@ const DataList: React.FC<DataListProps> = props => {
   }, [highlightId])
 
   React.useEffect(() => {
-    const indeterminate = cookies.some(item => !item.checked) && cookies.some(item => item.checked)
-    // @ts-ignore
-    document.querySelector("#check-all").indeterminate = indeterminate
-  }, [cookies])
+    const indeterminate = value.some(item => !item.checked) && value.some(item => item.checked)
+    const checkbox: HTMLInputElement = document.querySelector("#check-all")
+    checkbox.indeterminate = indeterminate
+  }, [value])
 
-  const init = async () => {
-    const cookies = await chrome.runtime.sendMessage({
-      action: MessageActionEnum.GET_COOKIES,
-      payload: {
-        domain
-      }
-    })
-
-    const domainCookies: Cookie[] = cookies
-      .sort((a, b) => a.name.localeCompare(b.name))
-
-    domainCookies.push(defaultCookie)
-    setCookies(domainCookies)
-  }
+  const addCreateCookies = React.useMemo(() => {
+    const hasCreate = value.find(item => item.create)
+    if (hasCreate) return value
+    return [...value, defaultCookie]
+  }, [value])
 
   const filteredCookies = React.useMemo(() => {
-    if (!filterDomains.length) {
+    if (!domainList.length) {
       const list = getDomainList(domain, subdomain)
-      return cookies.filter(item => list.includes(item.domain))
+      return addCreateCookies.filter(item => list.includes(item.domain))
     }
-    return cookies.filter(item => filterDomains.includes(item.domain))
-  }, [cookies, filterDomains])
+    return addCreateCookies.filter(item => domainList.includes(item.domain))
+  }, [addCreateCookies, domainList])
 
   const updateCookie = async newCookie => {
     const { hostOnly, session, create, checked, ...rest } = newCookie
@@ -102,7 +90,7 @@ const DataList: React.FC<DataListProps> = props => {
   }
 
   const onCheckAll = e => {
-    setCookies(cookies.map(item => {
+    onCookiesChange(filteredCookies.map(item => {
       return {
         ...item,
         checked: e.target.checked
@@ -111,7 +99,7 @@ const DataList: React.FC<DataListProps> = props => {
   }
 
   const onCheckItem = (e, cookie) => {
-    const nextCookies = cookies.map(item => {
+    const nextCookies = filteredCookies.map(item => {
       if (item === cookie) {
         return {
           ...item,
@@ -120,14 +108,13 @@ const DataList: React.FC<DataListProps> = props => {
       }
       return item
     })
-    setCookies(nextCookies)
+    onCookiesChange(nextCookies)
   }
 
   const deleteAndUpdate = async (cookie, updateFields) => {
     await chrome.runtime.sendMessage({
       action: MessageActionEnum.DELETE_COOKIES,
       payload: {
-        url,
         cookies: [cookie],
       }
     })
@@ -179,7 +166,7 @@ const DataList: React.FC<DataListProps> = props => {
     deleteAndUpdate(cookie, { domain })
   }
 
-  const checked = cookies.every(item => item.checked)
+  const checked = value.every(item => item.checked)
 
   return (
     <table className="table table-sm table-pin-rows table-pin-cols">
@@ -199,9 +186,9 @@ const DataList: React.FC<DataListProps> = props => {
           <td className="text-center">value</td>
           <td className="text-center">
             <HeaderDomain
-              cookies={cookies}
-              filterDomains={filterDomains}
-              setFilterDomains={setFilterDomains}
+              cookies={value}
+              domainList={domainList}
+              setDomainList={setDomainList}
             />
           </td>
           <td className="text-center">expirationDate</td>

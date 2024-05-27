@@ -29,6 +29,9 @@ dependencies:
   plasmo:
     specifier: 0.86.3
     version: 0.86.3(postcss@8.4.38)(react-dom@18.2.0)(react@18.2.0)
+  popular-message:
+    specifier: ^1.2.0
+    version: 1.2.0
   psl:
     specifier: ^1.9.0
     version: 1.9.0
@@ -5263,6 +5266,10 @@ packages:
       - velocityjs
       - walrus
       - whiskers
+    dev: false
+
+  /popular-message@1.2.0:
+    resolution: {integrity: sha512-Jz9AazDCgjSghB47hzhv0cOAc/oFSp1phzzn81V/HMo1/6/E1XtNqL0QOe+JTEUp1u0krhA8LgWq+ZXOzHcS5w==}
     dev: false
 
   /postcss-import@15.1.0(postcss@8.4.38):

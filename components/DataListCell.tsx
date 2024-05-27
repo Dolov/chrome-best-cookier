@@ -77,7 +77,7 @@ export const SameSite = props => {
 }
 
 export const HeaderDomain = props => {
-  const { cookies, filterDomains, setFilterDomains } = props
+  const { cookies, domainList, setDomainList } = props
 
   const domains: string[] = React.useMemo(() => {
     const list: string[] = Array.from(new Set(cookies.map(item => item.domain)))
@@ -86,12 +86,12 @@ export const HeaderDomain = props => {
   }, [cookies])
 
   const onChange = item => {
-    const checked = filterDomains.includes(item)
+    const checked = domainList.includes(item)
     if (checked) {
-      setFilterDomains(filterDomains.filter(type => type !== item))
+      setDomainList(domainList.filter(type => type !== item))
       return
     }
-    setFilterDomains([...filterDomains, item])
+    setDomainList([...domainList, item])
   }
 
   return (
@@ -103,7 +103,7 @@ export const HeaderDomain = props => {
         </button>
         <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 bg-base-100 rounded-box w-56 shadow-2xl max-h-48 overflow-auto flex flex-col flex-nowrap">
           {domains.map(item => {
-            const checked = filterDomains.includes(item)
+            const checked = domainList.includes(item)
             return (
               <li
                 key={item}

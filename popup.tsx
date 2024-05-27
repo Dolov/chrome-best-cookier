@@ -42,7 +42,7 @@ const Popup: React.FC<PopupProps> = props => {
 
 const Main = props => {
   const { urlInfo } = props
-  const { domain, subdomain, protocol, hostname } = urlInfo
+  const { domain, subdomain } = urlInfo
   const [cookies, setCookies] = React.useState<Cookie[]>([])
   
 
@@ -69,7 +69,8 @@ const Main = props => {
       <div className="flex-1 overflow-x-auto">
         <DataList
           init={init}
-          cookies={cookies}
+          value={cookies}
+          onChange={setCookies}
           urlInfo={urlInfo}
         />
       </div>
