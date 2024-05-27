@@ -1,0 +1,51 @@
+{
+  "name": "best-cookier",
+  "displayName": "Best Cookier",
+  "version": "1.0.0",
+  "description": "Easily manage your cookies.",
+  "author": "shisongyan. <songyan_shi@163.com>",
+  "scripts": {
+    "dev": "plasmo dev",
+    "build": "plasmo build",
+    "package": "plasmo package",
+    "test": "plasmo test"
+  },
+  "dependencies": {
+    "@ant-design/icons": "5.3.7",
+    "@plasmohq/storage": "1.10.0",
+    "antd": "5.17.3",
+    "classnames": "^2.5.1",
+    "daisyui": "^4.11.1",
+    "dayjs": "^1.11.11",
+    "js-cookie": "3.0.5",
+    "plasmo": "0.86.3",
+    "psl": "^1.9.0",
+    "rc-tween-one": "^3.0.6",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "4.1.1",
+    "@types/chrome": "0.0.258",
+    "@types/node": "20.11.5",
+    "@types/react": "18.2.48",
+    "@types/react-dom": "18.2.18",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "prettier": "3.2.4",
+    "tailwindcss": "^3.4.3",
+    "typescript": "5.3.3"
+  },
+  "manifest": {
+    "homepage_url": "https://github.com/Dolov/chrome-easy-cookies",
+    "host_permissions": [
+      "http://*/*",
+      "https://*/*"
+    ],
+    "permissions": [
+      "tabs",
+      "storage",
+      "cookies"
+    ]
+  }
+}

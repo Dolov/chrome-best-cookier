@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+#__plasmo {
+  @apply p-4;
+  background-image: repeating-linear-gradient(45deg, var(--fallback-b1, oklch(var(--b1))), var(--fallback-b1, oklch(var(--b1))) 13px, var(--fallback-b2, oklch(var(--b2))) 13px, var(--fallback-b2, oklch(var(--b2))) 14px);
+}
+
+@layer components {
+  .ellipsis {
+    @apply overflow-ellipsis overflow-hidden whitespace-nowrap;
+  }
+  
+  .h-center {
+    @apply flex items-center;
+  }
+
+  .x-center {
+    @apply flex justify-center;
+  }
+
+  .center {
+    @apply flex justify-center items-center;
+  }
+
+  .active {
+    background-color: var(--fallback-n, oklch(var(--n) / var(--tw-bg-opacity)));
+    color: var(--fallback-nc, oklch(var(--nc) / var(--tw-text-opacity)));
+    --tw-bg-opacity: 1;
+    --tw-text-opacity: 1;
+  }
+}
