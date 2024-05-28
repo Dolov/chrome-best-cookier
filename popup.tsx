@@ -1,7 +1,7 @@
 import React from 'react'
 import { useGetUrlInfo } from '~components/hooks'
 import Actions from '~components/Actions'
-import DataList from '~components/DataList'
+import DataList, { type DataListProps } from '~components/DataList'
 import { type Cookie, MessageActionEnum, getDomainList } from '~utils'
 import '~/style.less'
 
@@ -44,12 +44,10 @@ const Main = props => {
   const { urlInfo } = props
   const { domain, subdomain } = urlInfo
   const [cookies, setCookies] = React.useState<Cookie[]>([])
-  const [conditions, setConditions] = React.useState<{
-    name?: string
-    domainList?: string[]
-  }>(() => {
+  const [conditions, setConditions] = React.useState<DataListProps["conditions"]>(() => {
     return {
       name: "",
+      value: "",
       domainList: getDomainList(domain, subdomain),
     }
   })
@@ -74,17 +72,19 @@ const Main = props => {
   }, [])
 
   const filteredCookies = React.useMemo(() => {
-    const { name, domainList } = conditions
+    const { name, value, domainList } = conditions
     if (domainList.length) {
       return cookies.filter(item => {
         if (item.create) return true
         if (name && item.name) return item.name.toLowerCase().includes(name.toLowerCase())
+        if (value && item.value) return item.value.toLowerCase().includes(value.toLowerCase())
         return domainList.includes(item.domain)
       })
     }
     return cookies.filter(item => {
       if (item.create) return true
       if (name && item.name) return item.name.toLowerCase().includes(name.toLowerCase())
+      if (value && item.value) return item.value.toLowerCase().includes(value.toLowerCase())
       return true
     })
   }, [cookies, conditions])

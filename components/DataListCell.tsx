@@ -131,7 +131,7 @@ export const HeaderDomain = props => {
 }
 
 export const InputFilter = props => {
-  const { value, onChange } = props
+  const { value, onChange, placeholder } = props
   const inputRef = React.useRef<HTMLInputElement>()
   const detailsRef = React.useRef<HTMLDetailsElement>()
 
@@ -167,7 +167,7 @@ export const InputFilter = props => {
           onKeyDown={onKeyDown}
           onChange={e => onChange(e.target.value)}
           className="input input-sm input-bordered input-primary w-full"
-          placeholder="Search Name"
+          placeholder={placeholder}
         />
       </div>
     </details>

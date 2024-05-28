@@ -26,14 +26,14 @@ export interface DataListProps {
   onChange: (value: Cookie[]) => void
   allCookies: Cookie[]
   urlInfo: ReturnType<typeof useGetUrlInfo>
-  conditions: { name?: string, domainList?: string[] }
+  conditions: { name?: string, value?: string, domainList?: string[] }
   setConditions: (conditions: DataListProps['conditions']) => void
 }
 const DataList: React.FC<DataListProps> = props => {
   const { urlInfo, value = [], allCookies = [],
     init, onChange: onCookiesChange, conditions, setConditions,
   } = props
-  const { name, domainList } = conditions
+  const { name, value: filterValue, domainList } = conditions
   const { domain, subdomain } = urlInfo
 
   const [highlightId, setHighlightId] = React.useState("")
@@ -178,14 +178,26 @@ const DataList: React.FC<DataListProps> = props => {
               className="checkbox checkbox-primary checkbox-sm"
             />
           </td>
-          <th className="text-center bg-base-300 z-10 center">
-            name
-            <InputFilter
-              value={name}
-              onChange={name => setConditions({ ...conditions, name })}
-            />
+          <th className="text-center bg-base-300 z-10">
+            <div className="center">
+              <span>name</span>
+              <InputFilter
+                value={name}
+                onChange={name => setConditions({ ...conditions, name })}
+                placeholder="Filter by name"
+              />
+            </div>
           </th>
-          <td className="text-center">value</td>
+          <td className="text-center">
+            <div className="center">
+              <span>value</span>
+              <InputFilter
+                value={filterValue}
+                onChange={value => setConditions({ ...conditions, value })}
+                placeholder="Filter by value"
+              />
+            </div>
+          </td>
           <td className="text-center">
             <HeaderDomain
               cookies={allCookies}
