@@ -62,7 +62,9 @@ const Main = props => {
     })
 
     const domainCookies: Cookie[] = cookies
-      .sort((a, b) => a.name.localeCompare(b.name))
+      .sort((a, b) => {
+        return a.name.localeCompare(b.name)
+      })
 
     setCookies(domainCookies)
   }

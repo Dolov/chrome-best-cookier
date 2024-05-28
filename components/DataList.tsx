@@ -45,10 +45,15 @@ const DataList: React.FC<DataListProps> = props => {
   const createDataRef = React.useRef<Cookie>(defaultCookie)
 
   const cookies = React.useMemo(() => {
-    const hasCreate = value.find(item => item.create)
-    if (hasCreate) return value
-    return [...value, defaultCookie]
-  }, [value])
+    const data = value.filter(item => !item.create)
+    // 关注的数据置顶显示
+    data.sort((a, b) => {
+      const akey = `${a.name}-${a.value}-${a.domain}`
+      if (follows.includes(akey)) return -1
+      return 1
+    })
+    return [...data, defaultCookie]
+  }, [value, follows])
 
   React.useEffect(() => {
     if (!highlightId) return
