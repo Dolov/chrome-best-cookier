@@ -28,14 +28,14 @@ export interface DataListProps {
   onChange: (value: Cookie[]) => void
   allCookies: Cookie[]
   urlInfo: ReturnType<typeof useGetUrlInfo>
-  conditions: { name?: string, value?: string, domainList?: string[] }
+  conditions: { name?: string, value?: string, path?: string, domainList?: string[] }
   setConditions: (conditions: DataListProps['conditions']) => void
 }
 const DataList: React.FC<DataListProps> = props => {
   const { urlInfo, value = [], allCookies = [],
     init, onChange: onCookiesChange, conditions, setConditions,
   } = props
-  const { name, value: filterValue, domainList } = conditions
+  const { name, value: filterValue, path, domainList } = conditions
   const { domain, subdomain } = urlInfo
 
   const [follows] = useStorage(StorageKeyEnum.FOLLOW, [])
@@ -223,7 +223,16 @@ const DataList: React.FC<DataListProps> = props => {
             />
           </td>
           <td className="text-center">expirationDate</td>
-          <td className="text-center">path</td>
+          <td className="text-center">
+            <div className="center">
+              <span>path</span>
+              <InputFilter
+                  value={path}
+                  onChange={path => setConditions({ ...conditions, path })}
+                  placeholder="Filter by path"
+                />
+            </div>
+          </td>
           <td className="text-center">httpOnly</td>
           <td className="text-center">hostOnly</td>
           <td className="text-center">secure</td>

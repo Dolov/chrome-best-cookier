@@ -48,6 +48,7 @@ const Main = props => {
     return {
       name: "",
       value: "",
+      path: "",
       domainList: getDomainList(domain, subdomain),
     }
   })
@@ -74,10 +75,11 @@ const Main = props => {
   }, [])
 
   const filteredCookies = React.useMemo(() => {
-    const { name, value, domainList } = conditions
+    const { path, name, value, domainList } = conditions
     if (domainList.length) {
       return cookies.filter(item => {
         if (item.create) return true
+        if (path && item.path) return item.path.toLowerCase().includes(path.toLowerCase())
         if (name && item.name) return item.name.toLowerCase().includes(name.toLowerCase())
         if (value && item.value) return item.value.toLowerCase().includes(value.toLowerCase())
         return domainList.includes(item.domain)
@@ -85,6 +87,7 @@ const Main = props => {
     }
     return cookies.filter(item => {
       if (item.create) return true
+      if (path && item.path) return item.path.toLowerCase().includes(path.toLowerCase())
       if (name && item.name) return item.name.toLowerCase().includes(name.toLowerCase())
       if (value && item.value) return item.value.toLowerCase().includes(value.toLowerCase())
       return true
