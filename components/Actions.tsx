@@ -1,4 +1,5 @@
 import React from 'react'
+import { useStorage } from '@plasmohq/storage/hook'
 import classnames from 'classnames'
 import {
   MaterialSymbolsExportNotes, MaterialSymbolsDelete, MingcuteRefresh2Fill,
@@ -6,7 +7,7 @@ import {
   SiGlyphFullscreen, 
 } from '~components/Icons'
 import Modal from '~components/Modal'
-import { type Cookie, copyTextToClipboard, MessageActionEnum } from '~utils'
+import { type Cookie, copyTextToClipboard, MessageActionEnum, StorageKeyEnum } from '~utils'
 import message from './message'
 
 export interface ActionsProps {
@@ -125,8 +126,12 @@ const Actions: React.FC<ActionsProps> = props => {
 }
 
 export const RowActions = props => {
-  const { data, init, onChange } = props
-  const text = data.follow ? "取消关注" : "关注"
+  const { data, init } = props
+  const [follows, setFollows] = useStorage(StorageKeyEnum.FOLLOW, [])
+  const { name, value, domain } = data
+  const key = `${name}-${value}-${domain}`
+  const follow = follows.includes(key)
+  const text = follow ? "取消关注" : "关注"
 
   const handleDelete = async () => {
     const res = await chrome.runtime.sendMessage({
@@ -140,9 +145,12 @@ export const RowActions = props => {
   }
 
   const handleFollow = () => {
-    onChange({
-      follow: !data.follow
-    }, data)
+    const index = follows.indexOf(key)
+    if (index > -1) {
+      setFollows(follows.filter(item => item !== key))
+      return
+    }
+    setFollows([...follows, key])
   }
 
   return (
@@ -152,7 +160,7 @@ export const RowActions = props => {
       </div>
       <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow-2xl bg-base-100 rounded-box w-36">
         <li onClick={handleFollow}><a>{text}</a></li>
-        <li onClick={handleDelete}><a>删除</a></li>
+        <li onClick={handleDelete} className="text-error font-bold"><a>删除</a></li>
       </ul>
     </div>
   )

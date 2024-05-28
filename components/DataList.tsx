@@ -1,8 +1,9 @@
 import React from 'react'
 import classnames from 'classnames'
-import { useGetUrlInfo } from "~components/hooks"
+import { useStorage } from '@plasmohq/storage/hook'
 import { RowActions } from '~components/Actions'
-import { dayjs, MessageActionEnum, getDate, type Cookie } from '~utils'
+import { useGetUrlInfo } from "~components/hooks"
+import { dayjs, MessageActionEnum, getDate, type Cookie, StorageKeyEnum } from '~utils'
 import { Input, InputFilter, BooleanDisplay, BooleanToggle, HeaderDomain, SameSite } from '~components/DataListCell'
 
 const defaultCookie: Cookie = {
@@ -37,6 +38,7 @@ const DataList: React.FC<DataListProps> = props => {
   const { name, value: filterValue, domainList } = conditions
   const { domain, subdomain } = urlInfo
 
+  const [follows] = useStorage(StorageKeyEnum.FOLLOW, [])
   const [highlightId, setHighlightId] = React.useState("")
 
   defaultCookie.domain = subdomain ? `${subdomain}.${domain}` : domain
@@ -163,19 +165,6 @@ const DataList: React.FC<DataListProps> = props => {
     deleteAndUpdate(cookie, { domain })
   }
 
-  const handleRowDataUpdate = (changedValues, rowData) => {
-    const nextCookies = cookies.map(item => {
-      if (item === rowData) {
-        return {
-          ...item,
-          ...changedValues
-        }
-      }
-      return item
-    })
-    onCookiesChange(nextCookies)
-  }
-
   const checked = cookies.filter(item => !item.create).every(item => item.checked)
 
   return (
@@ -231,8 +220,9 @@ const DataList: React.FC<DataListProps> = props => {
       </thead>
       <tbody>
         {cookies.map((cookie, index) => {
-          const { name, path, expirationDate, follow, httpOnly, hostOnly, secure, sameSite, session, value, domain, create, checked } = cookie
+          const { name, path, expirationDate, httpOnly, hostOnly, secure, sameSite, session, value, domain, create, checked } = cookie
           const id = `${name}-${value}-${domain}`
+          const follow = follows.includes(id)
           const highlight = id === highlightId
           return (
             <tr key={`${id}-${index}`} className={classnames("group hover:bg-base-200", {
@@ -252,7 +242,7 @@ const DataList: React.FC<DataListProps> = props => {
               <th className={classnames('group-hover:bg-base-200', {
                 '!bg-secondary': highlight
               })}>
-                <div className="relative pl-7">
+                <div className="relative pl-6">
                   {follow && <span className="ribbon !absolute -left-1" />}
                   <Input
                     value={name}
@@ -306,7 +296,6 @@ const DataList: React.FC<DataListProps> = props => {
                 {!create && (<RowActions
                   init={init}
                   data={cookie}
-                  onChange={handleRowDataUpdate}
                 />)}
               </td>
             </tr>

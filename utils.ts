@@ -10,13 +10,16 @@ export {
 export type Cookie = {
   create?: boolean,
   checked?: boolean,
-  follow?: boolean
 } & chrome.cookies.Cookie
 
 export enum MessageActionEnum {
   GET_COOKIES = "GET_COOKIES",
   UPDATE_COOKIE = "UPDATE_COOKIE",
   DELETE_COOKIES = "DELETE_COOKIES",
+}
+
+export enum StorageKeyEnum {
+  FOLLOW = "FOLLOW",
 }
 
 const getLanguage = () => {
