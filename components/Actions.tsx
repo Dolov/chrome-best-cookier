@@ -2,8 +2,8 @@ import React from 'react'
 import classnames from 'classnames'
 import {
   MaterialSymbolsExportNotes, MaterialSymbolsDelete, MingcuteRefresh2Fill,
-  MaterialSymbolsSettings, StreamlineEmojisBug,
-  SiGlyphFullscreen,
+  MaterialSymbolsSettings, StreamlineEmojisBug, IonEllipsisVertical,
+  SiGlyphFullscreen, 
 } from '~components/Icons'
 import Modal from '~components/Modal'
 import { type Cookie, copyTextToClipboard, MessageActionEnum } from '~utils'
@@ -120,6 +120,40 @@ const Actions: React.FC<ActionsProps> = props => {
           </button>
         </div>
       </div>
+    </div>
+  )
+}
+
+export const RowActions = props => {
+  const { data, init, onChange } = props
+  const text = data.follow ? "取消关注" : "关注"
+
+  const handleDelete = async () => {
+    const res = await chrome.runtime.sendMessage({
+      action: MessageActionEnum.DELETE_COOKIES,
+      payload: {
+        cookies: [data]
+      }
+    })
+    init()
+    message.success("删除成功。")
+  }
+
+  const handleFollow = () => {
+    onChange({
+      follow: !data.follow
+    }, data)
+  }
+
+  return (
+    <div className="dropdown dropdown-bottom dropdown-end">
+      <div tabIndex={0} role="button" className="btn btn-sm btn-circle">
+        <IonEllipsisVertical className="text-lg" />
+      </div>
+      <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow-2xl bg-base-100 rounded-box w-36">
+        <li onClick={handleFollow}><a>{text}</a></li>
+        <li onClick={handleDelete}><a>删除</a></li>
+      </ul>
     </div>
   )
 }

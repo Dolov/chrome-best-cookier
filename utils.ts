@@ -7,7 +7,11 @@ export {
   dayjs
 }
 
-export type Cookie = { create?: boolean, checked?: boolean } & chrome.cookies.Cookie
+export type Cookie = {
+  create?: boolean,
+  checked?: boolean,
+  follow?: boolean
+} & chrome.cookies.Cookie
 
 export enum MessageActionEnum {
   GET_COOKIES = "GET_COOKIES",

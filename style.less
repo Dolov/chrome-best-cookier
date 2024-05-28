@@ -8,6 +8,46 @@
   background-image: repeating-linear-gradient(45deg, var(--fallback-b1, oklch(var(--b1))), var(--fallback-b1, oklch(var(--b1))) 13px, var(--fallback-b2, oklch(var(--b2))) 13px, var(--fallback-b2, oklch(var(--b2))) 14px);
 }
 
+
+/* HTML: <div class="ribbon">Your text content</div> */
+.ribbon {
+  font-size: 8px;
+  font-weight: bold;
+  color: #fff;
+}
+.ribbon {
+  --c: #8FBE00;
+  
+  padding: .6em 1.3em; /* you may need to adjust this based on your content */
+  aspect-ratio: 1;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  position: relative;
+  z-index: 0;
+  width: fit-content;
+  box-sizing: border-box;
+}
+.ribbon:before {
+  content:"";
+  position: absolute;
+  z-index: -1;
+  inset: 50% 0 auto;
+  aspect-ratio: 1;
+  background: color-mix(in srgb, var(--c), #000 35%);
+  clip-path: polygon(calc(100%/3) 0,calc(200%/3) 0,100% 90%,calc(200%/3) 100%,calc(100%/3) 0,calc(200%/3) 0,calc(100%/3) 100%,0 90%);
+}
+.ribbon:after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: radial-gradient(35% 35%,#0000 96%,#0003 97% 99%,#0000) var(--c);
+  clip-path: polygon(100.00% 50.00%,89.66% 55.22%,98.30% 62.94%,86.96% 65.31%,93.30% 75.00%,81.73% 74.35%,85.36% 85.36%,74.35% 81.73%,75.00% 93.30%,65.31% 86.96%,62.94% 98.30%,55.22% 89.66%,50.00% 100.00%,44.78% 89.66%,37.06% 98.30%,34.69% 86.96%,25.00% 93.30%,25.65% 81.73%,14.64% 85.36%,18.27% 74.35%,6.70% 75.00%,13.04% 65.31%,1.70% 62.94%,10.34% 55.22%,0.00% 50.00%,10.34% 44.78%,1.70% 37.06%,13.04% 34.69%,6.70% 25.00%,18.27% 25.65%,14.64% 14.64%,25.65% 18.27%,25.00% 6.70%,34.69% 13.04%,37.06% 1.70%,44.78% 10.34%,50.00% 0.00%,55.22% 10.34%,62.94% 1.70%,65.31% 13.04%,75.00% 6.70%,74.35% 18.27%,85.36% 14.64%,81.73% 25.65%,93.30% 25.00%,86.96% 34.69%,98.30% 37.06%,89.66% 44.78%); /* from https://css-generators.com/starburst-shape/ */
+}
+
+
+
 @layer components {
   .ellipsis {
     @apply overflow-ellipsis overflow-hidden whitespace-nowrap;
@@ -35,4 +75,5 @@
   .no-scrollbar::-webkit-scrollbar {
     @apply hidden;
   }
+  
 }

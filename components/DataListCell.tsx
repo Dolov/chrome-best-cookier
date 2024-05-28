@@ -18,7 +18,7 @@ export const BooleanDisplay = props => {
 }
 
 export const Input = props => {
-  const { value, create, onChange, placeholder } = props
+  const { value, create, onChange, placeholder, className } = props
   const [innerValue, setInnerValue] = React.useState(value)
 
   const onValueChange = e => {
@@ -42,7 +42,7 @@ export const Input = props => {
       onChange={e => setInnerValue(e.target.value)}
       onKeyDown={onKeyDown}
       placeholder={placeholder}
-      className={classnames("w-[180px] input-primary input-sm input-bordered", {
+      className={classnames("w-[180px] input-primary input-sm input-bordered", className, {
         "input": create
       })}
     />

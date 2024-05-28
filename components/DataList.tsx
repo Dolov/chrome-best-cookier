@@ -1,6 +1,7 @@
 import React from 'react'
 import classnames from 'classnames'
 import { useGetUrlInfo } from "~components/hooks"
+import { RowActions } from '~components/Actions'
 import { dayjs, MessageActionEnum, getDate, type Cookie } from '~utils'
 import { Input, InputFilter, BooleanDisplay, BooleanToggle, HeaderDomain, SameSite } from '~components/DataListCell'
 
@@ -162,6 +163,19 @@ const DataList: React.FC<DataListProps> = props => {
     deleteAndUpdate(cookie, { domain })
   }
 
+  const handleRowDataUpdate = (changedValues, rowData) => {
+    const nextCookies = cookies.map(item => {
+      if (item === rowData) {
+        return {
+          ...item,
+          ...changedValues
+        }
+      }
+      return item
+    })
+    onCookiesChange(nextCookies)
+  }
+
   const checked = cookies.filter(item => !item.create).every(item => item.checked)
 
   return (
@@ -212,12 +226,12 @@ const DataList: React.FC<DataListProps> = props => {
           <td className="text-center">secure</td>
           <td className="text-center">sameSite</td>
           <td className="text-center">session</td>
-          {/* <td className="text-center">storeId</td> */}
+          <td className="text-center">actions</td>
         </tr>
       </thead>
       <tbody>
         {cookies.map((cookie, index) => {
-          const { name, path, expirationDate, storeId, httpOnly, hostOnly, secure, sameSite, session, value, domain, create, checked } = cookie
+          const { name, path, expirationDate, follow, httpOnly, hostOnly, secure, sameSite, session, value, domain, create, checked } = cookie
           const id = `${name}-${value}-${domain}`
           const highlight = id === highlightId
           return (
@@ -238,24 +252,49 @@ const DataList: React.FC<DataListProps> = props => {
               <th className={classnames('group-hover:bg-base-200', {
                 '!bg-secondary': highlight
               })}>
-                <Input placeholder="Add New Cookie" create={create} value={name} onChange={value => onNameChange(value, cookie)} />
+                <div className="relative pl-7">
+                  {follow && <span className="ribbon !absolute -left-1" />}
+                  <Input
+                    value={name}
+                    create={create}
+                    onChange={value => onNameChange(value, cookie)}
+                    placeholder="Add New Cookie"
+                  />
+                </div>
               </th>
               <td>
-                <Input placeholder="Input Value" create={create} value={value} onChange={value => onValueChange(value, cookie)} />
+                <Input
+                  value={value}
+                  create={create}
+                  onChange={value => onValueChange(value, cookie)}
+                  placeholder="Input Value"
+                />
               </td>
               <td>
-                <Input create={create} value={domain} onChange={value => onDomainChange(value, cookie)} />
+                <Input
+                  value={domain}
+                  create={create}
+                  onChange={value => onDomainChange(value, cookie)}
+                />
               </td>
               <td className="ellipsis w-[150px]">{getDate(expirationDate)}</td>
               <td>{path}</td>
               <td>
-                <BooleanToggle className="toggle-secondary" value={httpOnly} onChange={httpOnly => onChange({ httpOnly }, cookie)} />
+                <BooleanToggle
+                  value={httpOnly}
+                  className="toggle-secondary"
+                  onChange={httpOnly => onChange({ httpOnly }, cookie)}
+                />
               </td>
               <td>
                 <BooleanDisplay className="badge-primary" value={hostOnly} />
               </td>
               <td>
-                <BooleanToggle className="toggle-accent" value={secure} onChange={secure => onChange({ secure }, cookie)} />
+                <BooleanToggle
+                  value={secure}
+                  className="toggle-accent"
+                  onChange={secure => onChange({ secure }, cookie)}
+                />
               </td>
               <td>
                 <SameSite value={sameSite} onChange={sameSite => onChange({ sameSite }, cookie)} />
@@ -263,7 +302,13 @@ const DataList: React.FC<DataListProps> = props => {
               <td>
                 <BooleanDisplay className="badge-primary" value={session} />
               </td>
-              {/* <td>{storeId}</td> */}
+              <td>
+                {!create && (<RowActions
+                  init={init}
+                  data={cookie}
+                  onChange={handleRowDataUpdate}
+                />)}
+              </td>
             </tr>
           )
         })}
