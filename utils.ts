@@ -106,13 +106,13 @@ export const getDomainList = (domain, subdomain) => {
   return list
 }
 
-export const getUrlFromCookieDomain = (cookie: chrome.cookies.Cookie) => {
-  const { domain } = cookie
+export const getUrlFromCookie = (cookie: chrome.cookies.Cookie) => {
+  const { domain, path = "/" } = cookie
   if (!domain) return ""
   if (domain.startsWith(".")) {
-    return `https://${domain.slice(1)}`
+    return `https://${domain.slice(1)}${path}`
   }
-  return `https://${domain}`
+  return `https://${domain}${path}`
 }
 
 

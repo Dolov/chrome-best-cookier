@@ -1,7 +1,7 @@
-import { MessageActionEnum, getUrlFromCookieDomain } from '~utils'
+import { MessageActionEnum, getUrlFromCookie } from '~utils'
 
 const setCookie = (cookie: chrome.cookies.Cookie) => {
-  const url = getUrlFromCookieDomain(cookie)
+  const url = getUrlFromCookie(cookie)
   const { hostOnly, session, ...restCookie } = cookie
   return chrome.cookies.set({
     url,
@@ -34,7 +34,7 @@ chrome.runtime.onMessage.addListener((params, sender, sendResponse) => {
     const { payload } = params;
     const { cookies } = payload;
     const deletePromises = cookies.map(cookie => {
-      const url = getUrlFromCookieDomain(cookie)
+      const url = getUrlFromCookie(cookie)
       return chrome.cookies.remove({
         url,
         name: cookie.name,

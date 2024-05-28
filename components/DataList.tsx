@@ -170,6 +170,15 @@ const DataList: React.FC<DataListProps> = props => {
     deleteAndUpdate(cookie, { domain })
   }
 
+  const onPathChange = async (path, cookie) => {
+    if (!path) return
+    if (cookie.create) {
+      onCreateItemChange({ path }, cookie)
+      return
+    }
+    deleteAndUpdate(cookie, { path })
+  }
+
   const checked = cookies.filter(item => !item.create).every(item => item.checked)
 
   return (
@@ -273,7 +282,14 @@ const DataList: React.FC<DataListProps> = props => {
                 />
               </td>
               <td className="ellipsis w-[150px]">{getDate(expirationDate)}</td>
-              <td>{path}</td>
+              <td>
+                <Input
+                  className="w-[100px]"
+                  value={path}
+                  create={create}
+                  onChange={path => onPathChange(path, cookie)}
+                />
+              </td>
               <td>
                 <BooleanToggle
                   value={httpOnly}

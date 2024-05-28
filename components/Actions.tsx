@@ -55,6 +55,7 @@ const Actions: React.FC<ActionsProps> = props => {
         cookies: filteredCookies
       }
     })
+    console.log('res: ', res);
     init()
     message.success("删除成功。")
   }
