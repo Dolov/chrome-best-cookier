@@ -1,8 +1,8 @@
 import React from 'react'
-import { useGetUrlInfo, useRefState } from '~components/hooks'
+import { useGetUrlInfo } from '~components/hooks'
 import Actions from '~components/Actions'
 import DataList from '~components/DataList'
-import { type Cookie, MessageActionEnum } from '~utils'
+import { type Cookie, MessageActionEnum, getDomainList } from '~utils'
 import '~/style.less'
 
 export interface PopupProps {
@@ -44,7 +44,16 @@ const Main = props => {
   const { urlInfo } = props
   const { domain, subdomain } = urlInfo
   const [cookies, setCookies] = React.useState<Cookie[]>([])
-  
+  const [conditions, setConditions] = React.useState<{
+    name?: string
+    domainList?: string[]
+  }>(() => {
+    return {
+      name: "",
+      domainList: getDomainList(domain, subdomain),
+    }
+  })
+
 
   const init = async () => {
     const cookies = await chrome.runtime.sendMessage({
@@ -62,21 +71,40 @@ const Main = props => {
 
   React.useEffect(() => {
     init()
-  }, [domain, subdomain])
+  }, [])
+
+  const filteredCookies = React.useMemo(() => {
+    const { name, domainList } = conditions
+    if (domainList.length) {
+      return cookies.filter(item => {
+        if (item.create) return true
+        if (name && item.name) return item.name.toLowerCase().includes(name.toLowerCase())
+        return domainList.includes(item.domain)
+      })
+    }
+    return cookies.filter(item => {
+      if (item.create) return true
+      if (name && item.name) return item.name.toLowerCase().includes(name.toLowerCase())
+      return true
+    })
+  }, [cookies, conditions])
 
   return (
     <div className="flex flex-col w-[700px] max-h-[568px] min-h-[256px]">
       <div className="flex-1 overflow-x-auto">
         <DataList
           init={init}
-          value={cookies}
+          allCookies={cookies}
+          value={filteredCookies}
           onChange={setCookies}
           urlInfo={urlInfo}
+          conditions={conditions}
+          setConditions={setConditions}
         />
       </div>
       <Actions
         init={init}
-        cookies={cookies}
+        cookies={filteredCookies}
       />
     </div>
   )

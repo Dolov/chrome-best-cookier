@@ -94,14 +94,19 @@ export const HeaderDomain = props => {
     setDomainList([...domainList, item])
   }
 
+  const len = domains.length
+  const hasData = len > 0
+
   return (
     <div className="center">
       <span>domain</span>
       <div className="dropdown dropdown-bottom dropdown-end dropdown-hover">
-        <button className="btn btn-sm btn-circle ml-1">
-          <MaterialSymbolsFilterAlt className="text-lg text-primary" />
+        <button className="btn btn-sm btn-circle ml-2">
+          <MaterialSymbolsFilterAlt className={classnames("text-lg", {
+            "text-primary": !!domainList.length
+          })} />
         </button>
-        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 bg-base-100 rounded-box w-56 shadow-2xl max-h-48 overflow-auto flex flex-col flex-nowrap">
+        {hasData && (<ul tabIndex={0} className="dropdown-content z-[1] menu p-2 bg-base-100 rounded-box w-56 shadow-2xl max-h-48 overflow-auto flex flex-col flex-nowrap">
           {domains.map(item => {
             const checked = domainList.includes(item)
             return (
@@ -119,8 +124,52 @@ export const HeaderDomain = props => {
               </li>
             )
           })}
-        </ul>
+        </ul>)}
       </div>
     </div>
+  )
+}
+
+export const InputFilter = props => {
+  const { value, onChange } = props
+  const inputRef = React.useRef<HTMLInputElement>()
+  const detailsRef = React.useRef<HTMLDetailsElement>()
+
+  const close = () => {
+    if (!detailsRef.current) return
+    detailsRef.current.open = false
+  }
+
+  const handleOpen: React.MouseEventHandler<HTMLElement> = e => {
+    e.preventDefault()
+    detailsRef.current.open = true
+    inputRef.current.focus()
+  }
+
+  const onKeyDown = e => {
+    if (e.key !== 'Enter') return
+    close()
+  }
+
+  return (
+    <details ref={detailsRef} className="dropdown">
+      <summary className="m-1 btn btn-sm btn-circle" onClick={handleOpen}>
+        <MaterialSymbolsFilterAlt className={classnames("text-lg", {
+          "text-primary": !!value
+        })} />
+      </summary>
+      <div tabIndex={0} className="dropdown-content z-[1] menu p-2 bg-base-100 rounded-box w-56 shadow-2xl max-h-48 overflow-auto flex flex-col flex-nowrap">
+        <input
+          ref={inputRef}
+          type="text"
+          value={value}
+          onBlur={close}
+          onKeyDown={onKeyDown}
+          onChange={e => onChange(e.target.value)}
+          className="input input-sm input-bordered input-primary w-full"
+          placeholder="Search Name"
+        />
+      </div>
+    </details>
   )
 }

@@ -1,8 +1,8 @@
 import React from 'react'
 import classnames from 'classnames'
-import { useRefState, useGetUrlInfo } from "~components/hooks"
-import { dayjs, getDomainList, MessageActionEnum, getDate, type Cookie } from '~utils'
-import { Input, BooleanDisplay, BooleanToggle, HeaderDomain, SameSite } from '~components/DataListCell'
+import { useGetUrlInfo } from "~components/hooks"
+import { dayjs, MessageActionEnum, getDate, type Cookie } from '~utils'
+import { Input, InputFilter, BooleanDisplay, BooleanToggle, HeaderDomain, SameSite } from '~components/DataListCell'
 
 const defaultCookie: Cookie = {
   name: '',
@@ -24,20 +24,28 @@ export interface DataListProps {
   init: () => void
   value: Cookie[]
   onChange: (value: Cookie[]) => void
+  allCookies: Cookie[]
   urlInfo: ReturnType<typeof useGetUrlInfo>
+  conditions: { name?: string, domainList?: string[] }
+  setConditions: (conditions: DataListProps['conditions']) => void
 }
 const DataList: React.FC<DataListProps> = props => {
-  const { urlInfo, value = [], init, onChange: onCookiesChange } = props
+  const { urlInfo, value = [], allCookies = [],
+    init, onChange: onCookiesChange, conditions, setConditions,
+  } = props
+  const { name, domainList } = conditions
   const { domain, subdomain } = urlInfo
 
-  const [domainList, setDomainList] = React.useState(() => {
-    return getDomainList(domain, subdomain)
-  })
   const [highlightId, setHighlightId] = React.useState("")
 
-  const createDefaultDomain = subdomain ? `${subdomain}.${domain}` : domain
-  defaultCookie.domain = createDefaultDomain
+  defaultCookie.domain = subdomain ? `${subdomain}.${domain}` : domain
   const createDataRef = React.useRef<Cookie>(defaultCookie)
+
+  const cookies = React.useMemo(() => {
+    const hasCreate = value.find(item => item.create)
+    if (hasCreate) return value
+    return [...value, defaultCookie]
+  }, [value])
 
   React.useEffect(() => {
     if (!highlightId) return
@@ -47,24 +55,11 @@ const DataList: React.FC<DataListProps> = props => {
   }, [highlightId])
 
   React.useEffect(() => {
-    const indeterminate = value.some(item => !item.checked) && value.some(item => item.checked)
+    const data = cookies.filter(item => !item.create)
+    const indeterminate = data.some(item => !item.checked) && data.some(item => item.checked)
     const checkbox: HTMLInputElement = document.querySelector("#check-all")
     checkbox.indeterminate = indeterminate
-  }, [value])
-
-  const addCreateCookies = React.useMemo(() => {
-    const hasCreate = value.find(item => item.create)
-    if (hasCreate) return value
-    return [...value, defaultCookie]
-  }, [value])
-
-  const filteredCookies = React.useMemo(() => {
-    if (!domainList.length) {
-      const list = getDomainList(domain, subdomain)
-      return addCreateCookies.filter(item => list.includes(item.domain))
-    }
-    return addCreateCookies.filter(item => domainList.includes(item.domain))
-  }, [addCreateCookies, domainList])
+  }, [cookies])
 
   const updateCookie = async newCookie => {
     const { hostOnly, session, create, checked, ...rest } = newCookie
@@ -90,7 +85,8 @@ const DataList: React.FC<DataListProps> = props => {
   }
 
   const onCheckAll = e => {
-    onCookiesChange(filteredCookies.map(item => {
+    onCookiesChange(cookies.map(item => {
+      if (item.create) return item
       return {
         ...item,
         checked: e.target.checked
@@ -99,7 +95,7 @@ const DataList: React.FC<DataListProps> = props => {
   }
 
   const onCheckItem = (e, cookie) => {
-    const nextCookies = filteredCookies.map(item => {
+    const nextCookies = cookies.map(item => {
       if (item === cookie) {
         return {
           ...item,
@@ -166,7 +162,7 @@ const DataList: React.FC<DataListProps> = props => {
     deleteAndUpdate(cookie, { domain })
   }
 
-  const checked = value.every(item => item.checked)
+  const checked = cookies.filter(item => !item.create).every(item => item.checked)
 
   return (
     <table className="table table-sm table-pin-rows table-pin-cols">
@@ -182,13 +178,19 @@ const DataList: React.FC<DataListProps> = props => {
               className="checkbox checkbox-primary checkbox-sm"
             />
           </td>
-          <th className="text-center bg-base-300">name</th>
+          <th className="text-center bg-base-300 z-10 center">
+            name
+            <InputFilter
+              value={name}
+              onChange={name => setConditions({ ...conditions, name })}
+            />
+          </th>
           <td className="text-center">value</td>
           <td className="text-center">
             <HeaderDomain
-              cookies={value}
+              cookies={allCookies}
               domainList={domainList}
-              setDomainList={setDomainList}
+              setDomainList={domainList => setConditions({ ...conditions, domainList })}
             />
           </td>
           <td className="text-center">expirationDate</td>
@@ -202,7 +204,7 @@ const DataList: React.FC<DataListProps> = props => {
         </tr>
       </thead>
       <tbody>
-        {filteredCookies.map((cookie, index) => {
+        {cookies.map((cookie, index) => {
           const { name, path, expirationDate, storeId, httpOnly, hostOnly, secure, sameSite, session, value, domain, create, checked } = cookie
           const id = `${name}-${value}-${domain}`
           const highlight = id === highlightId
@@ -227,7 +229,7 @@ const DataList: React.FC<DataListProps> = props => {
                 <Input placeholder="Add New Cookie" create={create} value={name} onChange={value => onNameChange(value, cookie)} />
               </th>
               <td>
-                <Input create={create} value={value} onChange={value => onValueChange(value, cookie)} />
+                <Input placeholder="Input Value" create={create} value={value} onChange={value => onValueChange(value, cookie)} />
               </td>
               <td>
                 <Input create={create} value={domain} onChange={value => onDomainChange(value, cookie)} />
