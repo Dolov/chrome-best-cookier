@@ -14,6 +14,7 @@ export type Cookie = {
 
 export enum MessageActionEnum {
   GET_COOKIES = "GET_COOKIES",
+  SET_COOKIES = "SET_COOKIES",
   UPDATE_COOKIE = "UPDATE_COOKIE",
   DELETE_COOKIES = "DELETE_COOKIES",
 }

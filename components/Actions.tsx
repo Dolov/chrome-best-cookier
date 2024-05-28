@@ -18,6 +18,7 @@ export interface ActionsProps {
 const Actions: React.FC<ActionsProps> = props => {
   const { cookies, init } = props
   const [visible, setVisible] = React.useState(false)
+  const [importData, setImportData] = React.useState("")
 
   const filteredCookies = React.useMemo(() => {
     const checkeds = cookies.filter(item => item.checked)
@@ -26,12 +27,25 @@ const Actions: React.FC<ActionsProps> = props => {
   }, [cookies])
 
   const handleExport = () => {
-    copyTextToClipboard(JSON.stringify(filteredCookies, null, 2))
+    const data = filteredCookies.map(item => {
+      const { checked, create, ...rest } = item
+      return rest
+    })
+    copyTextToClipboard(JSON.stringify(data, null, 2))
     message.success("复制成功。")
   }
 
-  const handleImport = () => {
-    setVisible(true)
+  const handleImport = async () => {
+    const res = await chrome.runtime.sendMessage({
+      action: MessageActionEnum.SET_COOKIES,
+      payload: {
+        cookies: JSON.parse(importData)
+      }
+    })
+    init()
+    setVisible(false)
+    setImportData("")
+    message.success("导入成功。")
   }
 
   const handleDelete = async () => {
@@ -72,10 +86,16 @@ const Actions: React.FC<ActionsProps> = props => {
       <Modal
         title="导入"
         visible={visible}
+        onOk={handleImport}
         onClose={() => setVisible(false)}
       >
         <div className="center">
-          <textarea className="textarea textarea-primary w-[98%] m-auto" placeholder="粘贴"></textarea>
+          <textarea
+            value={importData}
+            onChange={e => setImportData(e.target.value)}
+            className="textarea textarea-primary w-[98%] m-auto"
+            placeholder="粘贴"
+          />
         </div>
       </Modal>
       <div className='flex items-center'>
@@ -85,7 +105,7 @@ const Actions: React.FC<ActionsProps> = props => {
           </button>
         </div>
         <div className="tooltip" data-tip="导入">
-          <button onClick={handleImport} className="btn btn-sm btn-circle mx-2 group">
+          <button onClick={() => setVisible(true)} className="btn btn-sm btn-circle mx-2 group">
             <MaterialSymbolsExportNotes className="text-xl rotate-180 group-hover:text-primary" />
           </button>
         </div>
