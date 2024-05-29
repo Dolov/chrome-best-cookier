@@ -21,6 +21,7 @@ export enum MessageActionEnum {
 
 export enum StorageKeyEnum {
   FOLLOW = "FOLLOW",
+  SETTINGS = "SETTINGS"
 }
 
 const getLanguage = () => {

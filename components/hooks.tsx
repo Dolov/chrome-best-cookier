@@ -1,6 +1,7 @@
 import React from "react"
 import psl from 'psl'
-
+import { useStorage } from '@plasmohq/storage/hook'
+import { StorageKeyEnum } from '~utils'
 
 export const useBoolean = (defaultValue = false) => {
   const [value, setValue] = React.useState(defaultValue)
@@ -194,4 +195,27 @@ export const useGetUrlInfo = (url?: string) => {
   }, [])
   
   return urlInfo
+}
+
+export const useThemeChange = () => {
+  const [settings, setSettings] = useStorage<{
+    theme?: string
+  }>(StorageKeyEnum.SETTINGS, {})
+
+  const { theme } = settings
+
+  const setTheme = (theme: string) => {
+    setSettings({
+      ...settings,
+      theme,
+    })
+  }
+
+  React.useEffect(() => {
+    if (!theme) return
+    const html = document.querySelector("html")
+    html.setAttribute("data-theme", theme)
+  }, [theme])
+
+  return [theme, setTheme]
 }

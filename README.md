@@ -1,5 +1,6 @@
-# easy-cookies
+# Best Cookier
 
-https://chrome.google.com/webstore/detail/easy-cookies/gaponncihgmdkgepddfjajfajhjpddkp?hl=zh-CN&authuser=0
 
-![img](screentshots/WX20230717-144810@2x.png)
+### 功能
+- 32 款精致主题色，你想要的样子我都有
+- 
