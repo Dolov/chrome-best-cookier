@@ -4,7 +4,7 @@ import { useStorage } from '@plasmohq/storage/hook'
 import { RowActions } from '~components/Actions'
 import { useGetUrlInfo } from "~components/hooks"
 import { dayjs, MessageActionEnum, getDate, type Cookie, StorageKeyEnum } from '~utils'
-import { Input, InputFilter, BooleanDisplay, BooleanToggle, HeaderDomain, SameSite } from '~components/DataListCell'
+import { Input, InputFilter, BooleanDisplay, BooleanToggle, HeaderDomain, SameSite, DatePicker } from '~components/DataListCell'
 
 const defaultCookie: Cookie = {
   name: '',
@@ -81,6 +81,9 @@ const DataList: React.FC<DataListProps> = props => {
   }
 
   const onChange = async (changedValues, cookie) => {
+    if (changedValues.expirationDate) {
+      changedValues.expirationDate = dayjs(changedValues.expirationDate).valueOf() / 1000
+    }
     if (cookie.create) {
       onCreateItemChange(changedValues, cookie)
       return
@@ -222,15 +225,17 @@ const DataList: React.FC<DataListProps> = props => {
               setDomainList={domainList => setConditions({ ...conditions, domainList })}
             />
           </td>
-          <td className="text-center">expirationDate</td>
+          <td className="text-center">
+            expirationDate
+          </td>
           <td className="text-center">
             <div className="center">
               <span>path</span>
               <InputFilter
-                  value={path}
-                  onChange={path => setConditions({ ...conditions, path })}
-                  placeholder="Filter by path"
-                />
+                value={path}
+                onChange={path => setConditions({ ...conditions, path })}
+                placeholder="Filter by path"
+              />
             </div>
           </td>
           <td className="text-center">httpOnly</td>
@@ -290,7 +295,12 @@ const DataList: React.FC<DataListProps> = props => {
                   onChange={value => onDomainChange(value, cookie)}
                 />
               </td>
-              <td className="ellipsis w-[150px]">{getDate(expirationDate)}</td>
+              <td className="ellipsis w-[150px]">
+                <DatePicker
+                  value={getDate(expirationDate)}
+                  onChange={expirationDate => onChange({ expirationDate }, cookie)}
+                />
+              </td>
               <td>
                 <Input
                   className="w-[100px]"

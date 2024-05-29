@@ -173,3 +173,29 @@ export const InputFilter = props => {
     </details>
   )
 }
+
+export const DatePicker = props => {
+  const { value, onChange } = props
+  const [innerValue, setInnerValue] = React.useState(value)
+  const inputRef = React.useRef<HTMLInputElement>()
+
+  const onKeyDown = e => {
+    if (e.key !== 'Enter') return
+    onChange(innerValue)
+    if (inputRef.current) {
+      inputRef.current.blur()
+    }
+  }
+
+  return (
+    <input
+      ref={inputRef}
+      type="datetime-local"
+      value={innerValue}
+      onBlur={() => onChange(innerValue)}
+      onKeyDown={onKeyDown}
+      onChange={e => setInnerValue(e.target.value)}
+      className="input-sm input-primary input-bordered"
+    />
+  )
+}
