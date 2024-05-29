@@ -77,7 +77,7 @@ export const SameSite = props => {
 }
 
 export const HeaderDomain = props => {
-  const { cookies, domainList, setDomainList } = props
+  const { cookies, domainList: filterDomainList, setDomainList } = props
   const detailsRef = React.useRef<HTMLDetailsElement>()
 
   const domains: string[] = React.useMemo(() => {
@@ -95,12 +95,12 @@ export const HeaderDomain = props => {
   }, [])
 
   const onChange = item => {
-    const checked = domainList.includes(item)
+    const checked = filterDomainList.includes(item)
     if (checked) {
-      setDomainList(domainList.filter(type => type !== item))
+      setDomainList(filterDomainList.filter(type => type !== item))
       return
     }
-    setDomainList([...domainList, item])
+    setDomainList([...filterDomainList, item])
   }
 
   const handleOpenChange: React.MouseEventHandler<HTMLElement> = e => {
@@ -109,8 +109,8 @@ export const HeaderDomain = props => {
     detailsRef.current.open = open
   }
 
-  const len = domains.length
-  const hasData = len > 0
+  const hasData = domains.length > 0
+  const checked = domains.some(item => filterDomainList.includes(item))
 
   return (
     <details ref={detailsRef} className="dropdown dropdown-bottom dropdown-end">
@@ -119,12 +119,12 @@ export const HeaderDomain = props => {
         onClick={handleOpenChange}
       >
         <MaterialSymbolsFilterAlt className={classnames("text-lg", {
-          "text-primary": hasData
+          "text-primary": checked
         })} />
       </summary>
       {hasData && (<ul tabIndex={0} className="dropdown-content z-[1] menu p-2 bg-base-100 rounded-box w-56 shadow-2xl max-h-48 overflow-auto flex flex-col flex-nowrap">
         {domains.map(item => {
-          const checked = domainList.includes(item)
+          const checked = filterDomainList.includes(item)
           return (
             <li
               key={item}

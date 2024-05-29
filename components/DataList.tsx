@@ -219,11 +219,14 @@ const DataList: React.FC<DataListProps> = props => {
             </div>
           </td>
           <td className="text-center">
-            <HeaderDomain
-              cookies={allCookies}
-              domainList={domainList}
-              setDomainList={domainList => setConditions({ ...conditions, domainList })}
-            />
+            <div className="center">
+              <span>domain</span>
+              <HeaderDomain
+                cookies={allCookies}
+                domainList={domainList}
+                setDomainList={domainList => setConditions({ ...conditions, domainList })}
+              />
+            </div>
           </td>
           <td className="text-center">
             expirationDate
