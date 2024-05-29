@@ -2,7 +2,7 @@ import React from 'react'
 import classnames from 'classnames'
 import { useStorage } from '@plasmohq/storage/hook'
 import { RowActions } from '~components/Actions'
-import { useGetUrlInfo } from "~components/hooks"
+import { useGetUrlInfo, useRibbon } from "~components/hooks"
 import { dayjs, MessageActionEnum, getDate, type Cookie, StorageKeyEnum } from '~utils'
 import { Input, InputFilter, BooleanDisplay, BooleanToggle, HeaderDomain, SameSite, DatePicker } from '~components/DataListCell'
 
@@ -35,9 +35,11 @@ const DataList: React.FC<DataListProps> = props => {
   const { urlInfo, value = [], allCookies = [],
     init, onChange: onCookiesChange, conditions, setConditions,
   } = props
+
   const { name, value: filterValue, path, domainList } = conditions
   const { domain, subdomain } = urlInfo
 
+  const [ribbon] = useRibbon()
   const [follows] = useStorage(StorageKeyEnum.FOLLOW, [])
   const [highlightId, setHighlightId] = React.useState("")
 
@@ -189,7 +191,6 @@ const DataList: React.FC<DataListProps> = props => {
     <table className="table table-sm table-pin-rows table-pin-cols">
       <thead>
         <tr className="bg-base-300 rounded-box">
-          <td></td>
           <td className="text-center align-middle">
             <input
               id="check-all"
@@ -199,6 +200,7 @@ const DataList: React.FC<DataListProps> = props => {
               className="checkbox checkbox-primary checkbox-sm"
             />
           </td>
+          <td>NO.</td>
           <th className="text-center bg-base-300 z-10">
             <div className="center">
               <span>name</span>
@@ -255,14 +257,12 @@ const DataList: React.FC<DataListProps> = props => {
           const { name, path, expirationDate, httpOnly, hostOnly, secure, sameSite, session, value, domain, create, checked } = cookie
           const id = `${name}-${value}-${domain}`
           const follow = follows.includes(id)
+          const order = index + 1
           const highlight = id === highlightId
           return (
             <tr key={`${id}-${index}`} className={classnames("group hover:bg-base-200", {
               "!bg-secondary": highlight
             })}>
-              <td>
-                <div className="stat-value text-sm">{index + 1}</div>
-              </td>
               <td className="text-center align-middle">
                 {!create && (<input
                   type="checkbox"
@@ -271,11 +271,18 @@ const DataList: React.FC<DataListProps> = props => {
                   className="checkbox checkbox-primary checkbox-sm"
                 />)}
               </td>
+              <td>
+                <div className="w-6 center">
+                  {!follow && (<div className="stat-value text-sm">{order}</div>)}
+                  {follow && (
+                    <div className={classnames(ribbon)} />
+                  )}
+                </div>
+              </td>
               <th className={classnames('group-hover:bg-base-200', {
                 '!bg-secondary': highlight
               })}>
-                <div className="relative pl-6">
-                  {follow && <span className="ribbon !absolute -left-1" />}
+                <div>
                   <Input
                     value={name}
                     create={create}

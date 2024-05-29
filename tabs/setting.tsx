@@ -1,45 +1,9 @@
 import React from 'react'
 import classnames from 'classnames'
-import { useStorage } from '@plasmohq/storage/hook'
-import { StorageKeyEnum } from '~utils'
-import { useThemeChange } from '~components/hooks'
+import { themes, backgrounds, ribbons } from '~utils'
+import { useThemeChange, useRibbon, useBackgroundChange } from '~components/hooks'
 import '~/style.less'
 import './style.less'
-
-const themes = [
-  "light",
-  "dark",
-  "cupcake",
-  "bumblebee",
-  "emerald",
-  "corporate",
-  "synthwave",
-  "retro",
-  "cyberpunk",
-  "valentine",
-  "halloween",
-  "garden",
-  "forest",
-  "aqua",
-  "lofi",
-  "pastel",
-  "fantasy",
-  "wireframe",
-  "black",
-  "luxury",
-  "dracula",
-  "cmyk",
-  "autumn",
-  "business",
-  "acid",
-  "lemonade",
-  "night",
-  "coffee",
-  "winter",
-  "dim",
-  "nord",
-  "sunset",
-]
 
 const ThemeList = props => {
   const { value, onChange } = props
@@ -81,6 +45,49 @@ const ThemeList = props => {
   )
 }
 
+const BackgroundList = props => {
+  const { value, onChange } = props
+  return (
+    <div className="rounded-box grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+      {backgrounds.map(item => {
+        const { id, ...rest } = item
+        const checked = id === value
+        return (
+          <div
+            key={id}
+            style={rest}
+            onClick={() => onChange(id)}
+            className={classnames("h-16 cursor-pointer border-base-content/20 hover:border-base-content/40 overflow-hidden rounded-lg border outline outline-2 outline-offset-2 outline-transparent", {
+              "!outline-base-content": checked
+            })}>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+const RibbonList = props => {
+  const { value, onChange } = props
+
+  return (
+    <div className="rounded-box grid grid-cols-8 gap-4">
+      {ribbons.map(item => {
+        const checked = item === value
+        return (
+          <div
+            key={item}
+            onClick={() => onChange(item)}
+            className={classnames("py-6 center cursor-pointer border-base-content/20 hover:border-base-content/40 overflow-hidden rounded-lg border outline outline-2 outline-offset-2 outline-transparent", {
+              "!outline-base-content": checked
+            })}>
+            <div className={classnames(item, "mb-2")} />
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
 export interface SettingProps {
 
@@ -90,10 +97,12 @@ const Setting: React.FC<SettingProps> = props => {
   const { } = props
 
 
+  const [ribbon, setRibbon] = useRibbon()
   const [theme, setTheme] = useThemeChange()
+  const [background, setBackground] = useBackgroundChange()
 
   return (
-    <div>
+    <div className="overflow-auto h-full">
       <div className="collapse bg-base-200">
         <input type="radio" name="my-accordion-1" defaultChecked />
         <div className="collapse-title text-xl font-medium">
@@ -103,22 +112,22 @@ const Setting: React.FC<SettingProps> = props => {
           <ThemeList value={theme} onChange={setTheme} />
         </div>
       </div>
-      <div className="collapse bg-base-200">
+      <div className="collapse bg-base-200 mt-4">
         <input type="radio" name="my-accordion-1" />
         <div className="collapse-title text-xl font-medium">
           背景配置
         </div>
         <div className="collapse-content">
-          背景配置
+          <BackgroundList value={background} onChange={setBackground} />
         </div>
       </div>
-      <div className="collapse bg-base-200">
+      <div className="collapse bg-base-200 mt-4">
         <input type="radio" name="my-accordion-1" />
         <div className="collapse-title text-xl font-medium">
           关注徽章配置
         </div>
         <div className="collapse-content">
-          关注徽章配置
+          <RibbonList value={ribbon} onChange={setRibbon} />
         </div>
       </div>
     </div>

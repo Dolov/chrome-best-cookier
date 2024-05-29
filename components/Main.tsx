@@ -1,7 +1,7 @@
 import React from 'react'
 import classnames from 'classnames'
 import Actions from '~components/Actions'
-import { useThemeChange } from '~components/hooks'
+import { useThemeChange, useBackgroundChange } from '~components/hooks'
 import DataList, { type DataListProps } from '~components/DataList'
 import { type Cookie, getDomainList, MessageActionEnum } from '~utils'
 
@@ -10,6 +10,8 @@ export interface MainProps {
 
 const Main = props => {
   useThemeChange()
+  useBackgroundChange()
+
   const { full, urlInfo, className } = props
   const { domain, subdomain } = urlInfo
   const [cookies, setCookies] = React.useState<Cookie[]>([])

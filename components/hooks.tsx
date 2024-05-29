@@ -1,7 +1,7 @@
 import React from "react"
 import psl from 'psl'
 import { useStorage } from '@plasmohq/storage/hook'
-import { StorageKeyEnum } from '~utils'
+import { StorageKeyEnum, backgrounds } from '~utils'
 
 export const useBoolean = (defaultValue = false) => {
   const [value, setValue] = React.useState(defaultValue)
@@ -218,4 +218,55 @@ export const useThemeChange = () => {
   }, [theme])
 
   return [theme, setTheme]
+}
+
+export const useBackgroundChange = () => {
+  const [settings, setSettings] = useStorage<{
+    theme?: string
+    background?: string
+  }>(StorageKeyEnum.SETTINGS, {
+    background: "000"
+  })
+
+  const { background } = settings
+
+  const setBackground = (background: string) => {
+    setSettings({
+      ...settings,
+      background,
+    })
+  }
+
+  React.useEffect(() => {
+    if (!background) return
+    const root: HTMLDivElement = document.querySelector("#__plasmo")
+    if (!root) return
+    const item = backgrounds.find(item => item.id === background)
+    root.style.backgroundSize = item.backgroundSize || "auto 100%"
+    root.style.backgroundImage = item.backgroundImage
+  }, [background])
+
+  return [background, setBackground]
+}
+
+export const useRibbon = () => {
+  const [settings, setSettings] = useStorage<{
+    theme?: string
+    ribbon?: string
+    background?: string
+  }>(StorageKeyEnum.SETTINGS, {
+    ribbon: ""
+  })
+
+  const { ribbon } = settings
+
+  const setRibbon = (ribbon: string) => {
+    setSettings({
+      ...settings,
+      ribbon,
+    })
+  }
+
+
+  return [ribbon, setRibbon]
 }
