@@ -78,12 +78,21 @@ export const SameSite = props => {
 
 export const HeaderDomain = props => {
   const { cookies, domainList, setDomainList } = props
+  const detailsRef = React.useRef<HTMLDetailsElement>()
 
   const domains: string[] = React.useMemo(() => {
     const list: string[] = Array.from(new Set(cookies.map(item => item.domain)))
     list.sort((a, b) => a?.length - b?.length)
     return list
   }, [cookies])
+
+  React.useEffect(() => {
+    document.addEventListener('click', e => {
+      const target = e.target as HTMLElement
+      if (detailsRef.current.contains(target)) return
+      detailsRef.current.open = false
+    })
+  }, [])
 
   const onChange = item => {
     const checked = domainList.includes(item)
@@ -94,39 +103,45 @@ export const HeaderDomain = props => {
     setDomainList([...domainList, item])
   }
 
+  const handleOpenChange: React.MouseEventHandler<HTMLElement> = e => {
+    e.preventDefault()
+    const open = !detailsRef.current.open
+    detailsRef.current.open = open
+  }
+
   const len = domains.length
   const hasData = len > 0
 
   return (
-    <div className="center">
-      <span>domain</span>
-      <div className="dropdown dropdown-bottom dropdown-end dropdown-hover">
-        <button className="btn btn-sm btn-circle ml-2">
-          <MaterialSymbolsFilterAlt className={classnames("text-lg", {
-            "text-primary": !!domainList.length
-          })} />
-        </button>
-        {hasData && (<ul tabIndex={0} className="dropdown-content z-[1] menu p-2 bg-base-100 rounded-box w-56 shadow-2xl max-h-48 overflow-auto flex flex-col flex-nowrap">
-          {domains.map(item => {
-            const checked = domainList.includes(item)
-            return (
-              <li
-                key={item}
-                onClick={() => onChange(item)}
-                className={classnames("w-full ellipsis")}
-              >
-                <a className="w-full flex pl-0">
-                  <div className="w-4 pl-2 mr-2">
-                    {checked && <MaterialSymbolsCheckCircleOutlineRounded className="text-lg text-primary" />}
-                  </div>
-                  <div className="ellipsis">{item}</div>
-                </a>
-              </li>
-            )
-          })}
-        </ul>)}
-      </div>
-    </div>
+    <details ref={detailsRef} className="dropdown dropdown-bottom dropdown-end">
+      <summary
+        className="m-1 btn btn-sm btn-circle"
+        onClick={handleOpenChange}
+      >
+        <MaterialSymbolsFilterAlt className={classnames("text-lg", {
+          "text-primary": hasData
+        })} />
+      </summary>
+      {hasData && (<ul tabIndex={0} className="dropdown-content z-[1] menu p-2 bg-base-100 rounded-box w-56 shadow-2xl max-h-48 overflow-auto flex flex-col flex-nowrap">
+        {domains.map(item => {
+          const checked = domainList.includes(item)
+          return (
+            <li
+              key={item}
+              onClick={() => onChange(item)}
+              className={classnames("w-full ellipsis")}
+            >
+              <a className="w-full flex pl-0">
+                <div className="w-4 pl-2 mr-2">
+                  {checked && <MaterialSymbolsCheckCircleOutlineRounded className="text-lg text-primary" />}
+                </div>
+                <div className="ellipsis">{item}</div>
+              </a>
+            </li>
+          )
+        })}
+      </ul>)}
+    </details>
   )
 }
 
@@ -140,20 +155,26 @@ export const InputFilter = props => {
     detailsRef.current.open = false
   }
 
-  const handleOpen: React.MouseEventHandler<HTMLElement> = e => {
-    e.preventDefault()
-    detailsRef.current.open = true
-    inputRef.current.focus()
-  }
-
   const onKeyDown = e => {
     if (e.key !== 'Enter') return
     close()
   }
 
+  const handleOpenChange: React.MouseEventHandler<HTMLElement> = e => {
+    e.preventDefault()
+    const open = !detailsRef.current.open
+    detailsRef.current.open = open
+    if (open) {
+      inputRef.current.focus()
+    }
+  }
+
   return (
     <details ref={detailsRef} className="dropdown">
-      <summary className="m-1 btn btn-sm btn-circle" onClick={handleOpen}>
+      <summary
+        className="m-1 btn btn-sm btn-circle"
+        onClick={handleOpenChange}
+      >
         <MaterialSymbolsFilterAlt className={classnames("text-lg", {
           "text-primary": !!value
         })} />
@@ -179,9 +200,14 @@ export const DatePicker = props => {
   const [innerValue, setInnerValue] = React.useState(value)
   const inputRef = React.useRef<HTMLInputElement>()
 
+  const handleChange = () => {
+    if (value === innerValue) return
+    onChange(innerValue)
+  }
+
   const onKeyDown = e => {
     if (e.key !== 'Enter') return
-    onChange(innerValue)
+    handleChange()
     if (inputRef.current) {
       inputRef.current.blur()
     }
@@ -192,7 +218,7 @@ export const DatePicker = props => {
       ref={inputRef}
       type="datetime-local"
       value={innerValue}
-      onBlur={() => onChange(innerValue)}
+      onBlur={handleChange}
       onKeyDown={onKeyDown}
       onChange={e => setInnerValue(e.target.value)}
       className="input-sm input-primary input-bordered"
