@@ -96,7 +96,9 @@ const Actions: React.FC<ActionsProps> = props => {
           <textarea
             value={importData}
             onChange={e => setImportData(e.target.value)}
-            className="textarea textarea-primary w-[98%] m-auto"
+            className={classnames("textarea textarea-primary w-[98%] m-auto", {
+              "h-48": full
+            })}
             placeholder="粘贴"
           />
         </div>

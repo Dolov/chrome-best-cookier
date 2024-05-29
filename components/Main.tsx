@@ -75,7 +75,7 @@ const Main = props => {
         />
       </div>
       <Actions
-        full
+        full={full}
         init={init}
         urlInfo={urlInfo}
         cookies={filteredCookies}

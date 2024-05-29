@@ -182,7 +182,8 @@ const DataList: React.FC<DataListProps> = props => {
     deleteAndUpdate(cookie, { path })
   }
 
-  const checked = cookies.filter(item => !item.create).every(item => item.checked)
+  const checked = cookies.filter(item => !item.create).length &&
+    cookies.filter(item => !item.create).every(item => item.checked)
 
   return (
     <table className="table table-sm table-pin-rows table-pin-cols">
