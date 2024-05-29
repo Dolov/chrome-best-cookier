@@ -6,17 +6,19 @@ import {
   MaterialSymbolsSettings, StreamlineEmojisBug, IonEllipsisVertical,
   SiGlyphFullscreen, 
 } from '~components/Icons'
+import { useGetUrlInfo } from '~components/hooks'
 import Modal from '~components/Modal'
+import message from '~components/message'
 import { type Cookie, copyTextToClipboard, MessageActionEnum, StorageKeyEnum } from '~utils'
-import message from './message'
 
 export interface ActionsProps {
   init: () => void
   cookies: Cookie[]
+  urlInfo: ReturnType<typeof useGetUrlInfo>
 }
 
 const Actions: React.FC<ActionsProps> = props => {
-  const { cookies, init } = props
+  const { init, cookies, urlInfo } = props
   const [visible, setVisible] = React.useState(false)
   const [importData, setImportData] = React.useState("")
 
@@ -67,7 +69,7 @@ const Actions: React.FC<ActionsProps> = props => {
 
   const handleFull = () => {
     chrome.tabs.create({
-      url: "./tabs/full.html"
+      url: `./tabs/full.html?url=${encodeURIComponent(urlInfo.url)}`
     })
   }
 

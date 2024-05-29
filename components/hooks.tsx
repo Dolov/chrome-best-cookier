@@ -136,41 +136,62 @@ export function useControllableValue<T>(props: Props = {}, options: Options<T> =
   return [mergedValue, triggerChange] as const
 }
 
-export const useGetUrlInfo = () => {
+export const useGetUrlInfo = (url?: string) => {
+
   const [urlInfo, setUrlInfo] = React.useState<{
     domain: string, subdomain: string,
-    hostname: string, protocol: string
+    hostname: string, protocol: string,
+    url: string,
   }>()
-  
-  React.useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-      const currentUrl = tabs[0].url
-      const { hostname, protocol } = new URL(currentUrl)
-      if (hostname === "localhost") {
-        setUrlInfo({
-          domain: hostname, protocol, hostname, subdomain: ""
-        })
-        return
-      }
-      if (
-        !currentUrl ||
-        currentUrl.startsWith("chrome://") ||
-        currentUrl.startsWith("chrome-extension://")
-      ) {
-        setUrlInfo(null)
-        return
-      }
-      const url = psl.parse(hostname);
-      if (!url) {
-        setUrlInfo(null)
-        return
-      }
-      const { domain, subdomain } = url
-      setUrlInfo({
-        domain, subdomain, protocol, hostname
-      })
-    });
-  }, [])
 
+  const queryUrl = (): Promise<string> => {
+    return new Promise(resolve => {
+      chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+        const currentUrl = tabs[0].url
+        resolve(currentUrl)
+      });
+    })
+  }
+
+  const handleUrlInfo = (url: string) => {
+    const { hostname, protocol } = new URL(url)
+    if (hostname === "localhost") {
+      setUrlInfo({
+        domain: hostname, protocol,
+        hostname, subdomain: "", url
+      })
+      return
+    }
+    if (
+      !url ||
+      url.startsWith("chrome://") ||
+      url.startsWith("chrome-extension://")
+    ) {
+      setUrlInfo(null)
+      return
+    }
+    const pslInfo = psl.parse(hostname);
+    if (!pslInfo) {
+      setUrlInfo(null)
+      return
+    }
+    const { domain, subdomain } = pslInfo
+    setUrlInfo({
+      domain, subdomain, protocol, hostname, url,
+    })
+  }
+
+  React.useEffect(() => {
+    if (url) {
+      const realUrl = new URLSearchParams(url.split("?")[1]).get('url')
+      if (!realUrl) return
+      handleUrlInfo(realUrl)
+      return
+    }
+    queryUrl().then(url => {
+      handleUrlInfo(url)
+    })
+  }, [])
+  
   return urlInfo
 }

@@ -1,14 +1,14 @@
 import React from 'react'
+import classnames from 'classnames'
 import Actions from '~components/Actions'
 import DataList, { type DataListProps } from '~components/DataList'
 import { type Cookie, getDomainList, MessageActionEnum } from '~utils'
 
 export interface MainProps {
-  
 }
 
 const Main = props => {
-  const { urlInfo } = props
+  const { urlInfo, className } = props
   const { domain, subdomain } = urlInfo
   const [cookies, setCookies] = React.useState<Cookie[]>([])
   const [conditions, setConditions] = React.useState<DataListProps["conditions"]>(() => {
@@ -62,7 +62,7 @@ const Main = props => {
   }, [cookies, conditions])
 
   return (
-    <div className="flex flex-col w-[700px] max-h-[568px] min-h-[256px]">
+    <div className={classnames("flex flex-col", className)}>
       <div className="flex-1 overflow-x-auto">
         <DataList
           init={init}
@@ -76,6 +76,7 @@ const Main = props => {
       </div>
       <Actions
         init={init}
+        urlInfo={urlInfo}
         cookies={filteredCookies}
       />
     </div>

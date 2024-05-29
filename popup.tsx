@@ -34,7 +34,7 @@ const Popup: React.FC<PopupProps> = props => {
   }
 
   return (
-    <Main urlInfo={urlInfo} />
+    <Main className="w-[700px] max-h-[568px] min-h-[256px]" urlInfo={urlInfo} />
   )
 }
 
