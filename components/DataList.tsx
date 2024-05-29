@@ -273,16 +273,18 @@ const DataList: React.FC<DataListProps> = props => {
               </td>
               <td>
                 <div className="w-6 center">
-                  {!follow && (<div className="stat-value text-sm">{order}</div>)}
-                  {follow && (
-                    <div className={classnames(ribbon)} />
-                  )}
+                  <div className="stat-value text-sm">{order}</div>
                 </div>
               </td>
               <th className={classnames('group-hover:bg-base-200', {
                 '!bg-secondary': highlight
               })}>
-                <div>
+                <div className="relative">
+                  {follow && (
+                    <div className="absolute -left-3 -top-2 scale-50">
+                      <div className={classnames(ribbon)} />
+                    </div>
+                  )}
                   <Input
                     value={name}
                     create={create}
