@@ -48,13 +48,25 @@ const DataList: React.FC<DataListProps> = props => {
 
   const cookies = React.useMemo(() => {
     const data = value.filter(item => !item.create)
-    // 关注的数据置顶显示
-    data.sort((a, b) => {
-      const akey = `${a.name}-${a.value}-${a.domain}`
-      if (follows.includes(akey)) return -1
-      return 1
-    })
-    return [...data, defaultCookie]
+    // 将关注的数据置顶
+    const sortedData = data.map((item, index) => ({
+      index,
+      item,
+      key: `${item.name}-${item.value}-${item.domain}`
+    })).sort((a, b) => {
+      const aFollow = follows.includes(a.key);
+      const bFollow = follows.includes(b.key);
+
+      if (aFollow && !bFollow) {
+        return -1;
+      }
+      if (!aFollow && bFollow) {
+        return 1;
+      }
+      return a.index - b.index;
+    }).map(({ item }) => item);
+
+    return [...sortedData, defaultCookie]
   }, [value, follows])
 
   React.useEffect(() => {
