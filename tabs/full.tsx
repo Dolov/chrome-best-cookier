@@ -17,7 +17,11 @@ const App: React.FC<AppProps> = props => {
   if (!urlInfo) return null
   
   return (
-    <Main className="h-full" urlInfo={urlInfo} />
+    <Main
+      full
+      urlInfo={urlInfo}
+      className="h-full"
+    />
   )
 }
 

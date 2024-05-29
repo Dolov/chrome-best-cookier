@@ -15,10 +15,11 @@ export interface ActionsProps {
   init: () => void
   cookies: Cookie[]
   urlInfo: ReturnType<typeof useGetUrlInfo>
+  full?: boolean
 }
 
 const Actions: React.FC<ActionsProps> = props => {
-  const { init, cookies, urlInfo } = props
+  const { init, full, cookies, urlInfo } = props
   const [visible, setVisible] = React.useState(false)
   const [importData, setImportData] = React.useState("")
 
@@ -127,11 +128,11 @@ const Actions: React.FC<ActionsProps> = props => {
         </div>
       </div>
       <div>
-        <div className="tooltip" data-tip="全屏">
+        {!full && (<div className="tooltip" data-tip="全屏">
           <button onClick={handleFull} className="btn btn-sm btn-circle mx-2 group">
             <SiGlyphFullscreen className="text-xl group-hover:text-primary" />
           </button>
-        </div>
+        </div>)}
         <div className="tooltip" data-tip="设置">
           <button  onClick={handleSetting} className="btn btn-sm btn-circle mx-2 group">
             <MaterialSymbolsSettings className="text-xl group-hover:text-primary" />

@@ -8,7 +8,7 @@ export interface MainProps {
 }
 
 const Main = props => {
-  const { urlInfo, className } = props
+  const { full, urlInfo, className } = props
   const { domain, subdomain } = urlInfo
   const [cookies, setCookies] = React.useState<Cookie[]>([])
   const [conditions, setConditions] = React.useState<DataListProps["conditions"]>(() => {
@@ -75,6 +75,7 @@ const Main = props => {
         />
       </div>
       <Actions
+        full
         init={init}
         urlInfo={urlInfo}
         cookies={filteredCookies}
