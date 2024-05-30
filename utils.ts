@@ -235,3 +235,18 @@ export const ribbons = [
   "ribbon-d-7",
   "ribbon-d-8",
 ]
+
+export const getFileJson = (file: File): Promise<Record<string, any>> => {
+  const reader = new FileReader();
+
+  return new Promise((resolve, reject) => {
+    reader.onload = (event) => {
+      const content = event.target?.result;
+      if (typeof content === 'string') {
+        const data = JSON.parse(content);
+        resolve(data);
+      }
+    };
+    reader.readAsText(file);
+  })
+};

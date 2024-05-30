@@ -4,12 +4,15 @@ import classnames from 'classnames'
 import {
   MaterialSymbolsExportNotes, MaterialSymbolsDelete, MingcuteRefresh2Fill,
   MaterialSymbolsSettings, StreamlineEmojisBug, IonEllipsisVertical,
-  SiGlyphFullscreen, 
+  SiGlyphFullscreen, IonCopy,
 } from '~components/Icons'
 import { useGetUrlInfo } from '~components/hooks'
 import Modal from '~components/Modal'
+import Upload from '~components/Upload'
 import message from '~components/message'
-import { type Cookie, copyTextToClipboard, MessageActionEnum, StorageKeyEnum } from '~utils'
+import { type Cookie, copyTextToClipboard, MessageActionEnum,
+  StorageKeyEnum, getFileJson, dayjs
+} from '~utils'
 
 export interface ActionsProps {
   init: () => void
@@ -30,6 +33,19 @@ const Actions: React.FC<ActionsProps> = props => {
   }, [cookies])
 
   const handleExport = () => {
+    const data = filteredCookies.map(item => {
+      const { checked, create, ...rest } = item
+      return rest
+    })
+    const name = `Best Cookier_${urlInfo.domain}_${dayjs().format("YYYY-MM-DD")}.json`
+    const fileContent = encodeURIComponent(JSON.stringify(data, null, 2))
+    const downloadLink = document.createElement('a');
+    downloadLink.setAttribute('href', 'data:text/html;charset=utf-8,' + fileContent);
+    downloadLink.setAttribute('download', name);
+    downloadLink.click();
+  }
+
+  const handleCopy = () => {
     const data = filteredCookies.map(item => {
       const { checked, create, ...rest } = item
       return rest
@@ -80,6 +96,11 @@ const Actions: React.FC<ActionsProps> = props => {
     })
   }
 
+  const handleImportFile = async (file: File) => {
+    const data = await getFileJson(file)
+    setImportData(JSON.stringify(data, null, 2))
+  }
+
   const len = filteredCookies.length
   const noData = len == 0
   const title = `${len} 条数据`
@@ -99,9 +120,15 @@ const Actions: React.FC<ActionsProps> = props => {
             className={classnames("textarea textarea-primary w-[98%] m-auto", {
               "h-48": full
             })}
-            placeholder="粘贴"
+            placeholder="粘贴 JSON 数据"
           />
         </div>
+        <Upload
+          text="导入 JSON 文件"
+          accept=".json"
+          onChange={handleImportFile}
+          className="ml-2 mt-2 inline-block font-bold"
+        />
       </Modal>
       <div className='flex items-center'>
         <div className="tooltip" data-tip="刷新">
@@ -119,6 +146,11 @@ const Actions: React.FC<ActionsProps> = props => {
             "btn-disabled": noData
           })}>
             <MaterialSymbolsExportNotes className="text-xl group-hover:text-primary" />
+          </button>
+        </div>
+        <div className="tooltip" data-tip={`复制 ${title}`}>
+          <button onClick={handleCopy} className="btn btn-sm btn-circle mx-2 group">
+            <IonCopy className="text-xl rotate-180 group-hover:text-primary" />
           </button>
         </div>
         <div className="tooltip" data-tip={`删除 ${title}`}>

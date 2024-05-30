@@ -2,7 +2,7 @@
   "name": "best-cookier",
   "displayName": "Best Cookier",
   "version": "1.0.0",
-  "description": "一款集颜值和效率于一体的高质量 Cookie 管理器",
+  "description": "一款颜值超高、操作便捷、功能齐全的高质量 Cookie 管理器",
   "author": "shisongyan. <songyan_shi@163.com>",
   "scripts": {
     "dev": "plasmo dev",
