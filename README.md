@@ -6,7 +6,7 @@
 
 
 [chrome web store](https://chromewebstore.google.com/detail/best-cookier/eijnnomioacbbnkffmhnbpbocoajcage)
-一款颜值超高、操作便捷、功能齐全的高质量 Cookie 管理器
+一款颜值超高、操作便捷、功能丰富的高质量 Cookie 管理器
 
 
 ### 功能

@@ -1,0 +1,136 @@
+{
+  "extensionName": {
+    "message": "Best Cookier",
+    "description": ""
+  },
+  "extensionDescription": {
+    "message": "一款颜值超高、操作便捷、功能丰富的高质量 Cookie 管理器。",
+    "description": ""
+  },
+  "notSupportCookie": {
+    "message": "提示: 当前网站不支持设置 Cookie !",
+    "description": ""
+  },
+  "settings_theme": {
+    "message": "主题配置",
+    "description": ""
+  },
+  "settings_background": {
+    "message": "背景配置",
+    "description": ""
+  },
+  "settings_followIcon": {
+    "message": "关注图标配置",
+    "description": ""
+  },
+  "actions_copy": {
+    "message": "复制 $params$ 条数据",
+    "description": "",
+    "placeholders": {
+      "params": {
+        "content": "$1",
+        "example": ""
+      }
+    }
+  },
+  "actions_delete": {
+    "message": "删除 $params$ 条数据",
+    "description": "",
+    "placeholders": {
+      "params": {
+        "content": "$1",
+        "example": ""
+      }
+    }
+  },
+  "actions_refresh": {
+    "message": "刷新",
+    "description": ""
+  },
+  "actions_import": {
+    "message": "导入",
+    "description": ""
+  },
+  "actions_export": {
+    "message": "导出 $params$ 条数据",
+    "description": "",
+    "placeholders": {
+      "params": {
+        "content": "$1",
+        "example": ""
+      }
+    }
+  },
+  "actions_fullScreen": {
+    "message": "全屏",
+    "description": ""
+  },
+  "actions_setting": {
+    "message": "设置",
+    "description": ""
+  },
+  "actions_issues": {
+    "message": "功能申请 & 问题报告",
+    "description": ""
+  },
+  "copySuccess": {
+    "message": "复制成功。",
+    "description": ""
+  },
+  "importSuccess": {
+    "message": "导入成功。",
+    "description": ""
+  },
+  "deleteSuccess": {
+    "message": "删除成功。",
+    "description": ""
+  },
+  "delete": {
+    "message": "删除",
+    "description": ""
+  },
+  "follow": {
+    "message": "关注",
+    "description": ""
+  },
+  "unFollow": {
+    "message": "取消关注",
+    "description": ""
+  },
+  "importJsonFile": {
+    "message": "导入 JSON 文件",
+    "description": ""
+  },
+  "pasteJsonData": {
+    "message": "粘贴 JSON 数据",
+    "description": ""
+  },
+  "cancel": {
+    "message": "取消",
+    "description": ""
+  },
+  "import": {
+    "message": "导入",
+    "description": ""
+  },
+  "filterByName": {
+    "message": "按名称过滤",
+    "description": ""
+  },
+  "filterByValue": {
+    "message": "按值过滤",
+    "description": ""
+  },
+  "filterByPath": {
+    "message": "按路径过滤",
+    "description": ""
+  },
+  "addNewCookie": {
+    "message": "添加新 Cookie",
+    "description": ""
+  },
+  "inputValue": {
+    "message": "输入值",
+    "description": ""
+  }
+}

@@ -219,7 +219,7 @@ const DataList: React.FC<DataListProps> = props => {
               <InputFilter
                 value={name}
                 onChange={name => setConditions({ ...conditions, name })}
-                placeholder="Filter by name"
+                placeholder={chrome.i18n.getMessage("filterByName")}
               />
             </div>
           </th>
@@ -229,7 +229,7 @@ const DataList: React.FC<DataListProps> = props => {
               <InputFilter
                 value={filterValue}
                 onChange={value => setConditions({ ...conditions, value })}
-                placeholder="Filter by value"
+                placeholder={chrome.i18n.getMessage("filterByValue")}
               />
             </div>
           </td>
@@ -252,7 +252,7 @@ const DataList: React.FC<DataListProps> = props => {
               <InputFilter
                 value={path}
                 onChange={path => setConditions({ ...conditions, path })}
-                placeholder="Filter by path"
+                placeholder={chrome.i18n.getMessage("filterByPath")}
               />
             </div>
           </td>
@@ -301,7 +301,7 @@ const DataList: React.FC<DataListProps> = props => {
                     value={name}
                     create={create}
                     onChange={value => onNameChange(value, cookie)}
-                    placeholder="Add New Cookie"
+                    placeholder={chrome.i18n.getMessage("addNewCookie")}
                   />
                 </div>
               </th>
@@ -310,7 +310,7 @@ const DataList: React.FC<DataListProps> = props => {
                   value={value}
                   create={create}
                   onChange={value => onValueChange(value, cookie)}
-                  placeholder="Input Value"
+                  placeholder={chrome.i18n.getMessage("inputValue")}
                 />
               </td>
               <td>

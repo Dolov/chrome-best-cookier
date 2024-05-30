@@ -1,0 +1,136 @@
+{
+  "extensionName": {
+    "message": "Best Cookier",
+    "description": ""
+  },
+  "extensionDescription": {
+    "message": "A high-quality cookie manager with stylish design, convenient operation, and rich features.",
+    "description": ""
+  },
+  "notSupportCookie": {
+    "message": "Note: The current website does not support setting cookies!",
+    "description": ""
+  },
+  "settings_theme": {
+    "message": "Theme Setting",
+    "description": ""
+  },
+  "settings_background": {
+    "message": "Background Setting",
+    "description": ""
+  },
+  "settings_followIcon": {
+    "message": "Follow Icon Setting",
+    "description": ""
+  },
+  "actions_copy": {
+    "message": "Copy $params$ items",
+    "description": "",
+    "placeholders": {
+      "params": {
+        "content": "$1",
+        "example": ""
+      }
+    }
+  },
+  "actions_delete": {
+    "message": "Delete $params$ items",
+    "description": "",
+    "placeholders": {
+      "params": {
+        "content": "$1",
+        "example": ""
+      }
+    }
+  },
+  "actions_refresh": {
+    "message": "Refresh",
+    "description": ""
+  },
+  "actions_import": {
+    "message": "Import",
+    "description": ""
+  },
+  "actions_export": {
+    "message": "Export $params$ items",
+    "description": "",
+    "placeholders": {
+      "params": {
+        "content": "$1",
+        "example": ""
+      }
+    }
+  },
+  "actions_fullScreen": {
+    "message": "Full Screen",
+    "description": ""
+  },
+  "actions_setting": {
+    "message": "Settings",
+    "description": ""
+  },
+  "actions_issues": {
+    "message": "Feature Requests & Issue Reporting",
+    "description": ""
+  },
+  "copySuccess": {
+    "message": "Copy successful.",
+    "description": ""
+  },
+  "importSuccess": {
+    "message": "Import successful.",
+    "description": ""
+  },
+  "deleteSuccess": {
+    "message": "Delete successful.",
+    "description": ""
+  },
+  "delete": {
+    "message": "Delete",
+    "description": ""
+  },
+  "follow": {
+    "message": "Follow",
+    "description": ""
+  },
+  "unFollow": {
+    "message": "Unfollow",
+    "description": ""
+  },
+  "importJsonFile": {
+    "message": "Import JSON File",
+    "description": ""
+  },
+  "pasteJsonData": {
+    "message": "Paste JSON Data",
+    "description": ""
+  },
+  "cancel": {
+    "message": "Cancel",
+    "description": ""
+  },
+  "import": {
+    "message": "Import",
+    "description": ""
+  },
+  "filterByName": {
+    "message": "Filter by Name",
+    "description": ""
+  },
+  "filterByValue": {
+    "message": "Filter by Value",
+    "description": ""
+  },
+  "filterByPath": {
+    "message": "Filter by Path",
+    "description": ""
+  },
+  "addNewCookie": {
+    "message": "Add New Cookie",
+    "description": ""
+  },
+  "inputValue": {
+    "message": "Input Value",
+    "description": ""
+  }
+}

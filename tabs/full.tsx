@@ -4,6 +4,7 @@ import Main from '~components/Main'
 import '~/style.less'
 import './style.less'
 
+document.title = `${chrome.i18n.getMessage("extensionName")}`
 
 export interface AppProps {
   

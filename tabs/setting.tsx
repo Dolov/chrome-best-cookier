@@ -5,6 +5,8 @@ import { useThemeChange, useRibbon, useBackgroundChange } from '~components/hook
 import '~/style.less'
 import './style.less'
 
+document.title = `${chrome.i18n.getMessage("extensionName")}`
+
 const ThemeList = props => {
   const { value, onChange } = props
 
@@ -106,7 +108,7 @@ const Setting: React.FC<SettingProps> = props => {
       <div className="collapse bg-base-200">
         <input type="radio" name="my-accordion-1" defaultChecked />
         <div className="collapse-title text-xl font-medium">
-          主题配置
+          {chrome.i18n.getMessage("settings_theme")}
         </div>
         <div className="collapse-content">
           <ThemeList value={theme} onChange={setTheme} />
@@ -115,7 +117,7 @@ const Setting: React.FC<SettingProps> = props => {
       <div className="collapse bg-base-200 mt-4">
         <input type="radio" name="my-accordion-1" />
         <div className="collapse-title text-xl font-medium">
-          背景配置
+          {chrome.i18n.getMessage("settings_background")}
         </div>
         <div className="collapse-content">
           <BackgroundList value={background} onChange={setBackground} />
@@ -124,7 +126,7 @@ const Setting: React.FC<SettingProps> = props => {
       <div className="collapse bg-base-200 mt-4">
         <input type="radio" name="my-accordion-1" />
         <div className="collapse-title text-xl font-medium">
-          关注图标配置
+          {chrome.i18n.getMessage("settings_followIcon")}
         </div>
         <div className="collapse-content">
           <RibbonList value={ribbon} onChange={setRibbon} />

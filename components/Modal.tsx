@@ -32,10 +32,16 @@ const Modal: React.FC<ModalProps> = props => {
     <dialog id={id} className="modal">
       <div className="modal-box flex flex-col">
         <h3 className="font-bold text-lg">{title}</h3>
-        <div className="py-4 flex-1 overflow-auto no-scrollbar">{children}</div>
+        <div className="py-4 flex-1 overflow-auto no-scrollbar">
+          {children}
+        </div>
         <div className="modal-action">
-          <button onClick={onClose} className="btn btn-sm">取消</button>
-          <button onClick={handleOk} className="btn btn-sm btn-primary">导入</button>
+          <button onClick={onClose} className="btn btn-sm">
+            {chrome.i18n.getMessage("cancel")}
+          </button>
+          <button onClick={handleOk} className="btn btn-sm btn-primary">
+            {chrome.i18n.getMessage("import")}
+          </button>
         </div>
       </div>
     </dialog>

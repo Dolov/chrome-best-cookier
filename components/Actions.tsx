@@ -37,7 +37,7 @@ const Actions: React.FC<ActionsProps> = props => {
       const { checked, create, ...rest } = item
       return rest
     })
-    const name = `Best Cookier_${urlInfo.domain}_${dayjs().format("YYYY-MM-DD")}.json`
+    const name = `BestCookier${dayjs().format("YYYYMMDD-HHmmss")}-${urlInfo.domain}.json`
     const fileContent = encodeURIComponent(JSON.stringify(data, null, 2))
     const downloadLink = document.createElement('a');
     downloadLink.setAttribute('href', 'data:text/html;charset=utf-8,' + fileContent);
@@ -51,7 +51,7 @@ const Actions: React.FC<ActionsProps> = props => {
       return rest
     })
     copyTextToClipboard(JSON.stringify(data, null, 2))
-    message.success("复制成功。")
+    message.success(chrome.i18n.getMessage("copySuccess"))
   }
 
   const handleImport = async () => {
@@ -64,7 +64,7 @@ const Actions: React.FC<ActionsProps> = props => {
     init()
     setVisible(false)
     setImportData("")
-    message.success("导入成功。")
+    message.success(chrome.i18n.getMessage("importSuccess"))
   }
 
   const handleDelete = async () => {
@@ -75,7 +75,7 @@ const Actions: React.FC<ActionsProps> = props => {
       }
     })
     init()
-    message.success("删除成功。")
+    message.success(chrome.i18n.getMessage("deleteSuccess"))
   }
     
   const handleSetting = () => {
@@ -103,12 +103,11 @@ const Actions: React.FC<ActionsProps> = props => {
 
   const len = filteredCookies.length
   const noData = len == 0
-  const title = `${len} 条数据`
 
   return (
     <div className="pt-2 flex justify-between">
       <Modal
-        title="导入"
+        title={chrome.i18n.getMessage("actions_import")}
         visible={visible}
         onOk={handleImport}
         onClose={() => setVisible(false)}
@@ -120,40 +119,40 @@ const Actions: React.FC<ActionsProps> = props => {
             className={classnames("textarea textarea-primary w-[98%] m-auto", {
               "h-48": full
             })}
-            placeholder="粘贴 JSON 数据"
+            placeholder={chrome.i18n.getMessage("pasteJsonData")}
           />
         </div>
         <Upload
-          text="导入 JSON 文件"
+          text={chrome.i18n.getMessage("importJsonFile")}
           accept=".json"
           onChange={handleImportFile}
           className="ml-2 mt-2 inline-block font-bold"
         />
       </Modal>
       <div className='flex items-center'>
-        <div className="tooltip" data-tip="刷新">
+        <div className="tooltip" data-tip={chrome.i18n.getMessage("actions_refresh")}>
           <button onClick={init} className="btn btn-sm btn-circle mx-2 group">
             <MingcuteRefresh2Fill className="text-xl group-hover:text-primary" />
           </button>
         </div>
-        <div className="tooltip" data-tip="导入">
+        <div className="tooltip" data-tip={chrome.i18n.getMessage("actions_import")}>
           <button onClick={() => setVisible(true)} className="btn btn-sm btn-circle mx-2 group">
             <MaterialSymbolsExportNotes className="text-xl rotate-180 group-hover:text-primary" />
           </button>
         </div>
-        <div className="tooltip" data-tip={`导出 ${title}`}>
+        <div className="tooltip" data-tip={chrome.i18n.getMessage("actions_export", [`${len}`])}>
           <button onClick={handleExport} className={classnames("btn btn-sm btn-circle mx-2 group", {
             "btn-disabled": noData
           })}>
             <MaterialSymbolsExportNotes className="text-xl group-hover:text-primary" />
           </button>
         </div>
-        <div className="tooltip" data-tip={`复制 ${title}`}>
+        <div className="tooltip" data-tip={chrome.i18n.getMessage("actions_copy", [`${len}`])}>
           <button onClick={handleCopy} className="btn btn-sm btn-circle mx-2 group">
             <IonCopy className="text-xl rotate-180 group-hover:text-primary" />
           </button>
         </div>
-        <div className="tooltip" data-tip={`删除 ${title}`}>
+        <div className="tooltip" data-tip={chrome.i18n.getMessage("actions_delete", [`${len}`])}>
           <button onClick={handleDelete} className={classnames("btn btn-sm btn-circle mx-2 group", {
             "btn-disabled": noData
           })}>
@@ -162,17 +161,17 @@ const Actions: React.FC<ActionsProps> = props => {
         </div>
       </div>
       <div>
-        {!full && (<div className="tooltip" data-tip="全屏">
+        {!full && (<div className="tooltip" data-tip={chrome.i18n.getMessage("actions_fullScreen")}>
           <button onClick={handleFull} className="btn btn-sm btn-circle mx-2 group">
             <SiGlyphFullscreen className="text-xl group-hover:text-primary" />
           </button>
         </div>)}
-        <div className="tooltip" data-tip="设置">
+        <div className="tooltip" data-tip={chrome.i18n.getMessage("actions_setting")}>
           <button  onClick={handleSetting} className="btn btn-sm btn-circle mx-2 group">
             <MaterialSymbolsSettings className="text-xl group-hover:text-primary" />
           </button>
         </div>
-        <div className="tooltip tooltip-left" data-tip="功能申请 & 问题报告">
+        <div className="tooltip tooltip-left" data-tip={chrome.i18n.getMessage("actions_issues")}>
           <button onClick={handleIssue} className="btn btn-sm btn-circle mx-2">
             <StreamlineEmojisBug className="text-xl" />
           </button>
@@ -188,7 +187,7 @@ export const RowActions = props => {
   const { name, value, domain } = data
   const key = `${name}-${value}-${domain}`
   const follow = follows.includes(key)
-  const text = follow ? "取消关注" : "关注"
+  const text = follow ? chrome.i18n.getMessage("unFollow") : chrome.i18n.getMessage("follow")
 
   const handleDelete = async () => {
     const res = await chrome.runtime.sendMessage({
@@ -198,7 +197,7 @@ export const RowActions = props => {
       }
     })
     init()
-    message.success("删除成功。")
+    message.success(chrome.i18n.getMessage("deleteSuccess"))
   }
 
   const handleFollow = () => {
@@ -217,7 +216,9 @@ export const RowActions = props => {
       </div>
       <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow-2xl bg-base-100 rounded-box w-36">
         <li onClick={handleFollow}><a>{text}</a></li>
-        <li onClick={handleDelete} className="text-error font-bold"><a>删除</a></li>
+        <li onClick={handleDelete} className="text-error font-bold">
+          <a>{chrome.i18n.getMessage("delete")}</a>
+        </li>
       </ul>
     </div>
   )

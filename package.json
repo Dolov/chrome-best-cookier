@@ -1,8 +1,8 @@
 {
   "name": "best-cookier",
-  "displayName": "Best Cookier",
+  "displayName": "__MSG_extensionName__",
   "version": "1.0.0",
-  "description": "一款颜值超高、操作便捷、功能齐全的高质量 Cookie 管理器",
+  "description": "__MSG_extensionDescription__",
   "author": "shisongyan. <songyan_shi@163.com>",
   "scripts": {
     "dev": "plasmo dev",
@@ -38,6 +38,7 @@
     "typescript": "5.3.3"
   },
   "manifest": {
+    "default_locale": "en",
     "homepage_url": "https://github.com/Dolov/chrome-best-cookier",
     "host_permissions": [
       "http://*/*",
