@@ -1,5 +1,42 @@
 # Best Cookier
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/dolov/chrome-best-cookier)
+![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/eijnnomioacbbnkffmhnbpbocoajcage)
+![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/eijnnomioacbbnkffmhnbpbocoajcage)
+![Chrome Web Store Stars](https://img.shields.io/chrome-web-store/stars/eijnnomioacbbnkffmhnbpbocoajcage)
+
+
+[chrome web store](https://chromewebstore.google.com/detail/best-cookier/eijnnomioacbbnkffmhnbpbocoajcage)
+一款颜值超高、操作便捷、功能齐全的高质量 Cookie 管理器
 
 
 ### 功能
-- 32 款精致主题色，N 款背景渐变色，你想要的样子我都有。
+- 便捷的增、删、改、查。
+- 文件导入、导出为文件、复制、删除、全屏、批量操作。
+- 可检索根域名下所有子域名的 Cookie。
+- 支持 name、value、domain、path 等多列数据检索。
+- 支持 “关注” 某 cookie，置顶显示。
+- 32 款精致主题色、N 款背景渐变色、多个关注图标 你想要的样子我都有。
+
+### 功能示例
+
+#### 正常主题模式
+![img](./screentshots/WX20240530-102617@2x.png)
+
+#### 暗色主题模式
+![img](./screentshots/WX20240530-102704@2x.png)
+
+#### 导入
+![img](./screentshots/WX20240530-102858@2x.png)
+
+#### 全屏模式
+![img](./screentshots/WX20240530-102025@2x.png)
+![img](./screentshots/WX20240530-102038@2x.png)
+
+#### 主题配置
+![img](./screentshots/WX20240530-101855@2x.png)
+
+#### 关注图标配置
+![img](./screentshots/WX20240530-104119@2x.png)
+
+### 欢迎使用
+使用过程中遇到问题或者有新功能的诉求可以在 issues 中进行反馈。

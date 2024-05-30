@@ -124,7 +124,7 @@ const Setting: React.FC<SettingProps> = props => {
       <div className="collapse bg-base-200 mt-4">
         <input type="radio" name="my-accordion-1" />
         <div className="collapse-title text-xl font-medium">
-          关注徽章配置
+          关注图标配置
         </div>
         <div className="collapse-content">
           <RibbonList value={ribbon} onChange={setRibbon} />

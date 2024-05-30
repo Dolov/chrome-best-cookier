@@ -37,7 +37,7 @@ const Upload: React.FC<UploadProps> = props => {
       <label htmlFor={id}>
         {children}
         {text && (
-          <a className={classnames("link link-neutral", className)}>
+          <a className={classnames("link link-primary", className)}>
             {fileName || text}
           </a>
         )}
