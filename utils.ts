@@ -250,3 +250,11 @@ export const getFileJson = (file: File): Promise<Record<string, any>> => {
     reader.readAsText(file);
   })
 };
+
+export const getCreateItemDefaultDomain = (domain, subdomain) => {
+  if (subdomain === "www") return `.${domain}`
+  if (subdomain) {
+    return `.${subdomain}.${domain}`
+  }
+  return `.${domain}`
+}

@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import { useStorage } from '@plasmohq/storage/hook'
 import { RowActions } from '~components/Actions'
 import { useGetUrlInfo, useRibbon } from "~components/hooks"
-import { dayjs, MessageActionEnum, getDate, type Cookie, StorageKeyEnum } from '~utils'
+import { dayjs, MessageActionEnum, getDate, type Cookie, StorageKeyEnum, getCreateItemDefaultDomain } from '~utils'
 import { Input, InputFilter, BooleanDisplay, BooleanToggle, HeaderDomain, SameSite, DatePicker } from '~components/DataListCell'
 
 const defaultCookie: Cookie = {
@@ -43,7 +43,7 @@ const DataList: React.FC<DataListProps> = props => {
   const [follows] = useStorage(StorageKeyEnum.FOLLOW, [])
   const [highlightId, setHighlightId] = React.useState("")
 
-  defaultCookie.domain = subdomain ? `${subdomain}.${domain}` : domain
+  defaultCookie.domain = getCreateItemDefaultDomain(domain, subdomain)
   const createDataRef = React.useRef<Cookie>(defaultCookie)
 
   const cookies = React.useMemo(() => {
