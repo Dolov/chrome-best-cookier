@@ -43,7 +43,7 @@ const DataList: React.FC<DataListProps> = props => {
   const { domain, subdomain } = urlInfo
 
   const [ribbon] = useRibbon()
-  const [follows] = useStorage(StorageKeyEnum.FOLLOW, [])
+  const [follows, setFollows] = useStorage(StorageKeyEnum.FOLLOW, [])
   const [highlightId, setHighlightId] = React.useState("")
 
   defaultCookie.domain = getCreateItemDefaultDomain(domain, subdomain)
@@ -86,7 +86,7 @@ const DataList: React.FC<DataListProps> = props => {
     checkbox.indeterminate = indeterminate
   }, [cookies])
 
-  const updateCookie = async newCookie => {
+  const updateCookie = async (newCookie, oldCookie) => {
     const { hostOnly, session, create, checked, ...rest } = newCookie
     const res = await chrome.runtime.sendMessage({
       action: MessageActionEnum.UPDATE_COOKIE,
@@ -94,6 +94,14 @@ const DataList: React.FC<DataListProps> = props => {
         cookie: rest,
       }
     })
+
+    // 修改了 cookie 后，更新关注列表
+    const oldId = getId(oldCookie)
+    const newId = getId(newCookie)
+    if (oldId !== newId && follows.includes(oldId)) {
+      const otherIds = follows.filter(item => item !== oldId)
+      setFollows([...otherIds, newId])
+    }
     return res
   }
 
@@ -108,7 +116,7 @@ const DataList: React.FC<DataListProps> = props => {
     await updateCookie({
       ...cookie,
       ...changedValues,
-    })
+    }, cookie)
     init()
   }
 
@@ -145,7 +153,7 @@ const DataList: React.FC<DataListProps> = props => {
     const res = await updateCookie({
       ...cookie,
       ...updateFields,
-    })
+    }, cookie)
     init()
     setHighlightId(getId(res))
   }
@@ -157,7 +165,7 @@ const DataList: React.FC<DataListProps> = props => {
     }
     const { name, value, domain } = createDataRef.current
     if (!name || !value || !domain) return
-    const res = await updateCookie(createDataRef.current)
+    const res = await updateCookie(createDataRef.current, cookie)
     init()
     setHighlightId(getId(res))
     createDataRef.current = defaultCookie
