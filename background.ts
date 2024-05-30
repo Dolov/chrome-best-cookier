@@ -1,4 +1,7 @@
-import { MessageActionEnum, getUrlFromCookie } from '~utils'
+import { MessageActionEnum, getUrlFromCookie, StorageKeyEnum } from '~utils'
+import { Storage } from '@plasmohq/storage'
+
+const storage = new Storage()
 
 const setCookie = (cookie: chrome.cookies.Cookie) => {
   const url = getUrlFromCookie(cookie)
@@ -33,6 +36,7 @@ chrome.runtime.onMessage.addListener((params, sender, sendResponse) => {
   if (action === MessageActionEnum.DELETE_COOKIES) {
     const { payload } = params;
     const { cookies } = payload;
+    
     const deletePromises = cookies.map(cookie => {
       const url = getUrlFromCookie(cookie)
       return chrome.cookies.remove({
@@ -40,7 +44,17 @@ chrome.runtime.onMessage.addListener((params, sender, sendResponse) => {
         name: cookie.name,
       });
     });
-  
+
+
+    // 删除关注
+    storage.get(StorageKeyEnum.FOLLOW).then(follows => {
+      const deleteIds = cookies.map(cookie => {
+        return `${cookie.name}-${cookie.value}-${cookie.domain}`
+      })
+      const newFollows = (follows as unknown as string[]).filter(id => !deleteIds.includes(id))
+      storage.set(StorageKeyEnum.FOLLOW, newFollows)
+    })
+    
     Promise.all(deletePromises)
       .then(results => {
         sendResponse(results);
