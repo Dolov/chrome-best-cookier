@@ -6,15 +6,15 @@
 
 
 [chrome web store](https://chromewebstore.google.com/detail/best-cookier/eijnnomioacbbnkffmhnbpbocoajcage)
-一款颜值超高、操作便捷、功能丰富的高质量 Cookie 管理器
+一款集颜值、操作、功能与一体的高质量 Cookie 管理器
 
 
 ### 功能
 - 便捷的增、删、改、查。
-- 文件导入、导出为文件、复制、删除、全屏、批量操作。
-- 可检索根域名下所有子域名的 Cookie。
+- 文件导入、导出为文件、复制、删除、全屏操作、批量操作。
+- 支持检索根域名下所有子域名的 Cookie。
 - 支持 name、value、domain、path 等多列数据检索。
-- 支持 “关注” 某 cookie，置顶显示。
+- 支持 “关注” 某 cookie，置顶特殊显示。
 - 32 款精致主题色、N 款背景渐变色、多个关注图标 你想要的样子我都有。
 
 ### 功能示例
@@ -39,4 +39,4 @@
 ![img](./screentshots/WX20240530-104119@2x.png)
 
 ### 欢迎使用
-使用过程中遇到问题或者有新功能的诉求可以在 issues 中进行反馈。
+使用过程中遇到问题或者有新功能的需求可以在 issues 中进行反馈。
