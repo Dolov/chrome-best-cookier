@@ -209,7 +209,7 @@ const DataList: React.FC<DataListProps> = props => {
               type="checkbox"
               checked={checked}
               onChange={onCheckAll}
-              className="checkbox checkbox-primary checkbox-sm"
+              className="checkbox checkbox-primary checkbox-sm mt-[5px]"
             />
           </td>
           <td>NO.</td>
@@ -280,7 +280,7 @@ const DataList: React.FC<DataListProps> = props => {
                   type="checkbox"
                   checked={checked}
                   onChange={e => onCheckItem(e, cookie)}
-                  className="checkbox checkbox-primary checkbox-sm"
+                  className="checkbox checkbox-primary checkbox-sm mt-[5px]"
                 />)}
               </td>
               <td>
