@@ -337,7 +337,7 @@ const DataList: React.FC<DataListProps> = props => {
               <td>
                 <BooleanToggle
                   value={httpOnly}
-                  className="toggle-secondary"
+                  className="toggle-secondary mt-[5px]"
                   onChange={httpOnly => onChange({ httpOnly }, cookie)}
                 />
               </td>
@@ -347,7 +347,7 @@ const DataList: React.FC<DataListProps> = props => {
               <td>
                 <BooleanToggle
                   value={secure}
-                  className="toggle-accent"
+                  className="toggle-accent mt-[5px]"
                   onChange={secure => onChange({ secure }, cookie)}
                 />
               </td>
