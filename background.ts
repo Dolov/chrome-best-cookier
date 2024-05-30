@@ -1,4 +1,4 @@
-import { MessageActionEnum, getUrlFromCookie, StorageKeyEnum } from '~utils'
+import { MessageActionEnum, getUrlFromCookie, StorageKeyEnum, getId } from '~utils'
 import { Storage } from '@plasmohq/storage'
 
 const storage = new Storage()
@@ -48,9 +48,7 @@ chrome.runtime.onMessage.addListener((params, sender, sendResponse) => {
 
     // 删除关注
     storage.get(StorageKeyEnum.FOLLOW).then(follows => {
-      const deleteIds = cookies.map(cookie => {
-        return `${cookie.name}-${cookie.value}-${cookie.domain}`
-      })
+      const deleteIds = cookies.map(getId)
       const newFollows = (follows as unknown as string[]).filter(id => !deleteIds.includes(id))
       storage.set(StorageKeyEnum.FOLLOW, newFollows)
     })

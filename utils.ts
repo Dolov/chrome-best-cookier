@@ -224,3 +224,8 @@ export const getCreateItemDefaultDomain = (domain, subdomain) => {
   }
   return `.${domain}`
 }
+
+export const getId = (cookie: Cookie) => {
+  const { name, value, domain, path } = cookie
+  return `${name}-${value}-${domain}-${path}`
+}

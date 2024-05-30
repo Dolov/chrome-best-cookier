@@ -3,7 +3,10 @@ import classnames from 'classnames'
 import { useStorage } from '@plasmohq/storage/hook'
 import { RowActions } from '~components/Actions'
 import { useGetUrlInfo, useRibbon } from "~components/hooks"
-import { dayjs, MessageActionEnum, getDate, type Cookie, StorageKeyEnum, getCreateItemDefaultDomain } from '~utils'
+import {
+  dayjs, MessageActionEnum, getDate, type Cookie, StorageKeyEnum,
+  getCreateItemDefaultDomain, getId,
+} from '~utils'
 import { Input, InputFilter, BooleanDisplay, BooleanToggle, HeaderDomain, SameSite, DatePicker } from '~components/DataListCell'
 
 const defaultCookie: Cookie = {
@@ -52,7 +55,7 @@ const DataList: React.FC<DataListProps> = props => {
     const sortedData = data.map((item, index) => ({
       index,
       item,
-      key: `${item.name}-${item.value}-${item.domain}`
+      key: getId(item),
     })).sort((a, b) => {
       const aFollow = follows.includes(a.key);
       const bFollow = follows.includes(b.key);
@@ -144,7 +147,7 @@ const DataList: React.FC<DataListProps> = props => {
       ...updateFields,
     })
     init()
-    setHighlightId(`${res.name}-${res.value}-${res.domain}`)
+    setHighlightId(getId(res))
   }
 
   const onCreateItemChange = async (changedValues, cookie) => {
@@ -156,7 +159,7 @@ const DataList: React.FC<DataListProps> = props => {
     if (!name || !value || !domain) return
     const res = await updateCookie(createDataRef.current)
     init()
-    setHighlightId(`${res.name}-${res.value}-${res.domain}`)
+    setHighlightId(getId(res))
     createDataRef.current = defaultCookie
   }
 
@@ -267,7 +270,7 @@ const DataList: React.FC<DataListProps> = props => {
       <tbody>
         {cookies.map((cookie, index) => {
           const { name, path, expirationDate, httpOnly, hostOnly, secure, sameSite, session, value, domain, create, checked } = cookie
-          const id = `${name}-${value}-${domain}`
+          const id = getId(cookie)
           const follow = follows.includes(id)
           const order = index + 1
           const highlight = id === highlightId

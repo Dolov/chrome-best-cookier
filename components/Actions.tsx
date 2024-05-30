@@ -11,7 +11,7 @@ import Modal from '~components/Modal'
 import Upload from '~components/Upload'
 import message from '~components/message'
 import { type Cookie, copyTextToClipboard, MessageActionEnum,
-  StorageKeyEnum, getFileJson, dayjs
+  StorageKeyEnum, getFileJson, dayjs, getId
 } from '~utils'
 
 export interface ActionsProps {
@@ -185,8 +185,8 @@ export const RowActions = props => {
   const { data, init } = props
   const [follows, setFollows] = useStorage(StorageKeyEnum.FOLLOW, [])
   const { name, value, domain } = data
-  const key = `${name}-${value}-${domain}`
-  const follow = follows.includes(key)
+  const id = getId(data)
+  const follow = follows.includes(id)
   const text = follow ? chrome.i18n.getMessage("unFollow") : chrome.i18n.getMessage("follow")
 
   const handleDelete = async () => {
@@ -201,12 +201,12 @@ export const RowActions = props => {
   }
 
   const handleFollow = () => {
-    const index = follows.indexOf(key)
+    const index = follows.indexOf(id)
     if (index > -1) {
-      setFollows(follows.filter(item => item !== key))
+      setFollows(follows.filter(item => item !== id))
       return
     }
-    setFollows([...follows, key])
+    setFollows([...follows, id])
   }
 
   return (
