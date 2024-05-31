@@ -200,7 +200,9 @@ export const useGetUrlInfo = (url?: string) => {
 export const useThemeChange = () => {
   const [settings, setSettings] = useStorage<{
     theme?: string
-  }>(StorageKeyEnum.SETTINGS, {})
+  }>(StorageKeyEnum.SETTINGS, {
+    theme: "light",
+  })
 
   const { theme } = settings
 
@@ -255,7 +257,7 @@ export const useRibbon = () => {
     ribbon?: string
     background?: string
   }>(StorageKeyEnum.SETTINGS, {
-    ribbon: ""
+    ribbon: "ribbon-a-1"
   })
 
   const { ribbon } = settings

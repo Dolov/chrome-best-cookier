@@ -47,7 +47,8 @@
     "permissions": [
       "tabs",
       "storage",
-      "cookies"
+      "cookies",
+      "scripting"
     ]
   }
 }
