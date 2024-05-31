@@ -3,40 +3,44 @@
 ![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/eijnnomioacbbnkffmhnbpbocoajcage)
 ![Chrome Web Store Version](https://img.shields.io/chrome-web-store/v/eijnnomioacbbnkffmhnbpbocoajcage)
 ![Chrome Web Store Stars](https://img.shields.io/chrome-web-store/stars/eijnnomioacbbnkffmhnbpbocoajcage)
+![GitHub](https://img.shields.io/github/license/dolov/chrome-best-cookier)
+
+[Chrome Web Store](https://chromewebstore.google.com/detail/best-cookier/eijnnomioacbbnkffmhnbpbocoajcage)
+
+<div align="center">
+A high-quality cookie manager that integrates beauty, functionality, and ease of use.
+[English](https://github.com/Dolov/chrome-best-cookier/blob/main/README.md) | 简体中文
+</div>
 
 
-[chrome web store](https://chromewebstore.google.com/detail/best-cookier/eijnnomioacbbnkffmhnbpbocoajcage)
-一款集颜值、操作、功能与一体的高质量 Cookie 管理器
+### Features
+- Convenient add, delete, modify, and search functionalities.
+- Import/export from/to files, copy, delete, full-screen operation, batch operations.
+- Support for retrieving cookies from all subdomains under the root domain.
+- Support for searching multiple columns such as name, value, domain, path, etc.
+- Support for "following" a specific cookie, with special highlighting.
+- 32 exquisite theme colors, gradient background colors, multiple follow icons – whatever you desire.
 
+### Feature Examples
 
-### 功能
-- 便捷的增、删、改、查。
-- 文件导入、导出为文件、复制、删除、全屏操作、批量操作。
-- 支持检索根域名下所有子域名的 Cookie。
-- 支持 name、value、domain、path 等多列数据检索。
-- 支持 “关注” 某 cookie，置顶特殊显示。
-- 32 款精致主题色、N 款背景渐变色、多个关注图标 你想要的样子我都有。
-
-### 功能示例
-
-#### 正常主题模式
+#### Normal Theme Mode
 ![img](./screentshots/WX20240530-102617@2x.png)
 
-#### 暗色主题模式
+#### Dark Theme Mode
 ![img](./screentshots/WX20240530-102704@2x.png)
 
-#### 导入
+#### Import
 ![img](./screentshots/WX20240530-102858@2x.png)
 
-#### 全屏模式
+#### Full-Screen Mode
 ![img](./screentshots/WX20240530-102025@2x.png)
 ![img](./screentshots/WX20240530-102038@2x.png)
 
-#### 主题配置
+#### Theme Configuration
 ![img](./screentshots/WX20240530-101855@2x.png)
 
-#### 关注图标配置
+#### Follow Icon Configuration
 ![img](./screentshots/WX20240530-104119@2x.png)
 
-### 欢迎使用
-使用过程中遇到问题或者有新功能的需求可以在 issues 中进行反馈。
+### Welcome to Use
+If you encounter any issues during use or have new feature requests, feel free to provide feedback in the issues section.
