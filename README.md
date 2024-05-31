@@ -6,47 +6,50 @@
 ![GitHub](https://img.shields.io/github/license/dolov/chrome-best-cookier)
 
 
-
 <div align="center">
 
-[Chrome Web Store](https://chromewebstore.google.com/detail/best-cookier/eijnnomioacbbnkffmhnbpbocoajcage) A high-quality cookie manager that integrates beauty, functionality, and ease of use.
+[chrome web store](https://chromewebstore.google.com/detail/best-cookier/eijnnomioacbbnkffmhnbpbocoajcage) 一款集颜值、操作、功能与一体的高质量 Cookie 管理器。
 
-English | [简体中文](https://github.com/Dolov/chrome-best-cookier/blob/main/README.zh-CN.md)
+[English](https://github.com/Dolov/chrome-best-cookier/blob/main/README.en-US.md) | 简体中文
 </div>
 
 
-### Features
-- Convenient add, delete, modify, and search functionalities.
-- Monitor all JavaScript actions that change cookies and print them to the console (beneficial for frontend developers).
-- Import/export from/to files, copy, delete, full-screen operation, batch operations.
-- Support for retrieving cookies from all subdomains under the root domain.
-- Support for searching multiple columns such as name, value, domain, path, etc.
-- Support for "following" a specific cookie, with special highlighting.
-- 32 exquisite theme colors, gradient background colors, multiple follow icons – whatever you desire.
+### 功能
+- 便捷的增、删、改、查。
+- 监控所有 JS 操作 cookie 变化的动作并打印在控制台上（前端开发者利好）。
+- 文件导入、导出为文件、复制、删除、全屏操作、批量操作。
+- 支持检索根域名下所有子域名的 Cookie。
+- 支持 name、value、domain、path 等多列数据检索。
+- 支持 “关注” 某 cookie，置顶特殊显示。
+- 32 款精致主题色、N 款背景渐变色、多个关注图标 你想要的样子我都有。
 
-### Feature Examples
+### 功能示例
 
-#### Normal Theme Mode
+#### 正常主题模式
 ![img](./screentshots/WX20240530-102617@2x.png)
 
-#### Dark Theme Mode
+#### 暗色主题模式
 ![img](./screentshots/WX20240530-102704@2x.png)
 
-#### Import
+#### 导入
 ![img](./screentshots/WX20240530-102858@2x.png)
 
-#### Full-Screen Mode
+#### 监控所有 JS 操作 cookie 变化的动作
+![img](./screentshots/WX20240531-161045@2x.png)
+
+#### 全屏模式
 ![img](./screentshots/WX20240530-102025@2x.png)
 ![img](./screentshots/WX20240530-102038@2x.png)
 
-#### Theme Configuration
+#### 主题配置
 ![img](./screentshots/WX20240530-101855@2x.png)
 
-#### Follow Icon Configuration
+#### 关注图标配置
 ![img](./screentshots/WX20240530-104119@2x.png)
 
-### Welcome to Use
-If you encounter any issues during use or have new feature requests, feel free to provide feedback in the issues section.
 
-### Thanks
+### 欢迎使用
+使用过程中遇到问题或者有新功能的需求可以在 issues 中进行反馈。
+
+### 鸣谢
 - https://github.com/JSREI/js-cookie-monitor-debugger-hook
