@@ -43,6 +43,10 @@
       }
     }
   },
+  "actions_monitor": {
+    "message": "监听 Cookie 变化",
+    "description": ""
+  },
   "actions_refresh": {
     "message": "刷新",
     "description": ""
@@ -132,5 +136,14 @@
   "inputValue": {
     "message": "输入值",
     "description": ""
+  },
+  "monitorEnd": {
+    "message": "已结束监听。",
+    "description": ""
+  },
+  "monitorStart": {
+    "message": "已开始监听，打开浏览器控制台进行查看。",
+    "description": ""
   }
+  
 }

@@ -12,16 +12,24 @@ export type Cookie = {
   checked?: boolean,
 } & chrome.cookies.Cookie
 
+export const LOCAL_STORAGE_KEY = "__BestCookier_Monitor_Config__"
+
+
 export enum MessageActionEnum {
   GET_COOKIES = "GET_COOKIES",
   SET_COOKIES = "SET_COOKIES",
   UPDATE_COOKIE = "UPDATE_COOKIE",
   DELETE_COOKIES = "DELETE_COOKIES",
+
+  GET_MONITOR = "GET_MONITOR",
+  END_MONITOR = "END_MONITOR",
+  START_MONITOR = "START_MONITOR",
 }
 
 export enum StorageKeyEnum {
   FOLLOW = "FOLLOW",
-  SETTINGS = "SETTINGS"
+  SETTINGS = "SETTINGS",
+  MONITOR = "MONITOR",
 }
 
 

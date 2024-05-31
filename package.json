@@ -11,17 +11,12 @@
     "test": "plasmo test"
   },
   "dependencies": {
-    "@ant-design/icons": "5.3.7",
     "@plasmohq/storage": "1.10.0",
-    "antd": "5.17.3",
     "classnames": "^2.5.1",
     "daisyui": "^4.11.1",
     "dayjs": "^1.11.11",
-    "js-cookie": "3.0.5",
     "plasmo": "0.86.3",
-    "popular-message": "^1.2.0",
     "psl": "^1.9.0",
-    "rc-tween-one": "^3.0.6",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
@@ -46,9 +41,7 @@
     ],
     "permissions": [
       "tabs",
-      "storage",
-      "cookies",
-      "scripting"
+      "cookies"
     ]
   }
 }

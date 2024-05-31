@@ -43,6 +43,10 @@
       }
     }
   },
+  "actions_monitor": {
+    "message": "Monitor Cookie Changes",
+    "description": ""
+  },
   "actions_refresh": {
     "message": "Refresh",
     "description": ""
@@ -131,6 +135,14 @@
   },
   "inputValue": {
     "message": "Input Value",
+    "description": ""
+  },
+  "monitorEnd": {
+    "message": "Monitoring ended.",
+    "description": ""
+  },
+  "monitorStart": {
+    "message": "Monitoring started. Open the browser console to view.",
     "description": ""
   }
 }

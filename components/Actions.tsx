@@ -4,14 +4,14 @@ import classnames from 'classnames'
 import {
   MaterialSymbolsExportNotes, MaterialSymbolsDelete, MingcuteRefresh2Fill,
   MaterialSymbolsSettings, StreamlineEmojisBug, IonEllipsisVertical,
-  SiGlyphFullscreen, IonCopy,
+  SiGlyphFullscreen, IonCopy, CarbonCloudMonitoring,
 } from '~components/Icons'
 import { useGetUrlInfo } from '~components/hooks'
 import Modal from '~components/Modal'
 import Upload from '~components/Upload'
 import message from '~components/message'
 import { type Cookie, copyTextToClipboard, MessageActionEnum,
-  StorageKeyEnum, getFileJson, dayjs, getId
+  StorageKeyEnum, getFileJson, dayjs, getId, sendMessage,
 } from '~utils'
 
 export interface ActionsProps {
@@ -25,12 +25,26 @@ const Actions: React.FC<ActionsProps> = props => {
   const { init, full, cookies, urlInfo } = props
   const [visible, setVisible] = React.useState(false)
   const [importData, setImportData] = React.useState("")
+  const [monitorConfig, setMonitorConfig] = React.useState()
+  const monitoring = !!monitorConfig
 
   const filteredCookies = React.useMemo(() => {
     const checkeds = cookies.filter(item => item.checked)
     if (checkeds.length) return checkeds
     return cookies.filter(item => !item.create)
   }, [cookies])
+
+  React.useEffect(() => {
+    queryMonitorConfig()
+  }, [])
+
+  const queryMonitorConfig = () => {
+    sendMessage({
+      action: MessageActionEnum.GET_MONITOR,
+    }).then(res => {
+      setMonitorConfig(res)
+    })
+  }
 
   const handleExport = () => {
     const data = filteredCookies.map(item => {
@@ -101,6 +115,21 @@ const Actions: React.FC<ActionsProps> = props => {
     setImportData(JSON.stringify(data, null, 2))
   }
 
+  const handleMonitor = async () => {
+    const action = monitoring ? MessageActionEnum.END_MONITOR : MessageActionEnum.START_MONITOR
+    const res = await sendMessage({
+      action,
+      payload: {
+        names: filteredCookies.map(item => item.name),
+      }
+    })
+    queryMonitorConfig()
+    // const messageText = monitoring ?
+    //   chrome.i18n.getMessage("monitorEnd") :
+    //   chrome.i18n.getMessage("monitorStart")
+    // message.success(messageText)
+  }
+
   const len = filteredCookies.length
   const noData = len == 0
 
@@ -152,6 +181,13 @@ const Actions: React.FC<ActionsProps> = props => {
             <IonCopy className="text-xl rotate-180 group-hover:text-primary" />
           </button>
         </div>
+        {!full && (<div className="tooltip" data-tip={chrome.i18n.getMessage("actions_monitor")}>
+          <button onClick={handleMonitor} className={classnames("btn btn-sm btn-circle mx-2 group")}>
+            <CarbonCloudMonitoring className={classnames("text-xl group-hover:text-primary", {
+              "!text-secondary": monitoring
+            })} />
+          </button>
+        </div>)}
         <div className="tooltip" data-tip={chrome.i18n.getMessage("actions_delete", [`${len}`])}>
           <button onClick={handleDelete} className={classnames("btn btn-sm btn-circle mx-2 group", {
             "btn-disabled": noData
@@ -184,7 +220,6 @@ const Actions: React.FC<ActionsProps> = props => {
 export const RowActions = props => {
   const { data, init } = props
   const [follows, setFollows] = useStorage(StorageKeyEnum.FOLLOW, [])
-  const { name, value, domain } = data
   const id = getId(data)
   const follow = follows.includes(id)
   const text = follow ? chrome.i18n.getMessage("unFollow") : chrome.i18n.getMessage("follow")
