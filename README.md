@@ -17,6 +17,7 @@ English | [简体中文](https://github.com/Dolov/chrome-best-cookier/blob/main/
 
 ### Features
 - Convenient add, delete, modify, and search functionalities.
+- Monitor all JavaScript actions that change cookies and print them to the console (beneficial for frontend developers).
 - Import/export from/to files, copy, delete, full-screen operation, batch operations.
 - Support for retrieving cookies from all subdomains under the root domain.
 - Support for searching multiple columns such as name, value, domain, path, etc.
