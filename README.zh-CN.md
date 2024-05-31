@@ -5,11 +5,12 @@
 ![Chrome Web Store Stars](https://img.shields.io/chrome-web-store/stars/eijnnomioacbbnkffmhnbpbocoajcage)
 ![GitHub](https://img.shields.io/github/license/dolov/chrome-best-cookier)
 
-[chrome web store](https://chromewebstore.google.com/detail/best-cookier/eijnnomioacbbnkffmhnbpbocoajcage)
 
 <div align="center">
-一款集颜值、操作、功能与一体的高质量 Cookie 管理器。
-English | [简体中文](https://github.com/Dolov/chrome-best-cookier/blob/main/README.zh-CN.md)
+
+[chrome web store](https://chromewebstore.google.com/detail/best-cookier/eijnnomioacbbnkffmhnbpbocoajcage) 一款集颜值、操作、功能与一体的高质量 Cookie 管理器。
+
+[English](https://github.com/Dolov/chrome-best-cookier/blob/main/README.md) | 简体中文
 </div>
 
 
