@@ -11,7 +11,7 @@
 
 [Chrome Web Store](https://chromewebstore.google.com/detail/best-cookier/eijnnomioacbbnkffmhnbpbocoajcage) A high-quality cookie manager that integrates beauty, functionality, and ease of use.
 
-English | [简体中文](https://github.com/alibaba/hooks/blob/master/README.zh-CN.md)
+English | [简体中文](https://github.com/Dolov/chrome-best-cookier/blob/main/README.zh-CN.md)
 </div>
 
 
