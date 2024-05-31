@@ -32,11 +32,11 @@ English | [简体中文](https://github.com/Dolov/chrome-best-cookier/blob/main/
 #### Dark Theme Mode
 ![img](./screentshots/WX20240530-102704@2x.png)
 
-#### Monitor all JavaScript actions that change cookies
-![img](./screentshots/WX20240531-161045@2x.png)
-
 #### Import
 ![img](./screentshots/WX20240530-102858@2x.png)
+
+#### Monitor all JavaScript actions that change cookies
+![img](./screentshots/WX20240531-161045@2x.png)
 
 #### Full-Screen Mode
 ![img](./screentshots/WX20240530-102025@2x.png)
