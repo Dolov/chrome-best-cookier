@@ -124,10 +124,10 @@ const Actions: React.FC<ActionsProps> = props => {
       }
     })
     queryMonitorConfig()
-    // const messageText = monitoring ?
-    //   chrome.i18n.getMessage("monitorEnd") :
-    //   chrome.i18n.getMessage("monitorStart")
-    // message.success(messageText)
+    const messageText = monitoring ?
+      chrome.i18n.getMessage("monitorEnd") :
+      chrome.i18n.getMessage("monitorStart")
+    message.success(messageText)
   }
 
   const len = filteredCookies.length
