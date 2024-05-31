@@ -47,3 +47,6 @@ English | [简体中文](https://github.com/Dolov/chrome-best-cookier/blob/main/
 
 ### Welcome to Use
 If you encounter any issues during use or have new feature requests, feel free to provide feedback in the issues section.
+
+### Thanks
+- https://github.com/JSREI/js-cookie-monitor-debugger-hook

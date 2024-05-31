@@ -44,5 +44,9 @@
 #### 关注图标配置
 ![img](./screentshots/WX20240530-104119@2x.png)
 
+
 ### 欢迎使用
 使用过程中遇到问题或者有新功能的需求可以在 issues 中进行反馈。
+
+### 鸣谢
+- https://github.com/JSREI/js-cookie-monitor-debugger-hook
