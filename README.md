@@ -13,7 +13,7 @@
 
 <div align="center">
 
-[chrome web store](https://chromewebstore.google.com/detail/best-cookier/eijnnomioacbbnkffmhnbpbocoajcage) 一款集颜值、操作、功能与一体的高质量 Cookie 管理器。
+[chrome web store](https://chromewebstore.google.com/detail/best-cookier/eijnnomioacbbnkffmhnbpbocoajcage) 一款集颜值、操作、功能于一体的高质量 Cookie 管理器。
 
 [English](https://github.com/Dolov/chrome-best-cookier/blob/main/README.en-US.md) | 简体中文
 </div>
