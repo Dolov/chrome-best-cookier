@@ -118,15 +118,15 @@
     "description": ""
   },
   "filterByName": {
-    "message": "Filter by Name",
+    "message": "Filter by Name | Regex",
     "description": ""
   },
   "filterByValue": {
-    "message": "Filter by Value",
+    "message": "Filter by Value | Regex",
     "description": ""
   },
   "filterByPath": {
-    "message": "Filter by Path",
+    "message": "Filter by Path | Regex",
     "description": ""
   },
   "addNewCookie": {

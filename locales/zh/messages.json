@@ -118,15 +118,15 @@
     "description": ""
   },
   "filterByName": {
-    "message": "按名称过滤",
+    "message": "按名称过滤 | 正则",
     "description": ""
   },
   "filterByValue": {
-    "message": "按值过滤",
+    "message": "按值过滤 | 正则",
     "description": ""
   },
   "filterByPath": {
-    "message": "按路径过滤",
+    "message": "按路径过滤 | 正则",
     "description": ""
   },
   "addNewCookie": {

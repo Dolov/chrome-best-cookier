@@ -239,11 +239,15 @@ export const getId = (cookie: Cookie) => {
 }
 
 export const filterCookie = (cookie, value, key) => {
-  if (!value) return false
-  const keyValue = cookie[key]
-  if (!keyValue) return false
-  const includes = keyValue.toLowerCase().includes(value.toLowerCase())
-  if (includes) return true
-  const valueRegex = new RegExp(value, 'i')
-  return valueRegex.test(keyValue)
+  try {
+    if (!value) return false
+    const keyValue = cookie[key]
+    if (!keyValue) return false
+    const includes = keyValue.toLowerCase().includes(value.toLowerCase())
+    if (includes) return true
+    const valueRegex = new RegExp(value, 'i')
+    return valueRegex.test(keyValue)
+  } catch (error) {
+    return false
+  }
 }
