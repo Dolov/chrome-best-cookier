@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import Actions from '~components/Actions'
 import { useThemeChange, useBackgroundChange } from '~components/hooks'
 import DataList, { type DataListProps } from '~components/DataList'
-import { type Cookie, getDomainList, MessageActionEnum } from '~utils'
+import { type Cookie, getDomainList, MessageActionEnum, filterCookie } from '~utils'
 
 export interface MainProps {
 }
@@ -50,17 +50,17 @@ const Main = props => {
     if (domainList.length) {
       return cookies.filter(item => {
         if (item.create) return true
-        if (path && item.path) return item.path.toLowerCase().includes(path.toLowerCase())
-        if (name && item.name) return item.name.toLowerCase().includes(name.toLowerCase())
-        if (value && item.value) return item.value.toLowerCase().includes(value.toLowerCase())
+        if (path && item.path) return filterCookie(item, path, "path")
+        if (name && item.name) return filterCookie(item, name, "name")
+        if (value && item.value) return filterCookie(item, value, "value")
         return domainList.includes(item.domain)
       })
     }
     return cookies.filter(item => {
       if (item.create) return true
-      if (path && item.path) return item.path.toLowerCase().includes(path.toLowerCase())
-      if (name && item.name) return item.name.toLowerCase().includes(name.toLowerCase())
-      if (value && item.value) return item.value.toLowerCase().includes(value.toLowerCase())
+      if (path && item.path) return filterCookie(item, path, "path")
+      if (name && item.name) return filterCookie(item, name, "name")
+      if (value && item.value) return filterCookie(item, value, "value")
       return true
     })
   }, [cookies, conditions])

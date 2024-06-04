@@ -237,3 +237,13 @@ export const getId = (cookie: Cookie) => {
   const { name, value, domain, path } = cookie
   return `${name}-${value}-${domain}-${path}`
 }
+
+export const filterCookie = (cookie, value, key) => {
+  if (!value) return false
+  const keyValue = cookie[key]
+  if (!keyValue) return false
+  const includes = keyValue.toLowerCase().includes(value.toLowerCase())
+  if (includes) return true
+  const valueRegex = new RegExp(value, 'i')
+  return valueRegex.test(keyValue)
+}
