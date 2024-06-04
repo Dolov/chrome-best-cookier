@@ -172,17 +172,27 @@ const DataList: React.FC<DataListProps> = props => {
   }
 
   const onNameChange = async (name, cookie) => {
-    if (!name) return
-    if (cookie.create) {
+    if (cookie.create && !name) return
+    if (cookie.create && name) {
       onCreateItemChange({ name }, cookie)
       return
     }
-    deleteAndUpdate(cookie, { name })
+    if (name) {
+      deleteAndUpdate(cookie, { name })
+      return
+    }
+    await chrome.runtime.sendMessage({
+      action: MessageActionEnum.DELETE_COOKIES,
+      payload: {
+        cookies: [cookie],
+      }
+    })
+    init()
   }
 
   const onValueChange = async (value, cookie) => {
-    if (!value) return
-    if (cookie.create) {
+    if (cookie.create && !value) return
+    if (cookie.create && value) {
       onCreateItemChange({ value }, cookie)
       return
     }
