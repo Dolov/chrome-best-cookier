@@ -10,6 +10,7 @@ export const config: PlasmoCSConfig = {
   run_at: "document_start"
 }
 
+
 const init = async () => {
   const monitorConfig = localStorage.getItem(LOCAL_STORAGE_KEY)
   if (!monitorConfig) return
@@ -22,6 +23,7 @@ const init = async () => {
 
   Object.defineProperty(Document.prototype, 'cookie', {
     set(newValue) {
+
       _1717655521868onSetCookie(newValue);
       return originalCookieSet.call(this, newValue);
     },
@@ -134,6 +136,11 @@ const _1717655521868getLocation = () => {
   while (callstack.length && callstack[0].includes("_1717655521868")) {
     callstack.shift()
   }
+
+  while (callstack.length && callstack[0].includes("chrome-extension://")) {
+    callstack.shift()
+  }
+  
   if (callstack[0].includes("HTMLDocument.set")) {
     callstack.shift()
   }
