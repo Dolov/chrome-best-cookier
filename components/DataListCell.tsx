@@ -27,10 +27,9 @@ export const Input = props => {
   }
 
   const onKeyDown = e => {
+    if (e.key !== 'Enter') return
     const target = e.target as HTMLInputElement
-    if (e.key === 'Enter') {
-      target.blur()
-    }
+    target.blur()
   }
 
   return (

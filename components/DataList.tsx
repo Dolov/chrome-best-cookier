@@ -289,8 +289,8 @@ const DataList: React.FC<DataListProps> = props => {
         {cookies.map((cookie, index) => {
           const { name, path, expirationDate, httpOnly, hostOnly, secure, sameSite, session, value, domain, create, checked } = cookie
           const id = getId(cookie)
-          const follow = follows.includes(id)
           const order = index + 1
+          const follow = follows.includes(id)
           const highlight = id === highlightId
           return (
             <tr key={`${id}-${index}`} className={classnames("group hover:bg-base-200", {
