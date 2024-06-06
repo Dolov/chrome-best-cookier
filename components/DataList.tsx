@@ -156,6 +156,7 @@ const DataList: React.FC<DataListProps> = props => {
     }, cookie)
     init()
     setHighlightId(getId(res))
+    return res
   }
 
   const onCreateItemChange = async (changedValues, cookie) => {
@@ -199,13 +200,14 @@ const DataList: React.FC<DataListProps> = props => {
     deleteAndUpdate(cookie, { value })
   }
 
-  const onDomainChange = async (domain, cookie) => {
+  const onDomainChange = async (domain, cookie, callback?: (cookie: Cookie) => void) => {
     if (!domain) return
     if (cookie.create) {
       onCreateItemChange({ domain }, cookie)
       return
     }
-    deleteAndUpdate(cookie, { domain })
+    const newCookie = await deleteAndUpdate(cookie, { domain })
+    if (callback) callback(newCookie.domain)
   }
 
   const onPathChange = async (path, cookie) => {
@@ -338,7 +340,7 @@ const DataList: React.FC<DataListProps> = props => {
                 <Input
                   value={domain}
                   create={create}
-                  onChange={value => onDomainChange(value, cookie)}
+                  onChange={(value, callback) => onDomainChange(value, cookie, callback)}
                 />
               </td>
               <td className="ellipsis w-[150px]">

@@ -21,9 +21,15 @@ export const Input = props => {
   const { value, create, onChange, placeholder, className } = props
   const [innerValue, setInnerValue] = React.useState(value)
 
+  // fix: 修复某些场景下内部值与外部不一致的问题 eg .domain.com => domain.com
+  const fixValueNoChange = updatedValue => {
+    if (updatedValue === innerValue) return
+    setInnerValue(updatedValue)
+  }
+
   const onValueChange = e => {
     if (e.target.value === value) return
-    onChange(e.target.value)
+    onChange(e.target.value, fixValueNoChange)
   }
 
   const onKeyDown = e => {
