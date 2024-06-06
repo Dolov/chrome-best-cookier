@@ -30,7 +30,6 @@ export const Input = props => {
     const target = e.target as HTMLInputElement
     if (e.key === 'Enter') {
       target.blur()
-      onValueChange(e)
     }
   }
 
