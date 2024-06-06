@@ -86,6 +86,17 @@ const DataList: React.FC<DataListProps> = props => {
     checkbox.indeterminate = indeterminate
   }, [cookies])
 
+  const deleteCookie = async (cookie: Cookie, deleteFollow?: boolean) => {
+    const res = await chrome.runtime.sendMessage({
+      action: MessageActionEnum.DELETE_COOKIES,
+      payload: {
+        deleteFollow,
+        cookies: [cookie],
+      }
+    })
+    return res
+  }
+
   const updateCookie = async (newCookie, oldCookie) => {
     const { hostOnly, session, create, checked, ...rest } = newCookie
     const res = await chrome.runtime.sendMessage({
@@ -96,9 +107,10 @@ const DataList: React.FC<DataListProps> = props => {
     })
 
     // 修改了 cookie 后，更新关注列表
-    const oldId = getId(oldCookie)
     const newId = getId(res)
-    if (oldId !== newId && follows.includes(oldId)) {
+    const oldId = getId(oldCookie)
+    
+    if (!follows.includes(newId)) {
       const otherIds = follows.filter(item => item !== oldId)
       setFollows([...otherIds, newId])
     }
@@ -144,12 +156,7 @@ const DataList: React.FC<DataListProps> = props => {
   }
 
   const deleteAndUpdate = async (cookie, updateFields) => {
-    await chrome.runtime.sendMessage({
-      action: MessageActionEnum.DELETE_COOKIES,
-      payload: {
-        cookies: [cookie],
-      }
-    })
+    await deleteCookie(cookie, false)
     const res = await updateCookie({
       ...cookie,
       ...updateFields,
@@ -182,12 +189,8 @@ const DataList: React.FC<DataListProps> = props => {
       deleteAndUpdate(cookie, { name })
       return
     }
-    await chrome.runtime.sendMessage({
-      action: MessageActionEnum.DELETE_COOKIES,
-      payload: {
-        cookies: [cookie],
-      }
-    })
+    // name 为空则删除
+    await deleteCookie(cookie)
     init()
   }
 

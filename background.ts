@@ -35,7 +35,7 @@ chrome.runtime.onMessage.addListener((params, sender, sendResponse) => {
 
   if (action === MessageActionEnum.DELETE_COOKIES) {
     const { payload } = params;
-    const { cookies } = payload;
+    const { cookies, deleteFollow = true } = payload;
     
     const deletePromises = cookies.map(cookie => {
       const url = getUrlFromCookie(cookie)
@@ -45,13 +45,14 @@ chrome.runtime.onMessage.addListener((params, sender, sendResponse) => {
       });
     });
 
-
     // 删除关注
-    storage.get(StorageKeyEnum.FOLLOW).then(follows => {
-      const deleteIds = cookies.map(getId)
-      const newFollows = (follows as unknown as string[]).filter(id => !deleteIds.includes(id))
-      storage.set(StorageKeyEnum.FOLLOW, newFollows)
-    })
+    if (deleteFollow) {
+      storage.get(StorageKeyEnum.FOLLOW).then(follows => {
+        const deleteIds = cookies.map(getId)
+        const newFollows = (follows as unknown as string[]).filter(id => !deleteIds.includes(id))
+        storage.set(StorageKeyEnum.FOLLOW, newFollows)
+      })
+    }
     
     Promise.all(deletePromises)
       .then(results => {
