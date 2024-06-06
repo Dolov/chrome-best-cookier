@@ -97,7 +97,7 @@ const DataList: React.FC<DataListProps> = props => {
 
     // 修改了 cookie 后，更新关注列表
     const oldId = getId(oldCookie)
-    const newId = getId(newCookie)
+    const newId = getId(res)
     if (oldId !== newId && follows.includes(oldId)) {
       const otherIds = follows.filter(item => item !== oldId)
       setFollows([...otherIds, newId])
