@@ -110,7 +110,7 @@ const DataList: React.FC<DataListProps> = props => {
     const newId = getId(res)
     const oldId = getId(oldCookie)
     
-    if (!follows.includes(newId)) {
+    if (follows.includes(oldId) && newId !== oldId) {
       const otherIds = follows.filter(item => item !== oldId)
       setFollows([...otherIds, newId])
     }
