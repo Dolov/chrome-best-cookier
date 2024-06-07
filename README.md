@@ -53,6 +53,8 @@
 ![img](./screentshots/WX20240530-104119@2x.png)
 
 
+[![Star History Chart](https://api.star-history.com/svg?repos=Dolov/chrome-best-cookier&type=Date)](https://star-history.com/#Dolov/chrome-best-cookier&Date)
+
 ### 欢迎使用
 使用过程中遇到问题或者有新功能的需求可以在 issues 中进行反馈。
 
