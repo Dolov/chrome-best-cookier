@@ -1,6 +1,7 @@
 import React from 'react'
 import { useStorage } from '@plasmohq/storage/hook'
 import classnames from 'classnames'
+import QProgress from 'qier-progress'
 import {
   MaterialSymbolsExportNotes, MaterialSymbolsDelete, MingcuteRefresh2Fill,
   MaterialSymbolsSettings, StreamlineEmojisBug, IonEllipsisVertical,
@@ -13,6 +14,11 @@ import message from '~components/message'
 import { type Cookie, copyTextToClipboard, MessageActionEnum,
   StorageKeyEnum, getFileJson, dayjs, getId, sendMessage,
 } from '~utils'
+
+const qprogress = new QProgress({
+  height: 5,
+})
+
 
 export interface ActionsProps {
   init: () => void
@@ -160,9 +166,7 @@ const Actions: React.FC<ActionsProps> = props => {
       </Modal>
       <div className='flex items-center'>
         <div className="tooltip" data-tip={chrome.i18n.getMessage("actions_refresh")}>
-          <button onClick={init} className="btn btn-sm btn-circle mx-2 group">
-            <MingcuteRefresh2Fill className="text-xl group-hover:text-primary" />
-          </button>
+          <RefreshButton action={init} />
         </div>
         <div className="tooltip" data-tip={chrome.i18n.getMessage("actions_import")}>
           <button onClick={() => setVisible(true)} className="btn btn-sm btn-circle mx-2 group">
@@ -256,6 +260,29 @@ export const RowActions = props => {
         </li>
       </ul>
     </div>
+  )
+}
+
+const RefreshButton = props => {
+  const { action } = props
+  const [loading, setLoading] = React.useState(false)
+
+  const onClick = () => {
+    action()
+    qprogress.start()
+    setLoading(true)
+    setTimeout(() => {
+      qprogress.finish()
+      setLoading(false)
+    }, 300)
+  }
+
+  return (
+    <button onClick={onClick} className="btn btn-sm btn-circle mx-2 group">
+      <MingcuteRefresh2Fill className={classnames("text-xl group-hover:text-primary", {
+        "animate-spin": loading,
+      })} />
+    </button>
   )
 }
 

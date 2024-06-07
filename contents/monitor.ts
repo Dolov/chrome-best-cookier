@@ -128,6 +128,14 @@ function now() {
   return "[" + new Date(new Date().getTime() + 1000 * 60 * 60 * 8).toJSON().replace("T", " ").replace("Z", "") + "] ";
 }
 
+const genFormatArray = (messageAndStyleArray) => {
+  const formatArray = [];
+  for (let i = 0, end = messageAndStyleArray.length / 2; i < end; i++) {
+      formatArray.push("%c%s");
+  }
+  return formatArray.join("");
+}
+
 const _1717655521868getLocation = () => {
   const callstack = new Error().stack.split("\n")
   if (callstack[0] === "Error") {
@@ -145,14 +153,6 @@ const _1717655521868getLocation = () => {
     callstack.shift()
   }
   return callstack.join("\n")
-}
-
-const genFormatArray = (messageAndStyleArray) => {
-  const formatArray = [];
-  for (let i = 0, end = messageAndStyleArray.length / 2; i < end; i++) {
-      formatArray.push("%c%s");
-  }
-  return formatArray.join("");
 }
 
 const _1717655521868onDeleteCookie = (cookieOriginalValue, cookieName, cookieValue) => {

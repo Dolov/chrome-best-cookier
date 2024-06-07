@@ -23,6 +23,9 @@ dependencies:
   psl:
     specifier: ^1.9.0
     version: 1.9.0
+  qier-progress:
+    specifier: ^1.0.4
+    version: 1.0.4
   react:
     specifier: 18.2.0
     version: 18.2.0
@@ -5113,6 +5116,11 @@ packages:
   /punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
+    dev: false
+
+  /qier-progress@1.0.4:
+    resolution: {integrity: sha512-gCxgoM2wxW7GCo/iEpOlaunVo2cf+/AJfG6wtYIbYz18GXtUhFjgZjX2s+otWh/P8ppVgGULASkWtXfZQEd2FQ==}
+    engines: {node: '>=6.0.0'}
     dev: false
 
   /queue-microtask@1.2.3:
