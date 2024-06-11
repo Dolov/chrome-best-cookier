@@ -226,6 +226,7 @@ export const getFileJson = (file: File): Promise<Record<string, any>> => {
 };
 
 export const getCreateItemDefaultDomain = (domain, subdomain) => {
+  if (isIPAddress(domain)) return domain
   if (subdomain === "www") return `.${domain}`
   if (subdomain) {
     return `.${subdomain}.${domain}`
@@ -250,4 +251,10 @@ export const filterCookie = (cookie, value, key) => {
   } catch (error) {
     return false
   }
+}
+
+export const isIPAddress = (str: string) => {
+  // 仅由数字和点组成的正则表达式
+  const ipPattern = /^[0-9.]+$/;
+  return ipPattern.test(str);
 }

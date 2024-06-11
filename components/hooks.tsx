@@ -1,7 +1,7 @@
 import React from "react"
 import psl from 'psl'
 import { useStorage } from '@plasmohq/storage/hook'
-import { StorageKeyEnum, backgrounds } from '~utils'
+import { StorageKeyEnum, backgrounds, isIPAddress } from '~utils'
 
 export const useBoolean = (defaultValue = false) => {
   const [value, setValue] = React.useState(defaultValue)
@@ -156,6 +156,16 @@ export const useGetUrlInfo = (url?: string) => {
 
   const handleUrlInfo = (url: string) => {
     const { hostname, protocol } = new URL(url)
+    // 处理地址是 ip 的场景
+    if (isIPAddress(hostname)) {
+      setUrlInfo({
+        domain: hostname, protocol,
+        hostname, subdomain: "", url
+      })
+      return
+    }
+
+    // 处理地址是 localhost 的场景
     if (hostname === "localhost") {
       setUrlInfo({
         domain: hostname, protocol,
@@ -163,6 +173,8 @@ export const useGetUrlInfo = (url?: string) => {
       })
       return
     }
+
+    // 处理地址无法解析 cookie 的场景
     if (
       !url ||
       url.startsWith("chrome://") ||
