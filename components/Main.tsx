@@ -47,20 +47,13 @@ const Main = props => {
 
   const filteredCookies = React.useMemo(() => {
     const { path, name, value, domainList } = conditions
-    if (domainList.length) {
-      return cookies.filter(item => {
-        if (item.create) return true
-        if (path && item.path) return filterCookie(item, path, "path")
-        if (name && item.name) return filterCookie(item, name, "name")
-        if (value && item.value) return filterCookie(item, value, "value")
-        return domainList.includes(item.domain)
-      })
-    }
+    const filterDomain = domainList.length > 0
     return cookies.filter(item => {
       if (item.create) return true
       if (path && item.path) return filterCookie(item, path, "path")
       if (name && item.name) return filterCookie(item, name, "name")
       if (value && item.value) return filterCookie(item, value, "value")
+      if (filterDomain) return domainList.includes(item.domain)
       return true
     })
   }, [cookies, conditions])
