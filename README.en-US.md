@@ -18,6 +18,11 @@
 English | [简体中文](https://github.com/Dolov/chrome-best-cookier/blob/main/README.md)
 </div>
 
+### ⚠️⚠️⚠️ Disclaimer
+Browser cookies are highly private, and some websites use cookies for login authentication. If your cookies are stolen, it is equivalent to someone else logging into your account. Recently, it was reported that a prominent figure in the cryptocurrency community had $1 million stolen because another browser extension stole their cookies. Therefore, some bloggers on X have labeled this plugin as malicious. Being inexperienced is the original sin; I only regret not discovering this business opportunity earlier 🤣🤣🤣.
+
+Therefore, it is still recommended that users with such needs fork the repository and build and install it themselves, which isn't too complicated.
+
 
 ### Features
 - Convenient add, delete, modify, and search functionalities.

@@ -18,6 +18,12 @@
 [English](https://github.com/Dolov/chrome-best-cookier/blob/main/README.en-US.md) | 简体中文
 </div>
 
+### ⚠️⚠️⚠️ 声明
+浏览器 cookie 隐私性较高，有些网站的登录授权都是通过 cookie 来实现的，被窃取了 cookie 相当于被别人登录了账号。
+恰巧近几天爆出有币圈大佬因被其他浏览器扩展窃取 cookie 而被盗取 100w 刀，所以在 X 上有些博主将该插件定性为恶意插件。
+菜是原罪，只怪发现自己没提前发现这个商机 🤣🤣🤣。
+
+在此呢还是建议有需求的用户能够 fork 一下仓库，自己构建安装一下，也不算麻烦。
 
 ### 功能
 - 便捷的增、删、改、查。
@@ -57,6 +63,12 @@
 
 ### 欢迎使用
 使用过程中遇到问题或者有新功能的需求可以在 issues 中进行反馈。
+
+### 开发构建
+1. 安装 nodejs https://nodejs.org/en/download/package-manager
+2. npm i
+3. npm build
+4. npm package
 
 ### 鸣谢
 - https://github.com/JSREI/js-cookie-monitor-debugger-hook
