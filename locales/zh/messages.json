@@ -85,6 +85,10 @@
     "message": "导入成功。",
     "description": ""
   },
+  "importFail": {
+    "message": "导入失败。",
+    "description": ""
+  },
   "deleteSuccess": {
     "message": "删除成功。",
     "description": ""

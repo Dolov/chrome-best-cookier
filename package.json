@@ -35,6 +35,7 @@
   },
   "manifest": {
     "default_locale": "en",
+    "incognito": "split",
     "homepage_url": "https://github.com/Dolov/chrome-best-cookier",
     "host_permissions": [
       "http://*/*",

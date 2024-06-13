@@ -18,8 +18,8 @@ const Main = props => {
   const [conditions, setConditions] = React.useState<DataListProps["conditions"]>(() => {
     return {
       name: "",
-      value: "",
       path: "",
+      value: "",
       domainList: getDomainList(domain, subdomain),
     }
   })

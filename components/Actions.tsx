@@ -75,16 +75,27 @@ const Actions: React.FC<ActionsProps> = props => {
   }
 
   const handleImport = async () => {
-    const res = await chrome.runtime.sendMessage({
-      action: MessageActionEnum.SET_COOKIES,
-      payload: {
-        cookies: JSON.parse(importData)
-      }
-    })
-    init()
-    setVisible(false)
-    setImportData("")
-    message.success(chrome.i18n.getMessage("importSuccess"))
+    try {
+      const data = JSON.parse(importData).map(item => {
+        return {
+          ...item,
+          // 无痕模式和普通模式的 storeId 不同，需要清洗，否则会导入失败
+          storeId: ""
+        }
+      })
+      const res = await chrome.runtime.sendMessage({
+        action: MessageActionEnum.SET_COOKIES,
+        payload: {
+          cookies: data
+        }
+      })
+      init()
+      setVisible(false)
+      setImportData("")
+      message.success(chrome.i18n.getMessage("importSuccess"))
+    } catch (error) {
+      message.error(chrome.i18n.getMessage("importFail"))
+    }
   }
 
   const handleDelete = async () => {

@@ -85,6 +85,10 @@
     "message": "Import successful.",
     "description": ""
   },
+  "importFail": {
+    "message": "Import failed.",
+    "description": ""
+  },
   "deleteSuccess": {
     "message": "Delete successful.",
     "description": ""
