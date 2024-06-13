@@ -29,7 +29,7 @@ export interface ActionsProps {
 
 const Actions: React.FC<ActionsProps> = props => {
   const { init, full, cookies, urlInfo } = props
-  const { url, domain } = urlInfo
+  const { url, domain, hostname } = urlInfo
   const [visible, setVisible] = React.useState(false)
   const [importData, setImportData] = React.useState("")
   const [monitorConfig, setMonitorConfig] = React.useState()
@@ -112,7 +112,7 @@ const Actions: React.FC<ActionsProps> = props => {
     
   const handleSetting = () => {
     chrome.tabs.create({
-      url: `./tabs/setting.html?domain=${encodeURIComponent(domain)}`
+      url: `./tabs/setting.html?hostname=${encodeURIComponent(hostname)}`
     })
   }
 

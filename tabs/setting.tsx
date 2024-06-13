@@ -1,11 +1,17 @@
 import React from 'react'
 import classnames from 'classnames'
-import { themes, backgrounds, ribbons } from '~utils'
+import { themes, backgrounds, ribbons, StorageKeyEnum } from '~utils'
 import { useThemeChange, useRibbon, useBackgroundChange } from '~components/hooks'
 import '~/style.less'
 import './style.less'
+import { useStorage } from '@plasmohq/storage/hook'
 
 document.title = `${chrome.i18n.getMessage("extensionName")}`
+
+const selfIds = [
+  "eijnnomioacbbnkffmhnbpbocoajcage",
+  "mjpahlmelncmphfhdkijpeoengmlidnh"
+]
 
 const ThemeList = props => {
   const { value, onChange } = props
@@ -95,13 +101,38 @@ const CookieGuard = props => {
   const { } = props
   const [type, setType] = React.useState("COOKIES")
   const [extensions, setExtensions] = React.useState<chrome.management.ExtensionInfo[]>([])
+  const [guardSettings, setGuardSettings] = useStorage(StorageKeyEnum.GUARD_SETTINGS, {
+    
+  })
+
+  const hostname = React.useMemo(() => {
+    if (location.href.includes("hostname")) {
+      const hostname = new URLSearchParams(location.search).get("hostname")
+      return hostname
+    }
+    return ""
+  }, [])
+
+  const disableIds = guardSettings[hostname] || []
 
   React.useEffect(() => {
     chrome.management.getAll(extensions => {
-      console.log('extensions: ', extensions);
+      extensions = extensions.filter(item => !selfIds.includes(item.id))
       setExtensions(extensions)
     });
   }, [])
+
+  const onToggle = (e: React.ChangeEvent<HTMLInputElement>, item: chrome.management.ExtensionInfo) => {
+    const { id } = item
+    let ids = [...disableIds]
+    if (e.target.checked) {
+      ids = ids.filter(item => item !== id)
+    } else {
+      ids.push(id)
+    }
+
+    setGuardSettings({ ...guardSettings, [hostname]: ids })
+  }
 
 
   const all = type === "ALL"
@@ -121,7 +152,7 @@ const CookieGuard = props => {
         <li onClick={() => setType("COOKIES")} className="ml-2">
           <a className={classnames({ active: cookies })}>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            使用 Cookie 的扩展（{cExtensions.length}）
+            拥有 Cookie 授权的扩展（{cExtensions.length}）
             <span className="badge badge-sm badge-warning" />
           </a>
         </li>
@@ -131,7 +162,7 @@ const CookieGuard = props => {
           const { id, name, description, icons = [], permissions, version } = item
           const iconUrl = icons?.[icons.length - 1]?.url
           const cookiePermissions = permissions.includes("cookies")
-          const self = id === "eijnnomioacbbnkffmhnbpbocoajcage" || id === "mjpahlmelncmphfhdkijpeoengmlidnh"
+          const disable = disableIds.includes(id)
           return (
             <div key={id} className={classnames("card bg-base-100 mb-4 p-6 hover:shadow-xl", "item-border")}>
               <div className='flex'>
@@ -151,7 +182,7 @@ const CookieGuard = props => {
                     <div className="badge badge-warning">cookies</div>
                   )}
                 </div>
-                <input type="checkbox" disabled={self} className={classnames("checkbox")} />
+                <input checked={!disable} onChange={e => onToggle(e, item)} type="checkbox" className="toggle toggle-primary" />
               </div>
             </div>
           )
