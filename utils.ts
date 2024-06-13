@@ -27,9 +27,8 @@ export enum MessageActionEnum {
 }
 
 export enum StorageKeyEnum {
-  FOLLOW = "FOLLOW",
+  FOLLOWS = "FOLLOWS",
   SETTINGS = "SETTINGS",
-  MONITOR = "MONITOR",
 }
 
 

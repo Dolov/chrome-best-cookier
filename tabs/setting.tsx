@@ -18,8 +18,8 @@ const ThemeList = props => {
           <div
             onClick={() => onChange(item)}
             key={item}
-            className={classnames("border-base-content/20 hover:border-base-content/40 overflow-hidden rounded-lg border outline outline-2 outline-offset-2 outline-transparent", {
-              "!outline-base-content": checked
+            className={classnames("overflow-hidden rounded-lg item-border", {
+              "item-border-active": checked
             })}>
             <div data-theme={item} className="bg-base-100 text-base-content w-full cursor-pointer font-sans">
               <div className="grid grid-cols-5 grid-rows-3">
@@ -59,8 +59,8 @@ const BackgroundList = props => {
             key={id}
             style={rest}
             onClick={() => onChange(id)}
-            className={classnames("h-16 cursor-pointer border-base-content/20 hover:border-base-content/40 overflow-hidden rounded-lg border outline outline-2 outline-offset-2 outline-transparent", {
-              "!outline-base-content": checked
+            className={classnames("h-16 cursor-pointer overflow-hidden rounded-lg item-border", {
+              "item-border-active": checked
             })}>
           </div>
         )
@@ -80,13 +80,83 @@ const RibbonList = props => {
           <div
             key={item}
             onClick={() => onChange(item)}
-            className={classnames("py-6 center cursor-pointer border-base-content/20 hover:border-base-content/40 overflow-hidden rounded-lg border outline outline-2 outline-offset-2 outline-transparent", {
-              "!outline-base-content": checked
+            className={classnames("py-6 center cursor-pointer overflow-hidden rounded-lg item-border", {
+              "item-border-active": checked
             })}>
             <div className={classnames(item, "mb-2")} />
           </div>
         )
       })}
+    </div>
+  )
+}
+
+const CookieGuard = props => {
+  const { } = props
+  const [type, setType] = React.useState("COOKIES")
+  const [extensions, setExtensions] = React.useState<chrome.management.ExtensionInfo[]>([])
+
+  React.useEffect(() => {
+    chrome.management.getAll(extensions => {
+      console.log('extensions: ', extensions);
+      setExtensions(extensions)
+    });
+  }, [])
+
+
+  const all = type === "ALL"
+  const cookies = type === "COOKIES"
+  const cExtensions = extensions.filter(item => item.permissions.includes("cookies"))
+  const list = cookies ? cExtensions : extensions
+
+  return (
+    <div className="rounded-box">
+      <ul className="menu md:menu-horizontal">
+        <li onClick={() => setType("ALL")}>
+          <a className={classnames({ active: all })}>
+            全部扩展（{extensions.length}）
+            <span className="badge badge-xs badge-info pt-0"></span>
+          </a>
+        </li>
+        <li onClick={() => setType("COOKIES")} className="ml-2">
+          <a className={classnames({ active: cookies })}>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            使用 Cookie 的扩展（{cExtensions.length}）
+            <span className="badge badge-sm badge-warning" />
+          </a>
+        </li>
+      </ul>
+      <div className='grid grid-cols-4 gap-4'>
+        {list.map(item => {
+          const { id, name, description, icons = [], permissions, version } = item
+          const iconUrl = icons?.[icons.length - 1]?.url
+          const cookiePermissions = permissions.includes("cookies")
+          const self = id === "eijnnomioacbbnkffmhnbpbocoajcage" || id === "mjpahlmelncmphfhdkijpeoengmlidnh"
+          return (
+            <div key={id} className={classnames("card bg-base-100 mb-4 p-6 hover:shadow-xl", "item-border")}>
+              <div className='flex'>
+                <img className="h-12 w-12 min-h-12 min-w-12" src={iconUrl} />
+                <div className="pl-4">
+                  <h2 className="card-title ellipsis-clamp-1" title={name}>
+                    {name} v{version}
+                  </h2>
+                  <p className='ellipsis-clamp-2' title={description}>
+                    {description}
+                  </p>
+                </div>
+              </div>
+              <div className="card-actions mt-2 flex-1 items-end">
+                <div className="flex-1">
+                  {cookiePermissions && (
+                    <div className="badge badge-warning">cookies</div>
+                  )}
+                </div>
+                <input type="checkbox" disabled={self} className={classnames("checkbox")} />
+              </div>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -103,10 +173,18 @@ const Setting: React.FC<SettingProps> = props => {
   const [theme, setTheme] = useThemeChange()
   const [background, setBackground] = useBackgroundChange()
 
+  const checked = React.useMemo(() => {
+    if (location.href.includes("anchor")) {
+      const anchor = new URLSearchParams(location.search).get("anchor")
+      return anchor
+    }
+    return "theme"
+  }, [])
+
   return (
     <div className="overflow-auto h-full">
       <div className="collapse bg-base-200">
-        <input type="radio" name="my-accordion-1" defaultChecked />
+        <input type="radio" name="my-accordion-1" defaultChecked={checked === "theme"} />
         <div className="collapse-title text-xl font-medium">
           {chrome.i18n.getMessage("settings_theme")}
         </div>
@@ -132,8 +210,18 @@ const Setting: React.FC<SettingProps> = props => {
           <RibbonList value={ribbon} onChange={setRibbon} />
         </div>
       </div>
+      <div className="collapse bg-base-200 mt-4">
+        <input type="radio" name="my-accordion-1" defaultChecked={checked === "cookieGuard"} />
+        <div className="collapse-title text-xl font-medium">
+          {chrome.i18n.getMessage("settings_cookieGuard")}
+        </div>
+        <div className="collapse-content">
+          <CookieGuard />
+        </div>
+      </div>
     </div>
   )
 }
+
 
 export default Setting

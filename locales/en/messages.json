@@ -23,6 +23,10 @@
     "message": "Follow Icon Setting",
     "description": ""
   },
+  "settings_cookieGuard": {
+    "message": "Cookie Security Guard",
+    "description": ""
+  },
   "actions_copy": {
     "message": "Copy $params$ items",
     "description": "",
@@ -71,6 +75,10 @@
   },
   "actions_setting": {
     "message": "Settings",
+    "description": ""
+  },
+  "actions_guard": {
+    "message": "Cookie Guard",
     "description": ""
   },
   "actions_issues": {

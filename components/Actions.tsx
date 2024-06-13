@@ -5,7 +5,7 @@ import QProgress from 'qier-progress'
 import {
   MaterialSymbolsExportNotes, MaterialSymbolsDelete, MingcuteRefresh2Fill,
   MaterialSymbolsSettings, StreamlineEmojisBug, IonEllipsisVertical,
-  SiGlyphFullscreen, IonCopy, CarbonCloudMonitoring,
+  SiGlyphFullscreen, IonCopy, CarbonCloudMonitoring, MaterialSymbolsShieldLock,
 } from '~components/Icons'
 import { useGetUrlInfo } from '~components/hooks'
 import Modal from '~components/Modal'
@@ -29,6 +29,7 @@ export interface ActionsProps {
 
 const Actions: React.FC<ActionsProps> = props => {
   const { init, full, cookies, urlInfo } = props
+  const { url, domain } = urlInfo
   const [visible, setVisible] = React.useState(false)
   const [importData, setImportData] = React.useState("")
   const [monitorConfig, setMonitorConfig] = React.useState()
@@ -57,7 +58,7 @@ const Actions: React.FC<ActionsProps> = props => {
       const { checked, create, ...rest } = item
       return rest
     })
-    const name = `BestCookier${dayjs().format("YYYYMMDD-HHmmss")}-${urlInfo.domain}.json`
+    const name = `BestCookier${dayjs().format("YYYYMMDD-HHmmss")}-${domain}.json`
     const fileContent = encodeURIComponent(JSON.stringify(data, null, 2))
     const downloadLink = document.createElement('a');
     downloadLink.setAttribute('href', 'data:text/html;charset=utf-8,' + fileContent);
@@ -111,13 +112,13 @@ const Actions: React.FC<ActionsProps> = props => {
     
   const handleSetting = () => {
     chrome.tabs.create({
-      url: "./tabs/setting.html"
+      url: `./tabs/setting.html?domain=${encodeURIComponent(domain)}`
     })
   }
 
   const handleFull = () => {
     chrome.tabs.create({
-      url: `./tabs/full.html?url=${encodeURIComponent(urlInfo.url)}`
+      url: `./tabs/full.html?url=${encodeURIComponent(url)}`
     })
   }
 
@@ -211,12 +212,15 @@ const Actions: React.FC<ActionsProps> = props => {
           </button>
         </div>
       </div>
-      <div>
+      <div className="h-center">
         {!full && (<div className="tooltip" data-tip={chrome.i18n.getMessage("actions_fullScreen")}>
           <button onClick={handleFull} className="btn btn-sm btn-circle mx-2 group">
             <SiGlyphFullscreen className="text-xl group-hover:text-primary" />
           </button>
         </div>)}
+        <div className="tooltip" data-tip={chrome.i18n.getMessage("actions_guard")}>
+          <CookieGuard />
+        </div>
         <div className="tooltip" data-tip={chrome.i18n.getMessage("actions_setting")}>
           <button  onClick={handleSetting} className="btn btn-sm btn-circle mx-2 group">
             <MaterialSymbolsSettings className="text-xl group-hover:text-primary" />
@@ -234,7 +238,7 @@ const Actions: React.FC<ActionsProps> = props => {
 
 export const RowActions = props => {
   const { data, init } = props
-  const [follows, setFollows] = useStorage(StorageKeyEnum.FOLLOW, [])
+  const [follows, setFollows] = useStorage(StorageKeyEnum.FOLLOWS, [])
   const id = getId(data)
   const follow = follows.includes(id)
   const text = follow ? chrome.i18n.getMessage("unFollow") : chrome.i18n.getMessage("follow")
@@ -292,6 +296,21 @@ const RefreshButton = props => {
     <button onClick={onClick} className="btn btn-sm btn-circle mx-2 group">
       <MingcuteRefresh2Fill className={classnames("text-xl group-hover:text-primary", {
         "animate-spin": loading,
+      })} />
+    </button>
+  )
+}
+
+const CookieGuard = props => {
+  const { onClick } = props
+  const [enable, setEnable] = useStorage(StorageKeyEnum.COOKIE_GUARD_ENABLE, false)
+  const handleClick = () => {
+    setEnable(!enable)
+  }
+  return (
+    <button onClick={handleClick} className="btn btn-sm btn-circle mx-2 group">
+      <MaterialSymbolsShieldLock className={classnames("text-2xl group-hover:text-primary", {
+        "!text-warning": enable
       })} />
     </button>
   )

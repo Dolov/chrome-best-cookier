@@ -10,6 +10,14 @@
 
 
 @layer components {
+  .item-border {
+    @apply border-base-content/20 hover:border-base-content/40 border outline outline-2 outline-offset-2 outline-transparent;
+  }
+
+  .item-border-active {
+    @apply !outline-base-content;
+  }
+
   .ellipsis {
     @apply overflow-ellipsis overflow-hidden whitespace-nowrap;
   }
@@ -212,3 +220,15 @@
 .ribbon(b);
 .ribbon(c);
 .ribbon(d);
+
+.ellipsis-clamp(@i: 1) when (@i =< 10) {
+  .ellipsis-clamp-@{i} {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: @i;
+  }
+  .ellipsis-clamp((@i + 1));
+}
+
+.ellipsis-clamp();

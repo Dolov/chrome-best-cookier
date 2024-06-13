@@ -23,6 +23,10 @@
     "message": "关注图标配置",
     "description": ""
   },
+  "settings_cookieGuard": {
+    "message": "Cookie 安全卫士",
+    "description": ""
+  },
   "actions_copy": {
     "message": "复制 $params$ 条数据",
     "description": "",
@@ -75,6 +79,10 @@
   },
   "actions_issues": {
     "message": "功能申请 & 问题报告",
+    "description": ""
+  },
+  "actions_guard": {
+    "message": "Cookie 守卫",
     "description": ""
   },
   "copySuccess": {

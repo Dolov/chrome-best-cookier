@@ -43,7 +43,7 @@ const DataList: React.FC<DataListProps> = props => {
   const { domain, subdomain } = urlInfo
 
   const [ribbon] = useRibbon()
-  const [follows, setFollows] = useStorage(StorageKeyEnum.FOLLOW, [])
+  const [follows, setFollows] = useStorage(StorageKeyEnum.FOLLOWS, [])
   const [highlightId, setHighlightId] = React.useState("")
 
   defaultCookie.domain = getCreateItemDefaultDomain(domain, subdomain)

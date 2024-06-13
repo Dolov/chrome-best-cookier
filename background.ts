@@ -47,11 +47,11 @@ chrome.runtime.onMessage.addListener((params, sender, sendResponse) => {
 
     // 删除关注
     if (deleteFollow) {
-      storage.get(StorageKeyEnum.FOLLOW).then(follows => {
+      storage.get(StorageKeyEnum.FOLLOWS).then(follows => {
         if (!follows) return
         const deleteIds = cookies.map(getId)
         const newFollows = (follows as unknown as string[]).filter(id => !deleteIds.includes(id))
-        storage.set(StorageKeyEnum.FOLLOW, newFollows)
+        storage.set(StorageKeyEnum.FOLLOWS, newFollows)
       })
     }
     
