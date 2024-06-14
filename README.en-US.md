@@ -31,6 +31,8 @@ Therefore, it is still recommended that users with such needs fork the repositor
 - Support for retrieving cookies from all subdomains under the root domain.
 - Support for searching multiple columns such as name, value, domain, path, etc.
 - Support for "following" a specific cookie, with special highlighting.
+- Support "Cookie Security Guard", users can configure to disable certain extensions when accessing certain sites and activate them when leaving.
+- Supports incognito mode.
 - 32 exquisite theme colors, gradient background colors, multiple follow icons – whatever you desire.
 
 ### Feature Examples
