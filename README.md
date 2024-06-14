@@ -63,6 +63,11 @@
 
 [![Star History Chart](https://api.star-history.com/svg?repos=Dolov/chrome-best-cookier&type=Date)](https://star-history.com/#Dolov/chrome-best-cookier&Date)
 
+
+### 小窍门
+如果两个人的浏览器都安装了该插件，可实现一些网站的登录共享。比如知乎、爱奇艺、优酷、新东方、掘金、v2、github 等。
+如果网站是通过 session 实现的登录应该都可以，不过也需要注意账号安全。
+
 ### 欢迎使用
 使用过程中遇到问题或者有新功能的需求可以在 issues 中进行反馈。
 
