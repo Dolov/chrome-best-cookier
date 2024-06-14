@@ -2,22 +2,27 @@ import { MessageActionEnum, getUrlFromCookie, StorageKeyEnum, getId } from '~uti
 import { debounce } from 'lodash'
 import { Storage } from '@plasmohq/storage'
 
+
 const storage = new Storage()
 
-const globalStatus = {
-  onoff: false,
-  extensionStatus: {}
+const Utils = {
+  setCookie(cookie: chrome.cookies.Cookie) {
+    const url = getUrlFromCookie(cookie)
+    const { hostOnly, session, ...restCookie } = cookie
+    return chrome.cookies.set({
+      url,
+      ...restCookie,
+    })
+  },
+  getExtensions(): Promise<chrome.management.ExtensionInfo[]> {
+    return new Promise(resolve => {
+      chrome.management.getAll(extensions => {
+        resolve(extensions)
+      })
+    })
+  }
 }
 
-
-const setCookie = (cookie: chrome.cookies.Cookie) => {
-  const url = getUrlFromCookie(cookie)
-  const { hostOnly, session, ...restCookie } = cookie
-  return chrome.cookies.set({
-    url,
-    ...restCookie,
-  })
-}
 
 chrome.runtime.onMessage.addListener((params, sender, sendResponse) => {
   const { action } = params
@@ -34,7 +39,7 @@ chrome.runtime.onMessage.addListener((params, sender, sendResponse) => {
   if (action === MessageActionEnum.UPDATE_COOKIE) {
     const { payload } = params
     const { cookie } = payload
-    setCookie(cookie).then(cookie => {
+    Utils.setCookie(cookie).then(cookie => {
       sendResponse(cookie)
     })
     return true
@@ -74,7 +79,7 @@ chrome.runtime.onMessage.addListener((params, sender, sendResponse) => {
     const { payload } = params;
     const { cookies } = payload;
     const setPromises = cookies.map(cookie => {
-      return setCookie(cookie)
+      return Utils.setCookie(cookie)
     });
 
     Promise.all(setPromises)
@@ -90,12 +95,32 @@ chrome.runtime.onMessage.addListener((params, sender, sendResponse) => {
 
 
 
-const cookieGuardInit = () => {
-  // 关闭标签时无法获取 url，需要手动记录
-  const urlIdMap = {}
-  // 处理禁用与激活
-  const toggleExtensionIfTargetSite = async (url: string, type: string) => {
+class CookieGuard {
 
+  onoff = false
+
+  // 关闭标签时无法获取 url，需要手动记录
+  urlIdMap = {}
+  extensionStatus = {}
+  debounceExtensionStatusChange = debounce(this.onExtensionStatusChange.bind(this), 1000)
+
+  constructor() {
+    this.isEnable().then(enable => {
+      if (!enable) return
+      this.onEnabled()
+    })
+    const that = this
+    storage.watch({
+      [StorageKeyEnum.GUARD_ENABLE](changeInfo) {
+        const { newValue, oldValue } = changeInfo
+        if (newValue === oldValue) return
+        that.onEnableChange(newValue)
+      }
+    })
+  }
+
+
+  toggleExtensionStatus = async (url: string, type: string) => {
     let hostname
     let settings = []
 
@@ -126,7 +151,7 @@ const cookieGuardInit = () => {
         });
       }
       extensions.forEach(extension => {
-        globalStatus.onoff = true
+        this.onoff = true
         const { id, enabled } = extension
         // 如果在禁用列表就禁用
         if (settings.includes(id)) {
@@ -137,96 +162,110 @@ const cookieGuardInit = () => {
         }
         if (enabled) return
         // 已经被用户禁用，则不处理
-        if (!globalStatus.extensionStatus[id]) return
+        if (!this.extensionStatus[id]) return
         chrome.management.setEnabled(id, true)
       })
     })
   }
 
-  // 监听标签页创建事件
-  chrome.tabs.onCreated.addListener((tab) => {
+  async isEnable() {
+    return await storage.get(StorageKeyEnum.GUARD_ENABLE)
+  }
+
+  onTabsCreated = (tab: chrome.tabs.Tab) => {
     if (tab.url) {
-      urlIdMap[tab.id] = tab.url
+      this.urlIdMap[tab.id] = tab.url
     }
-    toggleExtensionIfTargetSite(tab.url, "onCreated");
-  });
+    this.toggleExtensionStatus(tab.url, "onCreated");
+  }
 
-  // 监听标签页更新事件
-  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  onTabsUpdated = (tabId: number, changeInfo: chrome.tabs.TabChangeInfo, tab: chrome.tabs.Tab) => {
     if (tab.url && tab.status === "complete") {
-      urlIdMap[tabId] = tab.url
-      toggleExtensionIfTargetSite(tab.url, "onUpdated");
+      this.urlIdMap[tabId] = tab.url
+      this.toggleExtensionStatus(tab.url, "onUpdated");
     }
-  });
+  }
 
-  // 监听标签页切换事件
-  chrome.tabs.onActivated.addListener((activeInfo) => {
+  onTabsActivated = (activeInfo: chrome.tabs.TabActiveInfo) => {
     chrome.tabs.get(activeInfo.tabId, (tab) => {
       if (tab.url) {
-        urlIdMap[activeInfo.tabId] = tab.url
+        this.urlIdMap[activeInfo.tabId] = tab.url
       }
-      toggleExtensionIfTargetSite(tab.url, "onActivated");
+      this.toggleExtensionStatus(tab.url, "onActivated");
     });
-  });
-
-  // 监听标签页关闭事件
-  chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
-    const url = urlIdMap[tabId]
-    if (!url) return
-    delete urlIdMap[tabId]
-    toggleExtensionIfTargetSite(url, "onRemoved");
-  });
-}
-
-
-// 初始化时获取插件状态
-storage.get(StorageKeyEnum.EXTENSION_STATUS).then(extensionStatus => {
-  if (extensionStatus) {
-    globalStatus.extensionStatus = extensionStatus
-    cookieGuardInit()
-    return
   }
-  chrome.management.getAll(extensions => {
+
+  onTabsRemoved = (tabId, removeInfo) => {
+    const url = this.urlIdMap[tabId]
+    if (!url) return
+    delete this.urlIdMap[tabId]
+    this.toggleExtensionStatus(url, "onRemoved");
+  }
+
+  async onEnabled() {
+    chrome.management.onEnabled.addListener(this.debounceExtensionStatusChange)
+    chrome.management.onDisabled.addListener(this.debounceExtensionStatusChange)
+    chrome.management.onInstalled.addListener(this.debounceExtensionStatusChange)
+    chrome.management.onUninstalled.addListener(this.debounceExtensionStatusChange)
+
+    storage.get(StorageKeyEnum.EXTENSION_STATUS).then(async status => {
+      let extensionStatus = status || {}
+
+      if (!status) {
+        const extensions = await Utils.getExtensions()
+        extensions.forEach(extension => {
+          const { id, enabled } = extension
+          extensionStatus[id] = enabled
+        })
+        storage.set(StorageKeyEnum.EXTENSION_STATUS, extensionStatus)
+      }
+      this.extensionStatus = extensionStatus
+      // 监听标签页创建事件
+      chrome.tabs.onCreated.addListener(this.onTabsCreated);
+      // 监听标签页更新事件
+      chrome.tabs.onUpdated.addListener(this.onTabsUpdated);
+      // 监听标签页切换事件
+      chrome.tabs.onActivated.addListener(this.onTabsActivated);
+      // 监听标签页关闭事件
+      chrome.tabs.onRemoved.addListener(this.onTabsRemoved);
+    })
+  }
+
+  /** 禁用时去除各种监听 */
+  onDisabled() {
+    storage.set(StorageKeyEnum.EXTENSION_STATUS, null)
+    chrome.management.onEnabled.removeListener(this.debounceExtensionStatusChange)
+    chrome.management.onDisabled.removeListener(this.debounceExtensionStatusChange)
+    chrome.management.onInstalled.removeListener(this.debounceExtensionStatusChange)
+    chrome.management.onUninstalled.removeListener(this.debounceExtensionStatusChange)
+    chrome.tabs.onCreated.removeListener(this.onTabsCreated);
+    chrome.tabs.onUpdated.removeListener(this.onTabsUpdated);
+    chrome.tabs.onActivated.removeListener(this.onTabsActivated);
+    chrome.tabs.onRemoved.removeListener(this.onTabsRemoved);
+  }
+
+  /** 响应用户配置，启用或禁用守卫 */
+  onEnableChange(enable: boolean) {
+    if (enable) {
+      this.onEnabled()
+      return
+    }
+    this.onDisabled()
+  }
+
+  /** 当外部操作导致的扩展状态变化时，更新存储的扩展状态 */
+  async onExtensionStatusChange() {
+    if (this.onoff) return this.onoff = false
     const extensionStatus = {}
+    const extensions = await Utils.getExtensions()
     extensions.forEach(extension => {
       const { id, enabled } = extension
       extensionStatus[id] = enabled
     })
+    this.extensionStatus = extensionStatus
     storage.set(StorageKeyEnum.EXTENSION_STATUS, extensionStatus)
-    globalStatus.extensionStatus = extensionStatus
-    cookieGuardInit()
-  })
-})
-
-
-// 手动更改权限或者被其他插件更改权限时记录其状态
-const handleExtensionStatusChange = () => {
-  if (globalStatus.onoff) return globalStatus.onoff = false
-  const extensionStatus = {}
-  chrome.management.getAll(extensions => {
-    extensions.forEach(extension => {
-      const { id, enabled } = extension
-      extensionStatus[id] = enabled
-    })
-    globalStatus.extensionStatus = extensionStatus
-    storage.set(StorageKeyEnum.EXTENSION_STATUS, extensionStatus)
-  })
+  }
 }
 
-const debounceHandleExtensionStatusChange = debounce(handleExtensionStatusChange, 1000)
 
-chrome.management.onDisabled.addListener(() => {
-  debounceHandleExtensionStatusChange()
-})
-
-chrome.management.onEnabled.addListener(() => {
-  debounceHandleExtensionStatusChange()
-})
-
-chrome.management.onInstalled.addListener(() => {
-  debounceHandleExtensionStatusChange()
-})
-
-chrome.management.onUninstalled.addListener(() => {
-  debounceHandleExtensionStatusChange()
-})
+const cookieGuard = new CookieGuard()

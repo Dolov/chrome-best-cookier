@@ -219,7 +219,7 @@ const Actions: React.FC<ActionsProps> = props => {
           </button>
         </div>)}
         <div className="tooltip" data-tip={chrome.i18n.getMessage("actions_guard")}>
-          <CookieGuard />
+          <CookieGuard hostname={hostname} />
         </div>
         <div className="tooltip" data-tip={chrome.i18n.getMessage("actions_setting")}>
           <button  onClick={handleSetting} className="btn btn-sm btn-circle mx-2 group">
@@ -302,15 +302,22 @@ const RefreshButton = props => {
 }
 
 const CookieGuard = props => {
-  const { onClick } = props
-  const [enable, setEnable] = useStorage(StorageKeyEnum.COOKIE_GUARD_ENABLE, false)
+  const { hostname } = props
+  const [guardSettings] = useStorage(StorageKeyEnum.GUARD_SETTINGS, {})
+  const settings = guardSettings[hostname] || []
+
+  const active = settings.length > 0
+
   const handleClick = () => {
-    setEnable(!enable)
+    chrome.tabs.create({
+      url: `./tabs/setting.html?hostname=${encodeURIComponent(hostname)}&anchor=cookieGuard`
+    })
   }
+  
   return (
     <button onClick={handleClick} className="btn btn-sm btn-circle mx-2 group">
       <MaterialSymbolsShieldLock className={classnames("text-2xl group-hover:text-primary", {
-        "!text-warning": enable
+        "!text-warning": active
       })} />
     </button>
   )

@@ -98,20 +98,12 @@ const RibbonList = props => {
 }
 
 const CookieGuard = props => {
-  const { } = props
+  const { enable, hostname } = props
   const [type, setType] = React.useState("COOKIES")
   const [extensions, setExtensions] = React.useState<chrome.management.ExtensionInfo[]>([])
   const [guardSettings, setGuardSettings] = useStorage(StorageKeyEnum.GUARD_SETTINGS, {
     
   })
-
-  const hostname = React.useMemo(() => {
-    if (location.href.includes("hostname")) {
-      const hostname = new URLSearchParams(location.search).get("hostname")
-      return hostname
-    }
-    return ""
-  }, [])
 
   const disableIds = guardSettings[hostname] || []
 
@@ -164,7 +156,10 @@ const CookieGuard = props => {
           const cookiePermissions = permissions.includes("cookies")
           const disable = disableIds.includes(id)
           return (
-            <div key={id} className={classnames("card bg-base-100 mb-4 p-6 hover:shadow-xl", "item-border")}>
+            <div key={id} className={classnames("card mb-4 p-6", "", {
+              "bg-base-300": !enable,
+              "hover:shadow-xl item-border bg-base-100": enable,
+            })}>
               <div className='flex'>
                 <img className="h-12 w-12 min-h-12 min-w-12" src={iconUrl} />
                 <div className="pl-4">
@@ -182,7 +177,13 @@ const CookieGuard = props => {
                     <div className="badge badge-warning">cookies</div>
                   )}
                 </div>
-                <input checked={!disable} onChange={e => onToggle(e, item)} type="checkbox" className="toggle toggle-primary" />
+                <input
+                  type="checkbox"
+                  checked={!disable}
+                  disabled={!enable}
+                  onChange={e => onToggle(e, item)}
+                  className="toggle toggle-primary"
+                />
               </div>
             </div>
           )
@@ -200,9 +201,10 @@ const Setting: React.FC<SettingProps> = props => {
   const { } = props
 
 
-  const [ribbon, setRibbon] = useRibbon()
   const [theme, setTheme] = useThemeChange()
+  const [ribbon, setRibbon] = useRibbon()
   const [background, setBackground] = useBackgroundChange()
+  const [guardEnable, setGuardEnable] = useStorage(StorageKeyEnum.GUARD_ENABLE, false)
 
   const checked = React.useMemo(() => {
     if (location.href.includes("anchor")) {
@@ -211,6 +213,18 @@ const Setting: React.FC<SettingProps> = props => {
     }
     return "theme"
   }, [])
+
+  const hostname = React.useMemo(() => {
+    if (location.href.includes("hostname")) {
+      const hostname = new URLSearchParams(location.search).get("hostname")
+      return hostname
+    }
+    return ""
+  }, [])
+
+  const onCookieGuardEnableChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGuardEnable(e.target.checked)
+  }
 
   return (
     <div className="overflow-auto h-full">
@@ -247,7 +261,24 @@ const Setting: React.FC<SettingProps> = props => {
           {chrome.i18n.getMessage("settings_cookieGuard")}
         </div>
         <div className="collapse-content">
-          <CookieGuard />
+          <div role="alert" className="alert alert-warning">
+            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+            <div>
+              <p>进入 {hostname} 站点时，可禁用某些插件，离开时再激活。</p>
+              <p>
+                <span>这是一项正在测试中的实验特性，点击右侧按钮激活使用。我们正在努力优化它，以提供更好的体验。</span>
+                <a href="https://github.com/Dolov/chrome-best-cookier/issues" target='_blank' className="link link-info">
+                  您的反馈对我们非常重要，欢迎随时与我们分享您的意见和建议！
+                </a>
+              </p>
+            </div>
+            <div>
+              <label className="cursor-pointer label">
+                <input onChange={onCookieGuardEnableChange} type="checkbox" className="toggle toggle-error" checked={guardEnable} />
+              </label>
+            </div>
+          </div>
+          <CookieGuard hostname={hostname} enable={guardEnable} />
         </div>
       </div>
     </div>
