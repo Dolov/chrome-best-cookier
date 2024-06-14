@@ -156,5 +156,31 @@
   "monitorStart": {
     "message": "Monitoring started. Open the browser console to view.",
     "description": ""
+  },
+  "allExtensions": {
+    "message": "All Extensions",
+    "description": ""
+  },
+  "ownCookieExtensions": {
+    "message": "Extensions with Cookie Authorization",
+    "description": ""
+  },
+  "disablePluginsOnEntry": {
+    "message": "Disable certain plugins when entering the $params$ site, and reactivate them upon leaving.",
+    "description": "",
+    "placeholders": {
+      "params": {
+        "content": "$1",
+        "example": ""
+      }
+    }
+  },
+  "experimentalFeatureNotice": {
+    "message": "This is an experimental feature in testing. Click the button on the right to activate it. We are working hard to optimize it for a better experience.",
+    "description": ""
+  },
+  "feedbackImportant": {
+    "message": "Your feedback is very important to us. Please feel free to share your thoughts and suggestions!",
+    "description": ""
   }
 }

@@ -303,10 +303,11 @@ const RefreshButton = props => {
 
 const CookieGuard = props => {
   const { hostname } = props
+  const [enable] = useStorage(StorageKeyEnum.GUARD_ENABLE, {})
   const [guardSettings] = useStorage(StorageKeyEnum.GUARD_SETTINGS, {})
   const settings = guardSettings[hostname] || []
 
-  const active = settings.length > 0
+  const active = settings.length > 0 && enable
 
   const handleClick = () => {
     chrome.tabs.create({

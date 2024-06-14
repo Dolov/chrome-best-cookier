@@ -137,14 +137,14 @@ const CookieGuard = props => {
       <ul className="menu md:menu-horizontal">
         <li onClick={() => setType("ALL")}>
           <a className={classnames({ active: all })}>
-            全部扩展（{extensions.length}）
+            {chrome.i18n.getMessage("allExtensions")}（{extensions.length}）
             <span className="badge badge-xs badge-info pt-0"></span>
           </a>
         </li>
         <li onClick={() => setType("COOKIES")} className="ml-2">
           <a className={classnames({ active: cookies })}>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            拥有 Cookie 授权的扩展（{cExtensions.length}）
+            {chrome.i18n.getMessage("ownCookieExtensions")}（{cExtensions.length}）
             <span className="badge badge-sm badge-warning" />
           </a>
         </li>
@@ -264,11 +264,11 @@ const Setting: React.FC<SettingProps> = props => {
           <div role="alert" className="alert alert-warning">
             <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
             <div>
-              <p>进入 {hostname} 站点时，可禁用某些插件，离开时再激活。</p>
+              <p>{chrome.i18n.getMessage("disablePluginsOnEntry", [hostname])}</p>
               <p>
-                <span>这是一项正在测试中的实验特性，点击右侧按钮激活使用。我们正在努力优化它，以提供更好的体验。</span>
+                <span>{chrome.i18n.getMessage("experimentalFeatureNotice")}</span>
                 <a href="https://github.com/Dolov/chrome-best-cookier/issues" target='_blank' className="link link-info">
-                  您的反馈对我们非常重要，欢迎随时与我们分享您的意见和建议！
+                  {chrome.i18n.getMessage("feedbackImportant")}
                 </a>
               </p>
             </div>

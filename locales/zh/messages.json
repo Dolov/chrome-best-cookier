@@ -156,6 +156,32 @@
   "monitorStart": {
     "message": "已开始监听，打开浏览器控制台进行查看。",
     "description": ""
+  },
+  "allExtensions": {
+    "message": "全部扩展",
+    "description": ""
+  },
+  "ownCookieExtensions": {
+    "message": "拥有 Cookie 授权的扩展",
+    "description": ""
+  },
+  "disablePluginsOnEntry": {
+    "message": "进入 $params$ 站点时，可禁用某些插件，离开时再激活。",
+    "description": "",
+    "placeholders": {
+      "params": {
+        "content": "$1",
+        "example": ""
+      }
+    }
+  },
+  "experimentalFeatureNotice": {
+    "message": "这是一项正在测试中的实验特性，点击右侧按钮激活使用。我们正在努力优化它，以提供更好的体验。",
+    "description": ""
+  },
+  "feedbackImportant": {
+    "message": "您的反馈对我们非常重要，欢迎随时与我们分享您的意见和建议！",
+    "description": ""
   }
   
 }
