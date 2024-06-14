@@ -1,7 +1,13 @@
 import { MessageActionEnum, getUrlFromCookie, StorageKeyEnum, getId } from '~utils'
+import { debounce } from 'lodash'
 import { Storage } from '@plasmohq/storage'
 
 const storage = new Storage()
+
+const globalStatus = {
+  onoff: false,
+  extensionStatus: {}
+}
 
 
 const setCookie = (cookie: chrome.cookies.Cookie) => {
@@ -83,19 +89,30 @@ chrome.runtime.onMessage.addListener((params, sender, sendResponse) => {
 
 
 
-const cookieGuardInit = (rawExtensionStatus) => {
+
+const cookieGuardInit = () => {
   // 关闭标签时无法获取 url，需要手动记录
   const urlIdMap = {}
   // 处理禁用与激活
   const toggleExtensionIfTargetSite = async (url: string, type: string) => {
-    if (!url) return
 
-    const { hostname } = new URL(url)
-    const guardSettings = await storage.get(StorageKeyEnum.GUARD_SETTINGS) || {}
-    const settings = guardSettings[hostname] || []
+    let hostname
+    let settings = []
+
+    if (url) {
+      try {
+        const guardSettings = await storage.get(StorageKeyEnum.GUARD_SETTINGS) || {}
+        hostname = new URL(url).hostname
+        settings = guardSettings[hostname] || []
+      } catch (error) {
+      }
+    }
 
     chrome.management.getAll(extensions => {
-      if (["onCreated", "onUpdated", "onActivated"].includes(type) && settings.length) {
+      if (
+        ["onCreated", "onUpdated"].includes(type) &&
+        settings.length
+      ) {
         const names = settings.map(item => {
           const target = extensions.find(extension => extension.id === item)
           return target.shortName || target.name
@@ -109,14 +126,18 @@ const cookieGuardInit = (rawExtensionStatus) => {
         });
       }
       extensions.forEach(extension => {
+        globalStatus.onoff = true
         const { id, enabled } = extension
+        // 如果在禁用列表就禁用
         if (settings.includes(id)) {
-          chrome.management.setEnabled(id, false)
+          if (enabled) {
+            chrome.management.setEnabled(id, false)
+          }
           return
         }
-        // 已经被用户禁用，则不处理
-        if (!rawExtensionStatus[id]) return
         if (enabled) return
+        // 已经被用户禁用，则不处理
+        if (!globalStatus.extensionStatus[id]) return
         chrome.management.setEnabled(id, true)
       })
     })
@@ -124,24 +145,26 @@ const cookieGuardInit = (rawExtensionStatus) => {
 
   // 监听标签页创建事件
   chrome.tabs.onCreated.addListener((tab) => {
-    if (!tab.url) return
-    urlIdMap[tab.id] = tab.url
+    if (tab.url) {
+      urlIdMap[tab.id] = tab.url
+    }
     toggleExtensionIfTargetSite(tab.url, "onCreated");
   });
 
   // 监听标签页更新事件
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (changeInfo.url && changeInfo.status === "complete") {
-      urlIdMap[tabId] = changeInfo.url
-      toggleExtensionIfTargetSite(changeInfo.url, "onUpdated");
+    if (tab.url && tab.status === "complete") {
+      urlIdMap[tabId] = tab.url
+      toggleExtensionIfTargetSite(tab.url, "onUpdated");
     }
   });
 
   // 监听标签页切换事件
   chrome.tabs.onActivated.addListener((activeInfo) => {
     chrome.tabs.get(activeInfo.tabId, (tab) => {
-      if (!tab.url) return
-      urlIdMap[activeInfo.tabId] = tab.url
+      if (tab.url) {
+        urlIdMap[activeInfo.tabId] = tab.url
+      }
       toggleExtensionIfTargetSite(tab.url, "onActivated");
     });
   });
@@ -149,20 +172,61 @@ const cookieGuardInit = (rawExtensionStatus) => {
   // 监听标签页关闭事件
   chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
     const url = urlIdMap[tabId]
-    delete urlIdMap[tabId]
     if (!url) return
+    delete urlIdMap[tabId]
     toggleExtensionIfTargetSite(url, "onRemoved");
   });
 }
 
 
-
-chrome.management.getAll(extensions => {
-  // 记录插件的初始状态
-  const rawExtensionStatus = {}
-  extensions.forEach(extension => {
-    const { id, enabled } = extension
-    rawExtensionStatus[id] = enabled
+// 初始化时获取插件状态
+storage.get(StorageKeyEnum.EXTENSION_STATUS).then(extensionStatus => {
+  if (extensionStatus) {
+    globalStatus.extensionStatus = extensionStatus
+    cookieGuardInit()
+    return
+  }
+  chrome.management.getAll(extensions => {
+    const extensionStatus = {}
+    extensions.forEach(extension => {
+      const { id, enabled } = extension
+      extensionStatus[id] = enabled
+    })
+    storage.set(StorageKeyEnum.EXTENSION_STATUS, extensionStatus)
+    globalStatus.extensionStatus = extensionStatus
+    cookieGuardInit()
   })
-  cookieGuardInit(rawExtensionStatus)
+})
+
+
+// 手动更改权限或者被其他插件更改权限时记录其状态
+const handleExtensionStatusChange = () => {
+  if (globalStatus.onoff) return globalStatus.onoff = false
+  const extensionStatus = {}
+  chrome.management.getAll(extensions => {
+    extensions.forEach(extension => {
+      const { id, enabled } = extension
+      extensionStatus[id] = enabled
+    })
+    globalStatus.extensionStatus = extensionStatus
+    storage.set(StorageKeyEnum.EXTENSION_STATUS, extensionStatus)
+  })
+}
+
+const debounceHandleExtensionStatusChange = debounce(handleExtensionStatusChange, 1000)
+
+chrome.management.onDisabled.addListener(() => {
+  debounceHandleExtensionStatusChange()
+})
+
+chrome.management.onEnabled.addListener(() => {
+  debounceHandleExtensionStatusChange()
+})
+
+chrome.management.onInstalled.addListener(() => {
+  debounceHandleExtensionStatusChange()
+})
+
+chrome.management.onUninstalled.addListener(() => {
+  debounceHandleExtensionStatusChange()
 })

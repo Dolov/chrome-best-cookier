@@ -15,6 +15,7 @@
     "classnames": "^2.5.1",
     "daisyui": "^4.11.1",
     "dayjs": "^1.11.11",
+    "lodash": "^4.17.21",
     "plasmo": "0.86.3",
     "psl": "^1.9.0",
     "qier-progress": "^1.0.4",
