@@ -1,6 +1,6 @@
 import React from 'react'
 import classnames from 'classnames'
-import { themes, backgrounds, ribbons, StorageKeyEnum } from '~utils'
+import { themes, backgrounds, ribbons, StorageKeyEnum, ga, dayjs } from '~utils'
 import { useThemeChange, useRibbon, useBackgroundChange } from '~components/hooks'
 import '~/style.less'
 import './style.less'
@@ -223,7 +223,11 @@ const Setting: React.FC<SettingProps> = props => {
   }, [])
 
   const onCookieGuardEnableChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setGuardEnable(e.target.checked)
+    const enable = e.target.checked
+    ga("setting_cookieguard", {
+      value: enable,
+    })
+    setGuardEnable(enable)
   }
 
   return (

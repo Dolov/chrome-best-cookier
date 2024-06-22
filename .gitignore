@@ -33,3 +33,5 @@ dist/
 .tsbuildinfo
 
 .VSCodeCounter
+
+.env

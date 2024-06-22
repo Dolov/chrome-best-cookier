@@ -14,6 +14,42 @@ export type Cookie = {
 
 export const LOCAL_STORAGE_KEY = "__BestCookier_Monitor_Config__"
 
+async function getOrCreateClientId() {
+  const result = await chrome.storage.local.get('clientId');
+  let clientId = result.clientId;
+  if (!clientId) {
+    // Generate a unique client ID, the actual value is not relevant
+    clientId = self.crypto.randomUUID();
+    await chrome.storage.local.set({ clientId });
+  }
+  return clientId;
+}
+
+export const ga = async (name, params?: Record<string, any>) => {
+  const GA_ENDPOINT = 'https://www.google-analytics.com/mp/collect';
+  const MEASUREMENT_ID = process.env.PLASMO_PUBLIC_MEASUREMENT_ID;
+  const API_SECRET = process.env.PLASMO_PUBLIC_API_SECRET;
+
+  fetch(
+    `${GA_ENDPOINT}?measurement_id=${MEASUREMENT_ID}&api_secret=${API_SECRET}`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        client_id: await getOrCreateClientId(),
+        events: [
+          {
+            name,
+            params: {
+              time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+              ...params,
+            },
+          },
+        ],
+      }),
+    }
+  );
+}
+
 
 export enum MessageActionEnum {
   GET_COOKIES = "GET_COOKIES",
@@ -100,17 +136,17 @@ export const getUrlFromCookie = (cookie: chrome.cookies.Cookie) => {
  * @return {void} This function does not return anything.
  */
 export const copyTextToClipboard = (text: string) => {
-	const textArea = document.createElement("textarea");
-	textArea.value = text;
-	document.body.appendChild(textArea);
-	textArea.select();
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  document.body.appendChild(textArea);
+  textArea.select();
 
-	try {
-		const successful = document.execCommand('copy');
-	} catch (err) {
-		console.log('err: ', err);
-	}
-	document.body.removeChild(textArea);
+  try {
+    const successful = document.execCommand('copy');
+  } catch (err) {
+    console.log('err: ', err);
+  }
+  document.body.removeChild(textArea);
 }
 
 export const themes = [

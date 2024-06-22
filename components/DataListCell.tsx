@@ -3,6 +3,7 @@ import classnames from 'classnames'
 import {
   MaterialSymbolsFilterAlt, MaterialSymbolsCheckCircleOutlineRounded
 } from '~components/Icons'
+import { ga } from '~utils'
 
 export const BooleanDisplay = props => {
   const { value, className } = props
@@ -111,6 +112,9 @@ export const HeaderDomain = props => {
     e.preventDefault()
     const open = !detailsRef.current.open
     detailsRef.current.open = open
+    if (open) {
+      ga(`filter_domain`)
+    }
   }
 
   const hasData = domains.length > 0
@@ -150,7 +154,7 @@ export const HeaderDomain = props => {
 }
 
 export const InputFilter = props => {
-  const { value, onChange, placeholder } = props
+  const { value, onChange, placeholder, type } = props
   const inputRef = React.useRef<HTMLInputElement>()
   const detailsRef = React.useRef<HTMLDetailsElement>()
 
@@ -169,6 +173,7 @@ export const InputFilter = props => {
     const open = !detailsRef.current.open
     detailsRef.current.open = open
     if (open) {
+      ga(`filter_${type}`)
       inputRef.current.focus()
     }
   }

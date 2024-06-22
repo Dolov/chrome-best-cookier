@@ -1,7 +1,7 @@
 import React from "react"
 import psl from 'psl'
 import { useStorage } from '@plasmohq/storage/hook'
-import { StorageKeyEnum, backgrounds, isIPAddress } from '~utils'
+import { StorageKeyEnum, backgrounds, isIPAddress, ga } from '~utils'
 
 export const useBoolean = (defaultValue = false) => {
   const [value, setValue] = React.useState(defaultValue)
@@ -219,6 +219,9 @@ export const useThemeChange = () => {
   const { theme } = settings
 
   const setTheme = (theme: string) => {
+    ga("setting_theme", {
+      value: theme,
+    })
     setSettings({
       ...settings,
       theme,
@@ -245,6 +248,9 @@ export const useBackgroundChange = () => {
   const { background } = settings
 
   const setBackground = (background: string) => {
+    ga("setting_background", {
+      value: background,
+    })
     setSettings({
       ...settings,
       background,
@@ -275,6 +281,10 @@ export const useRibbon = () => {
   const { ribbon } = settings
 
   const setRibbon = (ribbon: string) => {
+    ga("setting_ribbon", {
+      value: ribbon,
+    })
+
     setSettings({
       ...settings,
       ribbon,

@@ -243,6 +243,7 @@ const DataList: React.FC<DataListProps> = props => {
             <div className="center">
               <span>name</span>
               <InputFilter
+                type="name"
                 value={name}
                 onChange={name => setConditions({ ...conditions, name })}
                 placeholder={chrome.i18n.getMessage("filterByName")}
@@ -253,6 +254,7 @@ const DataList: React.FC<DataListProps> = props => {
             <div className="center">
               <span>value</span>
               <InputFilter
+                type="value"
                 value={filterValue}
                 onChange={value => setConditions({ ...conditions, value })}
                 placeholder={chrome.i18n.getMessage("filterByValue")}
@@ -276,6 +278,7 @@ const DataList: React.FC<DataListProps> = props => {
             <div className="center">
               <span>path</span>
               <InputFilter
+                type="path"
                 value={path}
                 onChange={path => setConditions({ ...conditions, path })}
                 placeholder={chrome.i18n.getMessage("filterByPath")}

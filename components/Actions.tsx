@@ -12,7 +12,7 @@ import Modal from '~components/Modal'
 import Upload from '~components/Upload'
 import message from '~components/message'
 import { type Cookie, copyTextToClipboard, MessageActionEnum,
-  StorageKeyEnum, getFileJson, dayjs, getId, sendMessage,
+  StorageKeyEnum, getFileJson, dayjs, getId, sendMessage, ga,
 } from '~utils'
 
 const qprogress = new QProgress({
@@ -54,6 +54,7 @@ const Actions: React.FC<ActionsProps> = props => {
   }
 
   const handleExport = () => {
+    ga("action_export")
     const data = filteredCookies.map(item => {
       const { checked, create, ...rest } = item
       return rest
@@ -67,6 +68,7 @@ const Actions: React.FC<ActionsProps> = props => {
   }
 
   const handleCopy = () => {
+    ga("action_copy")
     const data = filteredCookies.map(item => {
       const { checked, create, ...rest } = item
       return rest
@@ -76,6 +78,7 @@ const Actions: React.FC<ActionsProps> = props => {
   }
 
   const handleImport = async () => {
+    ga("action_import")
     try {
       const data = JSON.parse(importData).map(item => {
         return {
@@ -100,6 +103,7 @@ const Actions: React.FC<ActionsProps> = props => {
   }
 
   const handleDelete = async () => {
+    ga("action_delete")
     const res = await chrome.runtime.sendMessage({
       action: MessageActionEnum.DELETE_COOKIES,
       payload: {
@@ -111,29 +115,34 @@ const Actions: React.FC<ActionsProps> = props => {
   }
     
   const handleSetting = () => {
+    ga("action_setting")
     chrome.tabs.create({
       url: `./tabs/setting.html?hostname=${encodeURIComponent(hostname)}`
     })
   }
 
   const handleFull = () => {
+    ga("action_full")
     chrome.tabs.create({
       url: `./tabs/full.html?url=${encodeURIComponent(url)}`
     })
   }
 
   const handleIssue = () => {
+    ga("action_issue")
     chrome.tabs.create({
       url: "https://github.com/Dolov/chrome-best-cookier/issues"
     })
   }
 
   const handleImportFile = async (file: File) => {
+    ga("action_import_file")
     const data = await getFileJson(file)
     setImportData(JSON.stringify(data, null, 2))
   }
 
   const handleMonitor = async () => {
+    ga("action_monitor")
     const action = monitoring ? MessageActionEnum.END_MONITOR : MessageActionEnum.START_MONITOR
     const res = await sendMessage({
       action,
