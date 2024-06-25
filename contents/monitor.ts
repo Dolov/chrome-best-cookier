@@ -1,5 +1,6 @@
 import type { PlasmoCSConfig } from "plasmo"
-import { LOCAL_STORAGE_KEY } from '~utils'
+// fix: 从 utils 中引入 LOCAL_STORAGE_KEY 会导致与腾讯视频冲突
+import { LOCAL_STORAGE_KEY } from '~utils.tiny'
 
 const consoleLogFontSize = 12;
 

@@ -12,8 +12,6 @@ export type Cookie = {
   checked?: boolean,
 } & chrome.cookies.Cookie
 
-export const LOCAL_STORAGE_KEY = "__BestCookier_Monitor_Config__"
-
 async function getOrCreateClientId() {
   const result = await chrome.storage.local.get('clientId');
   let clientId = result.clientId;

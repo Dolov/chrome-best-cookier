@@ -1,5 +1,6 @@
 import type { PlasmoCSConfig } from "plasmo"
-import { LOCAL_STORAGE_KEY, MessageActionEnum } from '~utils'
+import { MessageActionEnum } from '~utils'
+import { LOCAL_STORAGE_KEY } from '~utils.tiny'
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
