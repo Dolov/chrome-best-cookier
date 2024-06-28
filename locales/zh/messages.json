@@ -27,15 +27,13 @@
     "message": "Cookie 安全卫士",
     "description": ""
   },
-  "actions_copy": {
-    "message": "复制 $params$ 条数据",
-    "description": "",
-    "placeholders": {
-      "params": {
-        "content": "$1",
-        "example": ""
-      }
-    }
+  "actions_copy_json": {
+    "message": "以 json 格式复制",
+    "description": ""
+  },
+  "actions_copy_headerstr": {
+    "message": "以 header string 格式复制",
+    "description": ""
   },
   "actions_delete": {
     "message": "删除 $params$ 条数据",

@@ -2,10 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-
 #__plasmo {
   @apply p-4;
-  background-image: repeating-linear-gradient(45deg, var(--fallback-b1, oklch(var(--b1))), var(--fallback-b1, oklch(var(--b1))) 13px, var(--fallback-b2, oklch(var(--b2))) 13px, var(--fallback-b2, oklch(var(--b2))) 14px);
+  background-image: repeating-linear-gradient(
+    45deg,
+    var(--fallback-b1, oklch(var(--b1))),
+    var(--fallback-b1, oklch(var(--b1))) 13px,
+    var(--fallback-b2, oklch(var(--b2))) 13px,
+    var(--fallback-b2, oklch(var(--b2))) 14px
+  );
 }
 @layer components {
   .item-border {
@@ -50,7 +55,7 @@
   font-weight: bold;
   color: #fff;
 
-  padding: .6em 1.5em 1.6em;
+  padding: 0.6em 1.5em 1.6em;
   /* you may need to adjust this based on your content */
   aspect-ratio: 1;
   display: grid;
@@ -81,7 +86,16 @@
     inset: 30% 0 auto;
     aspect-ratio: 1;
     background: color-mix(in srgb, var(--c), #000 35%);
-    clip-path: polygon(calc(100%/3) 0, calc(200%/3) 0, 100% 90%, calc(200%/3) 100%, calc(100%/3) 0, calc(200%/3) 0, calc(100%/3) 100%, 0 90%);
+    clip-path: polygon(
+      calc(100% / 3) 0,
+      calc(200% / 3) 0,
+      100% 90%,
+      calc(200% / 3) 100%,
+      calc(100% / 3) 0,
+      calc(200% / 3) 0,
+      calc(100% / 3) 100%,
+      0 90%
+    );
   }
 }
 
@@ -94,7 +108,7 @@
   --r: 20%;
   /* control the cutout part */
 
-  padding: .6em 1.3em;
+  padding: 0.6em 1.3em;
   /* you may need to adjust this based on your content */
   aspect-ratio: 1;
   display: grid;
@@ -105,14 +119,19 @@
   width: fit-content;
   box-sizing: border-box;
 
-
   &::before {
     content: "";
     position: absolute;
     z-index: -1;
     inset: 60% 20% -40%;
     background: color-mix(in srgb, var(--c), #000 35%);
-    clip-path: polygon(5% 0, 95% 0, 100% 100%, 50% calc(100% - var(--r)), 0 100%);
+    clip-path: polygon(
+      5% 0,
+      95% 0,
+      100% 100%,
+      50% calc(100% - var(--r)),
+      0 100%
+    );
   }
 
   &::after {
@@ -120,8 +139,42 @@
     position: absolute;
     z-index: -1;
     inset: 0;
-    background: radial-gradient(35% 35%, #0000 96%, #0003 97% 99%, #0000) var(--c);
-    clip-path: polygon(100.00% 50.00%, 89.23% 57.80%, 96.19% 69.13%, 83.26% 72.22%, 85.36% 85.36%, 72.22% 83.26%, 69.13% 96.19%, 57.80% 89.23%, 50.00% 100.00%, 42.20% 89.23%, 30.87% 96.19%, 27.78% 83.26%, 14.64% 85.36%, 16.74% 72.22%, 3.81% 69.13%, 10.77% 57.80%, 0.00% 50.00%, 10.77% 42.20%, 3.81% 30.87%, 16.74% 27.78%, 14.64% 14.64%, 27.78% 16.74%, 30.87% 3.81%, 42.20% 10.77%, 50.00% 0.00%, 57.80% 10.77%, 69.13% 3.81%, 72.22% 16.74%, 85.36% 14.64%, 83.26% 27.78%, 96.19% 30.87%, 89.23% 42.20%);
+    background: radial-gradient(35% 35%, #0000 96%, #0003 97% 99%, #0000)
+      var(--c);
+    clip-path: polygon(
+      100% 50%,
+      89.23% 57.8%,
+      96.19% 69.13%,
+      83.26% 72.22%,
+      85.36% 85.36%,
+      72.22% 83.26%,
+      69.13% 96.19%,
+      57.8% 89.23%,
+      50% 100%,
+      42.2% 89.23%,
+      30.87% 96.19%,
+      27.78% 83.26%,
+      14.64% 85.36%,
+      16.74% 72.22%,
+      3.81% 69.13%,
+      10.77% 57.8%,
+      0% 50%,
+      10.77% 42.2%,
+      3.81% 30.87%,
+      16.74% 27.78%,
+      14.64% 14.64%,
+      27.78% 16.74%,
+      30.87% 3.81%,
+      42.2% 10.77%,
+      50% 0%,
+      57.8% 10.77%,
+      69.13% 3.81%,
+      72.22% 16.74%,
+      85.36% 14.64%,
+      83.26% 27.78%,
+      96.19% 30.87%,
+      89.23% 42.2%
+    );
     /* from https://css-generators.com/starburst-shape/ */
   }
 }
@@ -132,7 +185,7 @@
   font-weight: bold;
   color: #fff;
 
-  padding: .6em 1.3em;
+  padding: 0.6em 1.3em;
   /* you may need to adjust this based on your content */
   aspect-ratio: 1;
   display: grid;
@@ -143,7 +196,6 @@
   width: fit-content;
   box-sizing: border-box;
 
-
   &::before {
     content: "";
     position: absolute;
@@ -151,7 +203,16 @@
     inset: 50% 0 auto;
     aspect-ratio: 1;
     background: color-mix(in srgb, var(--c), #000 35%);
-    clip-path: polygon(calc(100%/3) 0, calc(200%/3) 0, 100% 90%, calc(200%/3) 100%, calc(100%/3) 0, calc(200%/3) 0, calc(100%/3) 100%, 0 90%);
+    clip-path: polygon(
+      calc(100% / 3) 0,
+      calc(200% / 3) 0,
+      100% 90%,
+      calc(200% / 3) 100%,
+      calc(100% / 3) 0,
+      calc(200% / 3) 0,
+      calc(100% / 3) 100%,
+      0 90%
+    );
   }
 
   &::after {
@@ -159,8 +220,58 @@
     position: absolute;
     z-index: -1;
     inset: 0;
-    background: radial-gradient(35% 35%, #0000 96%, #0003 97% 99%, #0000) var(--c);
-    clip-path: polygon(100.00% 50.00%, 89.66% 55.22%, 98.30% 62.94%, 86.96% 65.31%, 93.30% 75.00%, 81.73% 74.35%, 85.36% 85.36%, 74.35% 81.73%, 75.00% 93.30%, 65.31% 86.96%, 62.94% 98.30%, 55.22% 89.66%, 50.00% 100.00%, 44.78% 89.66%, 37.06% 98.30%, 34.69% 86.96%, 25.00% 93.30%, 25.65% 81.73%, 14.64% 85.36%, 18.27% 74.35%, 6.70% 75.00%, 13.04% 65.31%, 1.70% 62.94%, 10.34% 55.22%, 0.00% 50.00%, 10.34% 44.78%, 1.70% 37.06%, 13.04% 34.69%, 6.70% 25.00%, 18.27% 25.65%, 14.64% 14.64%, 25.65% 18.27%, 25.00% 6.70%, 34.69% 13.04%, 37.06% 1.70%, 44.78% 10.34%, 50.00% 0.00%, 55.22% 10.34%, 62.94% 1.70%, 65.31% 13.04%, 75.00% 6.70%, 74.35% 18.27%, 85.36% 14.64%, 81.73% 25.65%, 93.30% 25.00%, 86.96% 34.69%, 98.30% 37.06%, 89.66% 44.78%);
+    background: radial-gradient(35% 35%, #0000 96%, #0003 97% 99%, #0000)
+      var(--c);
+    clip-path: polygon(
+      100% 50%,
+      89.66% 55.22%,
+      98.3% 62.94%,
+      86.96% 65.31%,
+      93.3% 75%,
+      81.73% 74.35%,
+      85.36% 85.36%,
+      74.35% 81.73%,
+      75% 93.3%,
+      65.31% 86.96%,
+      62.94% 98.3%,
+      55.22% 89.66%,
+      50% 100%,
+      44.78% 89.66%,
+      37.06% 98.3%,
+      34.69% 86.96%,
+      25% 93.3%,
+      25.65% 81.73%,
+      14.64% 85.36%,
+      18.27% 74.35%,
+      6.7% 75%,
+      13.04% 65.31%,
+      1.7% 62.94%,
+      10.34% 55.22%,
+      0% 50%,
+      10.34% 44.78%,
+      1.7% 37.06%,
+      13.04% 34.69%,
+      6.7% 25%,
+      18.27% 25.65%,
+      14.64% 14.64%,
+      25.65% 18.27%,
+      25% 6.7%,
+      34.69% 13.04%,
+      37.06% 1.7%,
+      44.78% 10.34%,
+      50% 0%,
+      55.22% 10.34%,
+      62.94% 1.7%,
+      65.31% 13.04%,
+      75% 6.7%,
+      74.35% 18.27%,
+      85.36% 14.64%,
+      81.73% 25.65%,
+      93.3% 25%,
+      86.96% 34.69%,
+      98.3% 37.06%,
+      89.66% 44.78%
+    );
     /* from https://css-generators.com/starburst-shape/ */
   }
 }
@@ -173,22 +284,30 @@
   font-weight: bold;
   color: #fff;
 
-  --f: .4em;
+  --f: 0.4em;
   /* control the folded part */
-  --r: .8em;
+  --r: 0.8em;
   /* control the cutout */
 
   border: solid #0000;
-  border-width: 0 calc(2*var(--f)) var(--r) 0;
-  background:
-    radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0/calc(2*var(--f)) var(--f) no-repeat border-box;
+  border-width: 0 calc(2 * var(--f)) var(--r) 0;
+  background: radial-gradient(50% 100% at bottom, #0005 98%, #0000 101%) 100% 0 /
+    calc(2 * var(--f)) var(--f) no-repeat border-box;
   background-color: var(--c);
   border-radius: var(--f) var(--f) 0 0;
-  clip-path: polygon(100% 0, 0 0, 0 100%, calc(50% - var(--f)) calc(100% - var(--r)), calc(100% - 2*var(--f)) 100%, calc(100% - 2*var(--f)) var(--f), 100% var(--f));
+  clip-path: polygon(
+    100% 0,
+    0 0,
+    0 100%,
+    calc(50% - var(--f)) calc(100% - var(--r)),
+    calc(100% - 2 * var(--f)) 100%,
+    calc(100% - 2 * var(--f)) var(--f),
+    100% var(--f)
+  );
 }
 
-
-@colorlist: oklch(var(--p)), oklch(var(--s)), oklch(var(--a)), oklch(var(--n)), oklch(var(--in)), oklch(var(--su)), oklch(var(--wa)), oklch(var(--er));
+@colorlist: oklch(var(--p)), oklch(var(--s)), oklch(var(--a)), oklch(var(--n)),
+  oklch(var(--in)), oklch(var(--su)), oklch(var(--wa)), oklch(var(--er));
 
 .ribbon(@name, @i: 1) when (@i =< length(@colorlist)) {
   .ribbon-@{name}-@{i} {
@@ -231,130 +350,130 @@
 
 .ellipsis-clamp();
 
-
-
 @bounceIn: ~"bubble-bounceIn";
 @bounceOut: ~"bubble-bounceOut";
 
 @keyframes @bounceIn {
+  from,
+  20%,
+  40%,
+  60%,
+  80%,
+  to {
+    -webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
 
-	from,
-	20%,
-	40%,
-	60%,
-	80%,
-	to {
-		-webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-		animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-	}
+  0% {
+    opacity: 0;
+    -webkit-transform: scale3d(0.3, 0.3, 0.3);
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
 
-	0% {
-		opacity: 0;
-		-webkit-transform: scale3d(0.3, 0.3, 0.3);
-		transform: scale3d(0.3, 0.3, 0.3);
-	}
+  20% {
+    -webkit-transform: scale3d(1.1, 1.1, 1.1);
+    transform: scale3d(1.1, 1.1, 1.1);
+  }
 
-	20% {
-		-webkit-transform: scale3d(1.1, 1.1, 1.1);
-		transform: scale3d(1.1, 1.1, 1.1);
-	}
+  40% {
+    -webkit-transform: scale3d(0.9, 0.9, 0.9);
+    transform: scale3d(0.9, 0.9, 0.9);
+  }
 
-	40% {
-		-webkit-transform: scale3d(0.9, 0.9, 0.9);
-		transform: scale3d(0.9, 0.9, 0.9);
-	}
+  60% {
+    opacity: 1;
+    -webkit-transform: scale3d(1.03, 1.03, 1.03);
+    transform: scale3d(1.03, 1.03, 1.03);
+  }
 
-	60% {
-		opacity: 1;
-		-webkit-transform: scale3d(1.03, 1.03, 1.03);
-		transform: scale3d(1.03, 1.03, 1.03);
-	}
+  80% {
+    -webkit-transform: scale3d(0.97, 0.97, 0.97);
+    transform: scale3d(0.97, 0.97, 0.97);
+  }
 
-	80% {
-		-webkit-transform: scale3d(0.97, 0.97, 0.97);
-		transform: scale3d(0.97, 0.97, 0.97);
-	}
-
-	to {
-		opacity: 1;
-		-webkit-transform: scale3d(1, 1, 1);
-		transform: scale3d(1, 1, 1);
-	}
+  to {
+    opacity: 1;
+    -webkit-transform: scale3d(1, 1, 1);
+    transform: scale3d(1, 1, 1);
+  }
 }
 
 @keyframes @bounceOut {
-	20% {
-		-webkit-transform: scale3d(0.9, 0.9, 0.9);
-		transform: scale3d(0.9, 0.9, 0.9);
-	}
+  20% {
+    -webkit-transform: scale3d(0.9, 0.9, 0.9);
+    transform: scale3d(0.9, 0.9, 0.9);
+  }
 
-	50%,
-	55% {
-		opacity: 1;
-		-webkit-transform: scale3d(1.1, 1.1, 1.1);
-		transform: scale3d(1.1, 1.1, 1.1);
-	}
+  50%,
+  55% {
+    opacity: 1;
+    -webkit-transform: scale3d(1.1, 1.1, 1.1);
+    transform: scale3d(1.1, 1.1, 1.1);
+  }
 
-	to {
-		opacity: 0;
-		-webkit-transform: scale3d(0.3, 0.3, 0.3);
-		transform: scale3d(0.3, 0.3, 0.3);
-	}
+  to {
+    opacity: 0;
+    -webkit-transform: scale3d(0.3, 0.3, 0.3);
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
 }
 
 .bubble {
-	z-index: 999;
-	position: relative;
+  z-index: 10;
+  position: relative;
 
-	&-surround {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		margin-top: var(--offset-size);
-		margin-left: var(--offset-size);
-		display: none;
-		z-index: -1;
+  &-surround {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: var(--offset-size);
+    margin-left: var(--offset-size);
+    display: none;
+    z-index: -1;
 
-		&.animate {
-			display: block;
-		}
+    &.animate {
+      display: block;
+    }
 
-		&.animate.visible {
-			animation: @bounceIn 0.3s;
-		}
+    &.animate.visible {
+      animation: @bounceIn 0.3s;
+    }
 
-		&.animate.hidden {
-			animation: @bounceOut 0.3s forwards;
-		}
-	}
+    &.animate.hidden {
+      animation: @bounceOut 0.3s forwards;
+    }
+  }
 
-	&-sub {
-		top: var(--offset-size);
-		left: var(--offset-size);
-		position: absolute;
-		border-radius: 50%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
+  &-sub {
+    top: var(--offset-size);
+    left: var(--offset-size);
+    position: absolute;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+      0 2px 10px 0 var(--shadow-color),
+      0 2px 8px 0 var(--shadow-color);
+    &:hover {
+    }
+  }
 
-		&:hover {
-			box-shadow: 0 2px 10px 0 var(--color), 0 2px 8px 0 var(--color);
-		}
-	}
+  &:hover {
+    // box-shadow:
+    //   0 2px 10px 0 var(--color),
+    //   0 2px 8px 0 var(--color);
+  }
 
-	&:hover {
-		box-shadow: 0 2px 10px 0 var(--color), 0 2px 8px 0 var(--color);
-	}
+  &.attach {
+    transition: 0.3s;
 
-	&.attach {
-		transition: .3s;
+    &.right:hover {
+      border-radius: 50% 0 0 50%;
+    }
 
-		&.right:hover {
-			border-radius: 50% 0 0 50%;
-		}
-
-		&.left:hover {
-			border-radius: 0 50% 50% 0;
-		}
-	}
+    &.left:hover {
+      border-radius: 0 50% 50% 0;
+    }
+  }
 }

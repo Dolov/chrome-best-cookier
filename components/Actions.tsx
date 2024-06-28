@@ -7,7 +7,9 @@ import { useStorage } from "@plasmohq/storage/hook"
 import Bubble from "~components/Bubble"
 import { useGetUrlInfo } from "~components/hooks"
 import {
+  BxBxsFileJson,
   CarbonCloudMonitoring,
+  CbiStreamz,
   IonCopy,
   IonEllipsisVertical,
   MaterialSymbolsDelete,
@@ -85,16 +87,6 @@ const Actions: React.FC<ActionsProps> = (props) => {
     )
     downloadLink.setAttribute("download", name)
     downloadLink.click()
-  }
-
-  const handleCopy = () => {
-    ga("action_copy")
-    const data = filteredCookies.map((item) => {
-      const { checked, create, ...rest } = item
-      return rest
-    })
-    copyTextToClipboard(JSON.stringify(data, null, 2))
-    message.success(chrome.i18n.getMessage("copySuccess"))
   }
 
   const handleImport = async () => {
@@ -232,18 +224,11 @@ const Actions: React.FC<ActionsProps> = (props) => {
             <MaterialSymbolsExportNotes className="text-xl group-hover:text-primary" />
           </button>
         </div>
-
-        {/* <Bubble> */}
-        <div
-          className="tooltip"
-          data-tip={chrome.i18n.getMessage("actions_copy", [`${len}`])}>
-          <button
-            onClick={handleCopy}
-            className="btn btn-sm btn-circle mx-2 group">
+        <Copy data={filteredCookies}>
+          <button className="btn btn-sm btn-circle mx-2 group">
             <IonCopy className="text-xl rotate-180 group-hover:text-primary" />
           </button>
-        </div>
-        {/* </Bubble> */}
+        </Copy>
         {!full && (
           <div
             className="tooltip"
@@ -404,6 +389,79 @@ const CookieGuard = (props) => {
         })}
       />
     </button>
+  )
+}
+
+const Copy = (props) => {
+  const { data: filteredCookies, children } = props
+
+  const handleCopyJson = () => {
+    ga("action_copy_json")
+    const data = filteredCookies.map((item) => {
+      const { checked, create, ...rest } = item
+      return rest
+    })
+    copyTextToClipboard(JSON.stringify(data, null, 2))
+    message.success(chrome.i18n.getMessage("copySuccess"))
+  }
+
+  const handleCopyHeaderStr = () => {
+    ga("action_copy_headerstr")
+    const data = filteredCookies
+      .map((item) => {
+        const { checked, create, ...rest } = item
+        return rest
+      })
+      .map((item) => `${item.name}=${item.value}`)
+    copyTextToClipboard(data.join("; "))
+    message.success(chrome.i18n.getMessage("copySuccess"))
+  }
+
+  return (
+    <Bubble
+      // trigger="hover"
+      subSize={27}
+      subRadius={40}
+      subBubbles={[
+        {
+          shadowColor: "oklch(var(--s))",
+          render(angle) {
+            return (
+              <div
+                style={{ transform: `rotateZ(${-angle}deg)` }}
+                className="tooltip center p-2"
+                data-tip={chrome.i18n.getMessage("actions_copy_json")}>
+                <button
+                  style={{ transform: `rotateZ(${angle}deg)` }}
+                  onClick={handleCopyJson}
+                  className="btn btn-xs btn-secondary btn-circle mx-2">
+                  <BxBxsFileJson className="text-xl rotate-180" />
+                </button>
+              </div>
+            )
+          }
+        },
+        {
+          shadowColor: "oklch(var(--a))",
+          render(angle) {
+            return (
+              <div
+                style={{ transform: `rotateZ(${-angle}deg)` }}
+                className="tooltip center p-2"
+                data-tip={chrome.i18n.getMessage("actions_copy_headerstr")}>
+                <button
+                  style={{ transform: `rotateZ(${angle}deg)` }}
+                  onClick={handleCopyHeaderStr}
+                  className="btn btn-xs btn-accent btn-circle mx-2">
+                  <CbiStreamz className="text-xl rotate-180" />
+                </button>
+              </div>
+            )
+          }
+        }
+      ]}>
+      {children}
+    </Bubble>
   )
 }
 

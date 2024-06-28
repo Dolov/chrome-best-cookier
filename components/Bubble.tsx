@@ -8,6 +8,7 @@ export interface BubbleProps
     React.HTMLAttributes<HTMLDivElement>,
     HTMLDivElement
   > {
+  trigger?: "click" | "hover"
   onClick?: React.MouseEventHandler<HTMLDivElement>
   /** 子气泡大小 */
   subSize?: number
@@ -20,9 +21,9 @@ export interface BubbleProps
   /** 子气泡是否可见的切换 */
   onSubVisibleChange?: (visible: boolean) => void
   subBubbles?: Array<{
-    title: string
-    color: string
-    children: React.ReactNode
+    render(angle): React.ReactNode
+    color?: string
+    shadowColor?: string
   }>
 }
 
@@ -31,6 +32,7 @@ const Bubble: React.FC<BubbleProps> = (props) => {
     children,
     subBubbles,
     style,
+    trigger = "click",
     subRadius = 80,
     subSize = 50,
     onMouseEnter: onMouseEnterProp,
@@ -62,16 +64,25 @@ const Bubble: React.FC<BubbleProps> = (props) => {
 
   /** 鼠标移入时，如果是吸附状态则展开 */
   const onMouseEnter: React.MouseEventHandler<HTMLDivElement> = (event) => {
+    if (trigger === "click") return
+    if (sub) {
+      setSubVisible(!subVisible)
+    }
     onMouseEnterProp && onMouseEnterProp(event)
   }
 
   const onMouseLeave: React.MouseEventHandler<HTMLDivElement> = (event) => {
+    if (trigger === "click") return
+    if (sub) {
+      setSubVisible(!subVisible)
+    }
     onMouseLeaveProp && onMouseLeaveProp(event)
   }
 
   const sub = Array.isArray(subBubbles) && subBubbles.length
 
   const clickHandler: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    if (trigger === "hover") return
     if (sub) {
       setSubVisible(!subVisible)
     }
@@ -94,27 +105,32 @@ const Bubble: React.FC<BubbleProps> = (props) => {
             animate: subVisibleChanged
           })}>
           {subBubbles.map((item, index) => {
-            const { title, color = "red" } = item
+            const { render, color, shadowColor } = item
             /** 加上 180deg 是为了让第一个显示在上面 */
-            const angle = (index * 360) / subBubbles.length + 180
+            // const angle = (index * 360) / subBubbles.length + 180
+            const angle = 145 + 70 * index
             return (
               <div
                 style={{
                   // @ts-ignore
                   "--color": color,
+                  "--shadow-color": shadowColor || color,
                   width: subSize,
                   height: subSize,
                   transform: `rotateZ(${angle}deg) translateY(${subRadius}px)`,
                   background: color
                 }}
-                className={classnames(`bubble-sub`)}
+                className={classnames("bubble-sub")}
                 onClick={(e) => e.stopPropagation()}>
                 {/* 内容部旋转 */}
                 <div
-                  style={{
-                    transform: `rotateZ(${-angle}deg)`
-                  }}>
-                  {title}
+                  className="center"
+                  style={
+                    {
+                      // transform: `rotateZ(${-angle}deg)`
+                    }
+                  }>
+                  {render(angle)}
                 </div>
               </div>
             )

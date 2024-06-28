@@ -27,15 +27,13 @@
     "message": "Cookie Security Guard",
     "description": ""
   },
-  "actions_copy": {
-    "message": "Copy $params$ items",
-    "description": "",
-    "placeholders": {
-      "params": {
-        "content": "$1",
-        "example": ""
-      }
-    }
+  "actions_copy_json": {
+    "message": "Copy JSON",
+    "description": ""
+  },
+  "actions_copy_headerstr": {
+    "message": "Copy Header String",
+    "description": ""
   },
   "actions_delete": {
     "message": "Delete $params$ items",
