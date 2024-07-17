@@ -14,7 +14,7 @@
 }
 @layer components {
   .item-border {
-    @apply border-base-content/20 hover:border-base-content/40 border outline outline-2 outline-offset-2 outline-transparent;
+    @apply border border-base-content/20 outline outline-2 outline-offset-2 outline-transparent hover:border-base-content/40;
   }
 
   .item-border-active {
@@ -22,7 +22,7 @@
   }
 
   .ellipsis {
-    @apply overflow-ellipsis overflow-hidden whitespace-nowrap;
+    @apply overflow-hidden overflow-ellipsis whitespace-nowrap;
   }
 
   .h-center {
@@ -34,7 +34,7 @@
   }
 
   .center {
-    @apply flex justify-center items-center;
+    @apply flex items-center justify-center;
   }
 
   .active {
