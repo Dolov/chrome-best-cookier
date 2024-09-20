@@ -4,6 +4,7 @@
 
 #__plasmo {
   @apply p-4;
+  overflow: hidden;
   background-image: repeating-linear-gradient(
     45deg,
     var(--fallback-b1, oklch(var(--b1))),
@@ -12,6 +13,7 @@
     var(--fallback-b2, oklch(var(--b2))) 14px
   );
 }
+
 @layer components {
   .item-border {
     @apply border border-base-content/20 outline outline-2 outline-offset-2 outline-transparent hover:border-base-content/40;
