@@ -24,11 +24,14 @@ import message from "~components/message"
 import Modal from "~components/Modal"
 import Upload from "~components/Upload"
 import {
+  cookieToArray,
   copyTextToClipboard,
   dayjs,
   ga,
   getFileJson,
   getId,
+  isJsonString,
+  jsonParse,
   MessageActionEnum,
   sendMessage,
   StorageKeyEnum,
@@ -91,14 +94,25 @@ const Actions: React.FC<ActionsProps> = (props) => {
 
   const handleImport = async () => {
     ga("action_import")
-    try {
-      const data = JSON.parse(importData).map((item) => {
+    const isJson = isJsonString(importData)
+    let data = []
+    if (isJson) {
+      const jsonData = jsonParse(importData, null)
+      if (!jsonData) {
+        message.error(chrome.i18n.getMessage("importFail"))
+        return
+      }
+      data = jsonData.map((item) => {
         return {
           ...item,
           // 无痕模式和普通模式的 storeId 不同，需要清洗，否则会导入失败
           storeId: ""
         }
       })
+    } else {
+      data = cookieToArray(importData, domain)
+    }
+    try {
       const res = await chrome.runtime.sendMessage({
         action: MessageActionEnum.SET_COOKIES,
         payload: {
@@ -175,7 +189,7 @@ const Actions: React.FC<ActionsProps> = (props) => {
   const noData = len == 0
 
   return (
-    <div className="pt-2 flex justify-between">
+    <div className="flex justify-between pt-2">
       <Modal
         title={chrome.i18n.getMessage("actions_import")}
         visible={visible}
@@ -185,7 +199,7 @@ const Actions: React.FC<ActionsProps> = (props) => {
           <textarea
             value={importData}
             onChange={(e) => setImportData(e.target.value)}
-            className={classnames("textarea textarea-primary w-[98%] m-auto", {
+            className={classnames("textarea textarea-primary m-auto w-[98%]", {
               "h-48": full
             })}
             placeholder={chrome.i18n.getMessage("pasteJsonData")}
@@ -209,8 +223,8 @@ const Actions: React.FC<ActionsProps> = (props) => {
           data-tip={chrome.i18n.getMessage("actions_import")}>
           <button
             onClick={() => setVisible(true)}
-            className="btn btn-sm btn-circle mx-2 group">
-            <MaterialSymbolsExportNotes className="text-xl rotate-180 group-hover:text-primary" />
+            className="group btn btn-circle btn-sm mx-2">
+            <MaterialSymbolsExportNotes className="rotate-180 text-xl group-hover:text-primary" />
           </button>
         </div>
         <div
@@ -218,15 +232,15 @@ const Actions: React.FC<ActionsProps> = (props) => {
           data-tip={chrome.i18n.getMessage("actions_export", [`${len}`])}>
           <button
             onClick={handleExport}
-            className={classnames("btn btn-sm btn-circle mx-2 group", {
+            className={classnames("group btn btn-circle btn-sm mx-2", {
               "btn-disabled": noData
             })}>
             <MaterialSymbolsExportNotes className="text-xl group-hover:text-primary" />
           </button>
         </div>
         <Copy data={filteredCookies}>
-          <button className="btn btn-sm btn-circle mx-2 group">
-            <IonCopy className="text-xl rotate-180 group-hover:text-primary" />
+          <button className="group btn btn-circle btn-sm mx-2">
+            <IonCopy className="rotate-180 text-xl group-hover:text-primary" />
           </button>
         </Copy>
         {!full && (
@@ -235,7 +249,7 @@ const Actions: React.FC<ActionsProps> = (props) => {
             data-tip={chrome.i18n.getMessage("actions_monitor")}>
             <button
               onClick={handleMonitor}
-              className={classnames("btn btn-sm btn-circle mx-2 group")}>
+              className={classnames("group btn btn-circle btn-sm mx-2")}>
               <CarbonCloudMonitoring
                 className={classnames("text-xl group-hover:text-primary", {
                   "!text-secondary": monitoring
@@ -249,7 +263,7 @@ const Actions: React.FC<ActionsProps> = (props) => {
           data-tip={chrome.i18n.getMessage("actions_delete", [`${len}`])}>
           <button
             onClick={handleDelete}
-            className={classnames("btn btn-sm btn-circle mx-2 group", {
+            className={classnames("group btn btn-circle btn-sm mx-2", {
               "btn-disabled": noData
             })}>
             <MaterialSymbolsDelete className="text-xl group-hover:text-error" />
@@ -263,7 +277,7 @@ const Actions: React.FC<ActionsProps> = (props) => {
             data-tip={chrome.i18n.getMessage("actions_fullScreen")}>
             <button
               onClick={handleFull}
-              className="btn btn-sm btn-circle mx-2 group">
+              className="group btn btn-circle btn-sm mx-2">
               <SiGlyphFullscreen className="text-xl group-hover:text-primary" />
             </button>
           </div>
@@ -278,14 +292,14 @@ const Actions: React.FC<ActionsProps> = (props) => {
           data-tip={chrome.i18n.getMessage("actions_setting")}>
           <button
             onClick={handleSetting}
-            className="btn btn-sm btn-circle mx-2 group">
+            className="group btn btn-circle btn-sm mx-2">
             <MaterialSymbolsSettings className="text-xl group-hover:text-primary" />
           </button>
         </div>
         <div
           className="tooltip tooltip-left"
           data-tip={chrome.i18n.getMessage("actions_issues")}>
-          <button onClick={handleIssue} className="btn btn-sm btn-circle mx-2">
+          <button onClick={handleIssue} className="btn btn-circle btn-sm mx-2">
             <StreamlineEmojisBug className="text-xl" />
           </button>
         </div>
@@ -324,17 +338,17 @@ export const RowActions = (props) => {
   }
 
   return (
-    <div className="dropdown dropdown-bottom dropdown-end">
-      <div tabIndex={0} role="button" className="btn btn-sm btn-circle">
+    <div className="dropdown dropdown-end dropdown-bottom">
+      <div tabIndex={0} role="button" className="btn btn-circle btn-sm">
         <IonEllipsisVertical className="text-lg" />
       </div>
       <ul
         tabIndex={0}
-        className="dropdown-content z-[1] menu p-2 shadow-2xl bg-base-100 rounded-box w-36">
+        className="menu dropdown-content z-[1] w-36 rounded-box bg-base-100 p-2 shadow-2xl">
         <li onClick={handleFollow}>
           <a>{text}</a>
         </li>
-        <li onClick={handleDelete} className="text-error font-bold">
+        <li onClick={handleDelete} className="font-bold text-error">
           <a>{chrome.i18n.getMessage("delete")}</a>
         </li>
       </ul>
@@ -357,7 +371,7 @@ const RefreshButton = (props) => {
   }
 
   return (
-    <button onClick={onClick} className="btn btn-sm btn-circle mx-2 group">
+    <button onClick={onClick} className="group btn btn-circle btn-sm mx-2">
       <MingcuteRefresh2Fill
         className={classnames("text-xl group-hover:text-primary", {
           "animate-spin": loading
@@ -382,7 +396,7 @@ const CookieGuard = (props) => {
   }
 
   return (
-    <button onClick={handleClick} className="btn btn-sm btn-circle mx-2 group">
+    <button onClick={handleClick} className="group btn btn-circle btn-sm mx-2">
       <MaterialSymbolsShieldLock
         className={classnames("text-2xl group-hover:text-primary", {
           "!text-warning": active
@@ -429,13 +443,13 @@ const Copy = (props) => {
             return (
               <div
                 style={{ transform: `rotateZ(${-angle}deg)` }}
-                className="tooltip center p-2"
+                className="center tooltip p-2"
                 data-tip={chrome.i18n.getMessage("actions_copy_json")}>
                 <button
                   style={{ transform: `rotateZ(${angle}deg)` }}
                   onClick={handleCopyJson}
-                  className="btn btn-xs btn-secondary btn-circle mx-2">
-                  <BxBxsFileJson className="text-xl rotate-180" />
+                  className="btn btn-circle btn-secondary btn-xs mx-2">
+                  <BxBxsFileJson className="rotate-180 text-xl" />
                 </button>
               </div>
             )
@@ -447,13 +461,13 @@ const Copy = (props) => {
             return (
               <div
                 style={{ transform: `rotateZ(${-angle}deg)` }}
-                className="tooltip center p-2"
+                className="center tooltip p-2"
                 data-tip={chrome.i18n.getMessage("actions_copy_headerstr")}>
                 <button
                   style={{ transform: `rotateZ(${angle}deg)` }}
                   onClick={handleCopyHeaderStr}
-                  className="btn btn-xs btn-accent btn-circle mx-2">
-                  <CbiStreamz className="text-xl rotate-180" />
+                  className="btn btn-circle btn-accent btn-xs mx-2">
+                  <CbiStreamz className="rotate-180 text-xl" />
                 </button>
               </div>
             )

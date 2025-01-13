@@ -116,7 +116,7 @@
     "description": ""
   },
   "pasteJsonData": {
-    "message": "粘贴 JSON 数据",
+    "message": "粘贴 JSON 数据或 request header cookie 字符串",
     "description": ""
   },
   "cancel": {
@@ -181,5 +181,4 @@
     "message": "您的反馈对我们非常重要，欢迎随时与我们分享您的意见和建议！",
     "description": ""
   }
-  
 }

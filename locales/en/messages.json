@@ -116,7 +116,7 @@
     "description": ""
   },
   "pasteJsonData": {
-    "message": "Paste JSON Data",
+    "message": "Paste JSON Data or request header cookie string",
     "description": ""
   },
   "cancel": {
