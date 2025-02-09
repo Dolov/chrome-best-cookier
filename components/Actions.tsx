@@ -93,37 +93,32 @@ const Actions: React.FC<ActionsProps> = (props) => {
   }
 
   const handleImport = async () => {
+    if (!importData) return
+
     ga("action_import")
+
     const isJson = isJsonString(importData)
-    let data = []
-    if (isJson) {
-      const jsonData = jsonParse(importData, null)
-      if (!jsonData) {
-        message.error(chrome.i18n.getMessage("importFail"))
-        return
-      }
-      data = jsonData.map((item) => {
-        return {
-          ...item,
-          // 无痕模式和普通模式的 storeId 不同，需要清洗，否则会导入失败
-          storeId: ""
-        }
-      })
-    } else {
-      data = cookieToArray(importData, domain)
+
+    // 无痕模式和普通模式的 storeId 不同，需要清洗，否则会导入失败
+    let data = isJson
+      ? jsonParse(importData, [])?.map((item) => ({ ...item, storeId: "" }))
+      : cookieToArray(importData, domain)
+
+    if (!data) {
+      return message.error(chrome.i18n.getMessage("importFail"))
     }
+
     try {
-      const res = await chrome.runtime.sendMessage({
+      await chrome.runtime.sendMessage({
         action: MessageActionEnum.SET_COOKIES,
-        payload: {
-          cookies: data
-        }
+        payload: { cookies: data }
       })
+
       init()
       setVisible(false)
       setImportData("")
       message.success(chrome.i18n.getMessage("importSuccess"))
-    } catch (error) {
+    } catch {
       message.error(chrome.i18n.getMessage("importFail"))
     }
   }

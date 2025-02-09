@@ -318,7 +318,7 @@ export const isJsonString = (str: string) => {
 
 export const cookieToArray = (cookieStr: string, domain: string) => {
   let arr = []
-  let pairs = cookieStr.split("; ")
+  let pairs = cookieStr.replace(/\r?\n/g, "").split("; ")
   for (let pair of pairs) {
     const parts = pair.split("=")
     // 对键和值进行解码，以处理可能的编码字符
