@@ -58,7 +58,7 @@ export enum MessageActionEnum {
 }
 
 export enum StorageKeyEnum {
-  FOLLOWS = "FOLLOWS",
+  FOLLOWS = "FOLLOW_MAP",
   SETTINGS = "SETTINGS",
   GUARD_ENABLE = "GUARD_ENABLE",
   GUARD_SETTINGS = "GUARD_SETTINGS",

@@ -29,7 +29,6 @@ import {
   dayjs,
   ga,
   getFileJson,
-  getId,
   isJsonString,
   jsonParse,
   MessageActionEnum,
@@ -305,9 +304,11 @@ const Actions: React.FC<ActionsProps> = (props) => {
 
 export const RowActions = (props) => {
   const { data, init } = props
-  const [follows, setFollows] = useStorage(StorageKeyEnum.FOLLOWS, [])
-  const id = getId(data)
-  const follow = follows.includes(id)
+  const { domain, name, path } = data
+  const followKey = `${domain}-${path}`
+  const [followMap, setFollowMap] = useStorage(StorageKeyEnum.FOLLOWS, {})
+  const follows = followMap[followKey] || []
+  const follow = follows.includes(name)
   const text = follow
     ? chrome.i18n.getMessage("unFollow")
     : chrome.i18n.getMessage("follow")
@@ -324,12 +325,20 @@ export const RowActions = (props) => {
   }
 
   const handleFollow = () => {
-    const index = follows.indexOf(id)
+    const { name } = data
+    const index = follows.indexOf(name)
     if (index > -1) {
-      setFollows(follows.filter((item) => item !== id))
+      const newFollows = follows.filter((item) => item !== name)
+      setFollowMap({
+        ...followMap,
+        [followKey]: newFollows
+      })
       return
     }
-    setFollows([...follows, id])
+    setFollowMap({
+      ...followMap,
+      [followKey]: [...follows, name]
+    })
   }
 
   return (
