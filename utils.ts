@@ -328,3 +328,9 @@ export const cookieToArray = (cookieStr: string, domain: string) => {
   }
   return arr
 }
+
+export const getFollowKey = (cookie: chrome.cookies.Cookie) => {
+  const { domain, path } = cookie
+  const domainWithoutDot = domain.startsWith(".") ? domain.slice(1) : domain
+  return `${domainWithoutDot}-${path}`
+}

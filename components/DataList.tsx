@@ -18,6 +18,7 @@ import {
   dayjs,
   getCreateItemDefaultDomain,
   getDate,
+  getFollowKey,
   getId,
   MessageActionEnum,
   StorageKeyEnum,
@@ -356,7 +357,8 @@ const DataList: React.FC<DataListProps> = (props) => {
           } = cookie
           const id = getId(cookie)
           const order = index + 1
-          const follows = followMap[`${domain}-${path}`] || []
+          const followKey = getFollowKey(cookie)
+          const follows = followMap[followKey] || []
           const follow = follows.includes(name)
           const highlight = id === highlightId
           return (

@@ -3,7 +3,7 @@ import { debounce } from "lodash"
 import { Storage } from "@plasmohq/storage"
 
 import {
-  getId,
+  getFollowKey,
   getUrlFromCookie,
   MessageActionEnum,
   StorageKeyEnum
@@ -69,12 +69,13 @@ chrome.runtime.onMessage.addListener((params, sender, sendResponse) => {
     if (deleteFollow) {
       storage.get(StorageKeyEnum.FOLLOWS).then((followMap: any) => {
         if (!followMap) return
-        const { domain, path, name } = cookies
-        const follows = followMap[`${domain}-${path}`] || []
+        const { name } = cookies
+        const followKey = getFollowKey(cookies)
+        const follows = followMap[followKey] || []
         const newFollows = follows.filter((item) => item !== name)
         storage.set(StorageKeyEnum.FOLLOWS, {
           ...followMap,
-          [`${domain}-${path}`]: newFollows
+          [followKey]: newFollows
         })
       })
     }

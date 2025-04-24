@@ -29,6 +29,7 @@ import {
   dayjs,
   ga,
   getFileJson,
+  getFollowKey,
   isJsonString,
   jsonParse,
   MessageActionEnum,
@@ -304,8 +305,8 @@ const Actions: React.FC<ActionsProps> = (props) => {
 
 export const RowActions = (props) => {
   const { data, init } = props
-  const { domain, name, path } = data
-  const followKey = `${domain}-${path}`
+  const { name } = data
+  const followKey = getFollowKey(data)
   const [followMap, setFollowMap] = useStorage(StorageKeyEnum.FOLLOWS, {})
   const follows = followMap[followKey] || []
   const follow = follows.includes(name)

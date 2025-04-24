@@ -1,42 +1,52 @@
-import React from 'react'
-import classnames from 'classnames'
-import {
-  MaterialSymbolsFilterAlt, MaterialSymbolsCheckCircleOutlineRounded
-} from '~components/Icons'
-import { ga } from '~utils'
+import classnames from "classnames"
+import React from "react"
 
-export const BooleanDisplay = props => {
+import {
+  MaterialSymbolsCheckCircleOutlineRounded,
+  MaterialSymbolsFilterAlt
+} from "~components/Icons"
+import { copyTextToClipboard, ga } from "~utils"
+
+export const BooleanDisplay = (props) => {
   const { value, className } = props
   const booleanValue = Boolean(value)
   if (booleanValue) {
     return (
-      <div className={classnames("badge badge-sm", className)}>{`${booleanValue}`}</div>
+      <div
+        className={classnames(
+          "badge badge-sm",
+          className
+        )}>{`${booleanValue}`}</div>
     )
   }
-  return (
-    <div className="badge badge-sm badge-ghost">{`${booleanValue}`}</div>
-  )
+  return <div className="badge badge-ghost badge-sm">{`${booleanValue}`}</div>
 }
 
-export const Input = props => {
+export const Input = (props) => {
   const { value, create, onChange, placeholder, className } = props
   const [innerValue, setInnerValue] = React.useState(value)
 
   // fix: 修复某些场景下内部值与外部不一致的问题 eg .domain.com => domain.com
-  const fixValueNoChange = updatedValue => {
+  const fixValueNoChange = (updatedValue) => {
     if (updatedValue === innerValue) return
     setInnerValue(updatedValue)
   }
 
-  const onValueChange = e => {
+  const onValueChange = (e) => {
     if (e.target.value === value) return
     onChange(e.target.value, fixValueNoChange)
   }
 
-  const onKeyDown = e => {
-    if (e.key !== 'Enter') return
+  const onKeyDown = (e) => {
+    if (e.key !== "Enter") return
     const target = e.target as HTMLInputElement
     target.blur()
+  }
+
+  const handleClick = (e) => {
+    const target = e.target as HTMLInputElement
+    copyTextToClipboard(innerValue)
+    target.select()
   }
 
   return (
@@ -44,71 +54,90 @@ export const Input = props => {
       type="text"
       value={innerValue}
       onBlur={onValueChange}
-      onChange={e => setInnerValue(e.target.value)}
+      onChange={(e) => setInnerValue(e.target.value)}
       onKeyDown={onKeyDown}
+      onClick={handleClick}
       placeholder={placeholder}
-      className={classnames("w-[180px] input-primary input-sm input-bordered", className, {
-        "input": create
-      })}
+      className={classnames(
+        "input-sm input-bordered input-primary w-[180px]",
+        className,
+        {
+          input: create
+        }
+      )}
     />
   )
 }
 
-export const BooleanToggle = props => {
+export const BooleanToggle = (props) => {
   const { value, onChange, className } = props
   return (
     <input
       type="checkbox"
       className={classnames("toggle", className)}
       checked={value}
-      onChange={e => onChange(e.target.checked)}
+      onChange={(e) => onChange(e.target.checked)}
     />
   )
 }
 
-export const SameSite = props => {
+export const SameSite = (props) => {
   const { value, onChange } = props
   return (
     <div className="dropdown">
-      <div tabIndex={0} role="button" className="btn btn-sm m-1">{value}</div>
-      <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-        <li onClick={() => onChange('lax')}><a>lax</a></li>
-        <li onClick={() => onChange('strict')}><a>strict</a></li>
-        <li onClick={() => onChange('no_restriction')}><a>none</a></li>
-        <li onClick={() => onChange('unspecified')}><a>unspecified</a></li>
+      <div tabIndex={0} role="button" className="btn btn-sm m-1">
+        {value}
+      </div>
+      <ul
+        tabIndex={0}
+        className="menu dropdown-content z-[1] w-52 rounded-box bg-base-100 p-2 shadow">
+        <li onClick={() => onChange("lax")}>
+          <a>lax</a>
+        </li>
+        <li onClick={() => onChange("strict")}>
+          <a>strict</a>
+        </li>
+        <li onClick={() => onChange("no_restriction")}>
+          <a>none</a>
+        </li>
+        <li onClick={() => onChange("unspecified")}>
+          <a>unspecified</a>
+        </li>
       </ul>
     </div>
   )
 }
 
-export const HeaderDomain = props => {
+export const HeaderDomain = (props) => {
   const { cookies, domainList: filterDomainList, setDomainList } = props
   const detailsRef = React.useRef<HTMLDetailsElement>()
 
   const domains: string[] = React.useMemo(() => {
-    const list: string[] = Array.from(new Set(cookies.map(item => item.domain)))
+    const list: string[] = Array.from(
+      new Set(cookies.map((item) => item.domain))
+    )
     list.sort((a, b) => a?.length - b?.length)
     return list
   }, [cookies])
 
   React.useEffect(() => {
-    document.addEventListener('click', e => {
+    document.addEventListener("click", (e) => {
       const target = e.target as HTMLElement
       if (detailsRef.current.contains(target)) return
       detailsRef.current.open = false
     })
   }, [])
 
-  const onChange = item => {
+  const onChange = (item) => {
     const checked = filterDomainList.includes(item)
     if (checked) {
-      setDomainList(filterDomainList.filter(type => type !== item))
+      setDomainList(filterDomainList.filter((type) => type !== item))
       return
     }
     setDomainList([...filterDomainList, item])
   }
 
-  const handleOpenChange: React.MouseEventHandler<HTMLElement> = e => {
+  const handleOpenChange: React.MouseEventHandler<HTMLElement> = (e) => {
     e.preventDefault()
     const open = !detailsRef.current.open
     detailsRef.current.open = open
@@ -118,42 +147,46 @@ export const HeaderDomain = props => {
   }
 
   const hasData = domains.length > 0
-  const checked = domains.some(item => filterDomainList.includes(item))
+  const checked = domains.some((item) => filterDomainList.includes(item))
 
   return (
-    <details ref={detailsRef} className="dropdown dropdown-bottom dropdown-end">
-      <summary
-        className="m-1 btn btn-sm btn-circle"
-        onClick={handleOpenChange}
-      >
-        <MaterialSymbolsFilterAlt className={classnames("text-lg", {
-          "text-primary": checked
-        })} />
+    <details ref={detailsRef} className="dropdown dropdown-end dropdown-bottom">
+      <summary className="btn btn-circle btn-sm m-1" onClick={handleOpenChange}>
+        <MaterialSymbolsFilterAlt
+          className={classnames("text-lg", {
+            "text-primary": checked
+          })}
+        />
       </summary>
-      {hasData && (<ul tabIndex={0} className="dropdown-content z-[1] menu p-2 bg-base-100 rounded-box w-56 shadow-2xl max-h-48 overflow-auto flex flex-col flex-nowrap">
-        {domains.map(item => {
-          const checked = filterDomainList.includes(item)
-          return (
-            <li
-              key={item}
-              onClick={() => onChange(item)}
-              className={classnames("w-full ellipsis")}
-            >
-              <a className="w-full flex pl-0">
-                <div className="w-4 pl-2 mr-2">
-                  {checked && <MaterialSymbolsCheckCircleOutlineRounded className="text-lg text-primary" />}
-                </div>
-                <div className="ellipsis">{item}</div>
-              </a>
-            </li>
-          )
-        })}
-      </ul>)}
+      {hasData && (
+        <ul
+          tabIndex={0}
+          className="menu dropdown-content z-[1] flex max-h-48 w-56 flex-col flex-nowrap overflow-auto rounded-box bg-base-100 p-2 shadow-2xl">
+          {domains.map((item) => {
+            const checked = filterDomainList.includes(item)
+            return (
+              <li
+                key={item}
+                onClick={() => onChange(item)}
+                className={classnames("ellipsis w-full")}>
+                <a className="flex w-full pl-0">
+                  <div className="mr-2 w-4 pl-2">
+                    {checked && (
+                      <MaterialSymbolsCheckCircleOutlineRounded className="text-lg text-primary" />
+                    )}
+                  </div>
+                  <div className="ellipsis">{item}</div>
+                </a>
+              </li>
+            )
+          })}
+        </ul>
+      )}
     </details>
   )
 }
 
-export const InputFilter = props => {
+export const InputFilter = (props) => {
   const { value, onChange, placeholder, type } = props
   const inputRef = React.useRef<HTMLInputElement>()
   const detailsRef = React.useRef<HTMLDetailsElement>()
@@ -163,12 +196,12 @@ export const InputFilter = props => {
     detailsRef.current.open = false
   }
 
-  const onKeyDown = e => {
-    if (e.key !== 'Enter') return
+  const onKeyDown = (e) => {
+    if (e.key !== "Enter") return
     close()
   }
 
-  const handleOpenChange: React.MouseEventHandler<HTMLElement> = e => {
+  const handleOpenChange: React.MouseEventHandler<HTMLElement> = (e) => {
     e.preventDefault()
     const open = !detailsRef.current.open
     detailsRef.current.open = open
@@ -180,22 +213,23 @@ export const InputFilter = props => {
 
   return (
     <details ref={detailsRef} className="dropdown">
-      <summary
-        className="m-1 btn btn-sm btn-circle"
-        onClick={handleOpenChange}
-      >
-        <MaterialSymbolsFilterAlt className={classnames("text-lg", {
-          "text-primary": !!value
-        })} />
+      <summary className="btn btn-circle btn-sm m-1" onClick={handleOpenChange}>
+        <MaterialSymbolsFilterAlt
+          className={classnames("text-lg", {
+            "text-primary": !!value
+          })}
+        />
       </summary>
-      <div tabIndex={0} className="dropdown-content z-[1] menu p-2 bg-base-100 rounded-box w-56 shadow-2xl max-h-48 overflow-auto flex flex-col flex-nowrap">
+      <div
+        tabIndex={0}
+        className="menu dropdown-content z-[1] flex max-h-48 w-56 flex-col flex-nowrap overflow-auto rounded-box bg-base-100 p-2 shadow-2xl">
         <input
           ref={inputRef}
           type="text"
           value={value}
           onBlur={close}
           onKeyDown={onKeyDown}
-          onChange={e => onChange(e.target.value)}
+          onChange={(e) => onChange(e.target.value)}
           className="input input-sm input-bordered input-primary w-full"
           placeholder={placeholder}
         />
@@ -204,7 +238,7 @@ export const InputFilter = props => {
   )
 }
 
-export const DatePicker = props => {
+export const DatePicker = (props) => {
   const { value, onChange } = props
   const [innerValue, setInnerValue] = React.useState(value)
   const inputRef = React.useRef<HTMLInputElement>()
@@ -214,8 +248,8 @@ export const DatePicker = props => {
     onChange(innerValue)
   }
 
-  const onKeyDown = e => {
-    if (e.key !== 'Enter') return
+  const onKeyDown = (e) => {
+    if (e.key !== "Enter") return
     handleChange()
     if (inputRef.current) {
       inputRef.current.blur()
@@ -229,8 +263,8 @@ export const DatePicker = props => {
       value={innerValue}
       onBlur={handleChange}
       onKeyDown={onKeyDown}
-      onChange={e => setInnerValue(e.target.value)}
-      className="input-sm input-primary input-bordered"
+      onChange={(e) => setInnerValue(e.target.value)}
+      className="input-sm input-bordered input-primary"
     />
   )
 }
