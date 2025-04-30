@@ -5,7 +5,7 @@ import {
   MaterialSymbolsCheckCircleOutlineRounded,
   MaterialSymbolsFilterAlt
 } from "~components/Icons"
-import { copyTextToClipboard, ga } from "~utils"
+import { ga } from "~utils"
 
 export const BooleanDisplay = (props) => {
   const { value, className } = props
@@ -45,7 +45,6 @@ export const Input = (props) => {
 
   const handleClick = (e) => {
     const target = e.target as HTMLInputElement
-    copyTextToClipboard(innerValue)
     target.select()
   }
 
