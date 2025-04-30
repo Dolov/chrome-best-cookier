@@ -86,9 +86,12 @@ const DataList: React.FC<DataListProps> = (props) => {
         key: getId(item)
       }))
       .sort((a, b) => {
-        const follows = followMap[`${a.item.domain}-${a.item.path}`] || []
-        const aFollow = follows.includes(a.item.name)
-        const bFollow = follows.includes(b.item.name)
+        const aFollowKey = getFollowKey(a.item)
+        const bFollowKey = getFollowKey(b.item)
+        const aFollows = followMap[aFollowKey] || []
+        const bFollows = followMap[bFollowKey] || []
+        const aFollow = aFollows.includes(a.item.name)
+        const bFollow = bFollows.includes(b.item.name)
 
         if (aFollow && !bFollow) {
           return -1
