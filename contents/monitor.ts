@@ -1,5 +1,10 @@
 import type { PlasmoCSConfig } from "plasmo"
 // fix: 从 utils 中引入 LOCAL_STORAGE_KEY 会导致与腾讯视频冲突
+import {
+  getCurrentCookies,
+  parseSetCookie
+} from "./monitor-cookie-parse"
+import { hookDocumentCookie } from "./monitor-cookie-hook"
 import { LOCAL_STORAGE_KEY } from '~utils.tiny'
 
 const consoleLogFontSize = 12;
@@ -18,17 +23,9 @@ const init = async () => {
   console.log('%c⌛ Best Cookier - 监听 Cookie 变化中...', 'background: #007bff; color: #ffffff; padding: 4px;');
   const { names } = JSON.parse(monitorConfig)
 
-  const {
-    set: originalCookieSet
-  } = Object.getOwnPropertyDescriptor(Document.prototype, 'cookie') || {};
-
-  Object.defineProperty(Document.prototype, 'cookie', {
-    set(newValue) {
-
-      _1717655521868onSetCookie(newValue);
-      return originalCookieSet.call(this, newValue);
-    },
-  });
+  hookDocumentCookie(Document, (newValue) => {
+    _1717655521868onSetCookie(newValue);
+  })
 
 }
 
@@ -36,7 +33,7 @@ init()
 
 const _1717655521868onSetCookie = (newValue: string) => {
   const { name, value, expires } = parseSetCookie(newValue);
-  const currentCookies = getCurrentCookies();
+  const currentCookies = getCurrentCookies(document.cookie);
 
   const expiresTime = expires ? new Date(expires).getTime() : null;
 
@@ -56,73 +53,6 @@ const _1717655521868onSetCookie = (newValue: string) => {
   _1717655521868onAddCookie(newValue, name, value);
 }
 
-
-/**
- * Splits a string into a key-value pair object.
- *
- * @param {string} s - The string to be split.
- * @return {Object} An object containing the key and value extracted from the string.
- */
-const splitKeyValue = (s: string) => {
-  let key = "",
-    value = "";
-  const keyValueArray = (s || "").split("=");
-
-  if (keyValueArray.length) {
-    key = decodeURIComponent(keyValueArray[0].trim());
-  }
-
-  if (keyValueArray.length > 1) {
-    value = decodeURIComponent(keyValueArray.slice(1).join("=").trim());
-  }
-
-  return {
-    key,
-    value
-  }
-}
-
-/**
- * Parses a cookie string and returns an object representing the cookie.
- *
- * @param {string} cookieString - The cookie string to be parsed.
- * @return {Object} An object representing the cookie, with keys and values extracted from the string.
- */
-const parseSetCookie = (cookieString: string) => {
-  // uuid_tt_dd=10_37476713480-1609821005397-659114; Expires=Thu, 01 Jan 1025 00:00:00 GMT; Path=/; Domain=.csdn.net;
-  const cookieStringSplit = cookieString.split(";");
-  const {
-    key,
-    value
-  } = splitKeyValue(cookieStringSplit.length && cookieStringSplit[0])
-  const cookie: Record<string, any> = {
-    value,
-    name: key,
-  }
-  for (let i = 1; i < cookieStringSplit.length; i++) {
-    let {
-      key,
-      value
-    } = splitKeyValue(cookieStringSplit[i]);
-    cookie[key] = value
-  }
-  return cookie
-}
-
-const getCurrentCookies = () => {
-  const cookieMap = {}
-  if (!document.cookie) {
-    return cookieMap;
-  }
-  document.cookie.split(";").forEach(x => {
-    const {
-      key,
-      value
-    } = splitKeyValue(x);
-    cookieMap[key] = value
-  });
-  return cookieMap;
-}
 
 function now() {
   // 东八区专属...
